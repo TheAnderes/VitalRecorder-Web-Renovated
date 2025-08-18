@@ -109,6 +109,74 @@
         </div>
       </div>
     </section>
+<!-- CÓMO FUNCIONA -->
+<section class="product-how">
+  <div class="product-container">
+    <h2 class="product-section-title">¿Cómo funciona Vital Recorder?</h2>
+
+    <div class="product-how-grid">
+      <article class="product-how-card">
+        <div class="product-step-badge">1</div>
+        <i class="bi bi-sliders2-vertical product-how-icon"></i>
+        <h3 class="product-how-title">Configura en la app</h3>
+        <p class="product-how-text">
+          Registra medicamentos, dosis y horarios. Elige quién recibirá avisos.
+        </p>
+      </article>
+
+      <article class="product-how-card">
+        <div class="product-step-badge">2</div>
+        <i class="bi bi-smartwatch product-how-icon"></i>
+        <h3 class="product-how-title">La pulsera te avisa</h3>
+        <p class="product-how-text">
+          Vibración y luz en la muñeca; también notificaciones en el teléfono.
+        </p>
+      </article>
+
+      <article class="product-how-card">
+        <div class="product-step-badge">3</div>
+        <i class="bi bi-arrow-right-circle product-how-icon"></i>
+        <h3 class="product-how-title">Confirma y comparte</h3>
+        <p class="product-how-text">
+          Marca la toma como realizada y comparte el estado con tu familia.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTRICAS / PRIORIDAD -->
+<section class="product-metrics">
+  <div class="product-container">
+    <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
+
+    <div class="product-metrics-grid">
+      <article class="product-metric-card">
+        <i class="bi bi-hand-thumbs-up product-metric-icon"></i>
+        <div class="product-metric-value">95%</div>
+        <div class="product-metric-label">Satisfacción</div>
+      </article>
+
+      <article class="product-metric-card">
+        <i class="bi bi-bell product-metric-icon"></i>
+        <div class="product-metric-value">+1 K</div>
+        <div class="product-metric-label">Recordatorios</div>
+      </article>
+
+      <article class="product-metric-card">
+        <i class="bi bi-headset product-metric-icon"></i>
+        <div class="product-metric-value">24/7</div>
+        <div class="product-metric-label">Soporte</div>
+      </article>
+
+      <article class="product-metric-card">
+        <i class="bi bi-shield-lock product-metric-icon"></i>
+        <div class="product-metric-value">100%</div>
+        <div class="product-metric-label">Privacidad</div>
+      </article>
+    </div>
+  </div>
+</section>
 
     <!-- TESTIMONIOS -->
     <section class="product-testimonials">
@@ -234,12 +302,14 @@
   padding: 2.5rem 0 1rem;
 }
 .product-hero-title {
-  font-size: 3rem;
+  font-size: 100px;
   font-weight: 900;
   text-align: center;
   color: #0f2147;
-  text-decoration: underline 6px rgba(15,33,71,.3);
+  text-decoration: underline 6px #0f2147;
   text-underline-offset: .5rem;
+  margin-top:5px ;
+  margin-bottom: 15px;
 }
 
 /* INTRO */
@@ -302,6 +372,7 @@
 .product-features {
   background:#f5f7fb;
   padding: 3.5rem 0;
+  height: 500px;
 }
 .product-section-title {
   text-align: center;
@@ -343,6 +414,7 @@
   background: linear-gradient(135deg,#4f9dfd 0%, #20dff1 100%);
   padding: 3.5rem 0;
   color:#0b1634;
+  height: 600px;
 }
 .product-forwho-lead {
   text-align:center;
@@ -451,4 +523,106 @@
 @media (max-width: 560px) {
   .product-testimonials-grid { grid-template-columns: 1fr; }
 }
+/* ======= HOW IT WORKS ======= */
+.product-how {
+  background: #f5f7fb;
+  padding: 3.25rem 0;
+  height: 400px;
+}
+.product-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.product-how-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 1.5rem;
+  box-shadow: 0 8px 18px rgba(0,0,0,.06);
+  text-align: center;
+  position: relative;
+}
+.product-step-badge {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  background: #0f2147;
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(15,33,71,.25);
+}
+.product-how-icon {
+  font-size: 3rem;
+  margin: .25rem 0 .5rem;
+  background: linear-gradient(90deg,#00f2fe,#4481eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.product-how-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f2147;
+  margin: 0 0 .25rem;
+}
+.product-how-text { color:#5b6575; margin:0; }
+
+/* ======= METRICS ======= */
+.product-metrics {
+  background: linear-gradient(135deg,#20dff1 0%, #4f9dfd 100%);
+  padding: 3.25rem 0;
+  height: 460px;
+}
+.product-metrics-title {
+  text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 900;
+  color: #0f2147;
+  margin: 0 0 2rem;
+}
+.product-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+.product-metric-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 14px 30px rgba(15,33,71,.18);
+}
+.product-metric-icon {
+  font-size: 2.4rem;
+  margin-bottom: .35rem;
+  background: linear-gradient(90deg,#00f2fe,#4481eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.product-metric-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #0f2147;
+  line-height: 1.1;
+}
+.product-metric-label {
+  color: #5b6575;
+  font-weight: 600;
+}
+
+/* ======= RESPONSIVE EXTRAS ======= */
+@media (max-width: 1000px) {
+  .product-how-grid { grid-template-columns: 1fr; }
+  .product-metrics-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 560px) {
+  .product-metrics-grid { grid-template-columns: 1fr; }
+}
+
 </style>
