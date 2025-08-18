@@ -3,15 +3,14 @@ import ContactView from '@/views/ContactView.vue'
 
 const routes = [
   { path: '/', name: 'contact', component: ContactView },
-  { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
-  { path: '/product', name: 'product', component: () => import('@/views/HomeView.vue') },
-  { path: '/login', name: 'login', component: () => import('@/views/HomeView.vue') }, // reemplaza con tu vista real de login
+  { path: '/login', name: 'login', component: () => import('@/components/Login.vue') },
+  { path: '/about-us', name: 'about-us', component: () => import('@/components/AboutUs.vue')},
+  { path: '/register', name: 'register', component: () => import('@/components/Register.vue')}
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes,
-  scrollBehavior(){ return { top: 0 } }
 })
 
 export default router
