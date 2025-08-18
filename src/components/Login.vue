@@ -17,7 +17,7 @@
       
       <h1 class="title">Inicio de Sesión</h1>
       <p class="subtitle">
-        ¿Es tu primera vez? <a href="/registro">Regístrate aquí</a>
+        ¿Es tu primera vez? <a href="/register">Regístrate aquí</a>
       </p>
 
       <form @submit.prevent="handleLogin" class="login-form">
