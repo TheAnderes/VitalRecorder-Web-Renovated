@@ -11,6 +11,7 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
+import 'bootstrap-icons/font/bootstrap-icons.css'
 export default { components: { AppHeader, AppFooter } };
 </script>
 
