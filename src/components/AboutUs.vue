@@ -133,9 +133,8 @@ const getInitials = (fullName) => {
   margin: 0 0 2rem;
 }
 
-/* ===== Sección 1 ===== */
 .hero-section {
-  background: linear-gradient(135deg, #4e54c8, #00c6ff);
+  background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   color: white;
   padding: 3rem 0;
   width: 100%;

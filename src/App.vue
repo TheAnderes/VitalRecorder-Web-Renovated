@@ -15,12 +15,10 @@ import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <style>
-html, body, #app { height: 100%; margin: 0; }
-main { padding: 1rem; }
+html, #app { height: 100%; margin: 0; }
 
 body {
   margin: 0;
   padding: 0;
-  background: #fff; /* opcional */
 }
 </style>
