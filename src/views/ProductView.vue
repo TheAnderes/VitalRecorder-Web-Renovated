@@ -1,15 +1,10 @@
 <template>
   <div class="product-view">
 
-    <!-- HERO / TÍTULO DE LA PÁGINA -->
-    <section class="product-hero">
-      <div class="product-container">
-        <h1 class="product-hero-title">Producto</h1>
-      </div>
-    </section>
 
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
+      <h1 class="product-hero-title">Producto</h1>
       <div class="product-container product-intro-grid">
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
@@ -315,15 +310,15 @@
 /* INTRO */
 .product-intro {
   background: linear-gradient(135deg,#53e0f3 0%, #2a74ff 100%);
-  padding: 2.5rem 0 3.5rem;
+  padding: 10px 0 3.5rem;
   color: #fff;
+  height: 651px;
 }
 .product-intro-grid {
   display: grid;
   grid-template-columns: 1.25fr .75fr;
   gap: 2rem;
   align-items: center;
-  border: 1px dashed rgba(255,255,255,.35);
   padding: 2rem;
   border-radius: 16px;
   backdrop-filter: blur(2px);
@@ -334,13 +329,15 @@
   line-height: 1.15;
   margin: 0 0 1rem;
   color: #0b1634;
+  text-align: center;
 }
 .product-intro-lead {
-  font-size: 1.15rem;
+  font-size: 27px;
   line-height: 1.6;
   color: #f2f6ff;
-  font-weight: 600;
   margin: 0 0 1.5rem;
+  text-align: center;
+  font-weight:1000;
 }
 .product-intro-actions { display:flex; gap:1rem; flex-wrap:wrap; }
 
