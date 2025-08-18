@@ -62,15 +62,13 @@ const props = defineProps({
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-
-  /* sin esquinas a los lados para pegarse a los bordes */
   border-left: none;
   border-right: none;
-  border-radius: 16px;          /* mantén curvas arriba/abajo si quieres */
+  border-radius: 16px;        
   box-shadow:0 8px 20px rgba(0,0,0,.08);
   padding: clamp(14px, 2vw, 22px);
   margin-top: clamp(18px, 3vh, 28px);
-  margin-bottom: 0;             /* 👈 importante: sin espacio debajo */
+  margin-bottom: 0;             
 }
 .inner{
   display:grid;
@@ -80,15 +78,15 @@ const props = defineProps({
 }
 
 .item{
-  background: transparent;     /* o #fff si prefieres */
-  border: none;                /* ← adiós al borde punteado */
+  background: transparent;    
+  border: none;               
   border-radius: 12px;
   padding: clamp(18px, 2.2vw, 28px);
   display: grid;
   justify-items: center;
   text-align: center;
   gap: 10px;
-  box-shadow: none;            /* sin sombra interna */
+  box-shadow: none;            
 }
 .badge{
   width: clamp(64px, 6.5vw, 80px);
