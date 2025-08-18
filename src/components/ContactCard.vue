@@ -3,9 +3,13 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import ContactInfoStrip from '@/components/ContactInfoStrip.vue'
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl })
+import pin from '@/assets/icons/pin.png'
+import mail from '@/assets/icons/mail.png'
+import phone from '@/assets/icons/phone.png'
 const name = ref('')
 const email = ref('')
 const message = ref('')
@@ -90,6 +94,7 @@ function submit() {
         </div>
       </div>
     </div>
+     <ContactInfoStrip :address-img="pin" :email-img="mail" :phone-img="phone" />
   </section>
 </template>
 <style scoped>
@@ -98,10 +103,10 @@ function submit() {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 24px 0 36px;
-  min-height: calc(100vh - 180px);
+    padding: 24px 0 0;  
+  min-height: auto;  
 }
-.hero { /* tu contenedor interno centrado */
+.hero { 
   max-width: 1150px;
   margin: 0 auto;
   padding: 0 16px;
