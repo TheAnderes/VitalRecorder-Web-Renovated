@@ -13,9 +13,9 @@
 
       <ul class="links">
         <li><router-link to="/">Inicio</router-link></li>
-        <li><router-link to="/about">Sobre Nosotros</router-link></li>
+        <li><router-link to="/about-us">Sobre Nosotros</router-link></li>
         <li><router-link to="/product">Producto</router-link></li>
-        <li><router-link to="/">Contáctanos</router-link></li>
+        <li><router-link to="/contact-us">Contáctanos</router-link></li>
         <li><router-link to="/login" class="btn">Iniciar Sesión</router-link></li>
       </ul>
     </nav>
@@ -26,7 +26,7 @@
 .header{
 background: #0f172a; color: #fff;
 position: sticky; top: 0;
-z-index: 5000;           /* por encima de Leaflet */
+z-index: 5000;           
 width: 100%;
 }
 .shell{

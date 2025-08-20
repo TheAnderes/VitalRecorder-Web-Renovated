@@ -94,7 +94,7 @@ function submit() {
 </template>
 <style scoped>
 .wrap {
-  background: linear-gradient(90deg,#2dd4bf 0%, #60a5fa 100%);
+  background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
