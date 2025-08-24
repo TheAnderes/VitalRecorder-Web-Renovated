@@ -188,12 +188,9 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
   text-align: center;
   font-size: 50px;
   font-weight: var(--bold);
-  line-height: 1.6;
-  font-size: clamp(.98rem, 1.3vw, 1.1rem);
   line-height: 1.55;
   color: #f2f6ff;
   margin: 0 0 1.5rem;
-  text-align: center;
   font-family: var(--tipografia);
 }
 .product-intro-actions { display:flex; gap:50px; flex-wrap:wrap; justify-content:center; }
