@@ -28,6 +28,8 @@ background: #0f172a; color: #fff;
 position: sticky; top: 0;
 z-index: 5000;           
 width: 100%;
+font-family: var(--tipografia);
+font-weight: 600;
 }
 .shell{
   width: clamp(320px, 92vw, 1440px);
