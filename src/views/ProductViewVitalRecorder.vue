@@ -38,14 +38,17 @@ import IconThing from '@/components/icons/IconThing.svg'
 
 import IconMale from '@/components/icons/IconMale.svg'
 import IconFemale from '@/components/icons/IconFemale.svg'
+import PrimaryButton from '@/components/PrimaryButton.vue';
+
 
 </script>
 <template>
   <div class="product-view">
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
-      <h1 class="product-hero-title">Vital Reccorder</h1>
+      <h1 class="product-hero-title">Vital Recorder</h1>
       <div class="product-container product-intro-grid">
+        
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
             Nunca Olvides tus<br />Medicamentos
@@ -54,7 +57,7 @@ import IconFemale from '@/components/icons/IconFemale.svg'
             Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
           </p>
           <div class="product-intro-actions">
-            <ButtonSecondary 
+            <PrimaryButton
               root="contact-us" 
               name="Contactanos"
               />
@@ -63,14 +66,6 @@ import IconFemale from '@/components/icons/IconFemale.svg'
           </div>
         </div>
 
-        <div class="product-intro-media">
-          <IntroIconButtonCard 
-            root="contact-us" 
-            :icon="IconWathVital"
-            :iconbutton="IconGooglePlay"
-          />
-
-        </div>
 
       </div>
     </section>
@@ -106,8 +101,6 @@ import IconFemale from '@/components/icons/IconFemale.svg'
             title="Sincronización familiar"
             text="Comparte avisos y estado en tiempo real"
             />
-
-
 
         </div>
       </div>
@@ -213,7 +206,7 @@ import IconFemale from '@/components/icons/IconFemale.svg'
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
-          Nuestra mayor recompensa es saber que VitalSystems hace una diferencia real . 
+          Nuestra mayor recompensa es saber que VitalSystems hace una diferencia real en la vida de las personas.
         </p>
         <div class="product-metrics-grid">
           <PointViewCard
@@ -236,9 +229,26 @@ import IconFemale from '@/components/icons/IconFemale.svg'
             valuer="100%"
             Text="Privacidad"/>
         </div>
-        <p class="product-forwho-lead" style="width:100vw;">
-          Los testimonios de nuestros usuarios y sus familias son el reflejo de nuestro compromiso.
-        </p>
+        <div class="DownloadContend ">
+
+          <div class="DownloadNow">
+          <p>Descargalo ya</p>
+  <img 
+    :src="IconApp" 
+    class="product-how-icon-mask" 
+    :style="[maskStyle, url ? { cursor: 'pointer' } : {}]" 
+    @click="openLink"
+    alt="icono"
+  />
+        </div>
+        </div>
+        
+      </div>
+    </section>
+    <section class="product-testimonials">
+      <div class="product-container ">
+        <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
+
         <div class="product-testimonials-grid">
           
         <TestimonialCard
@@ -253,16 +263,30 @@ import IconFemale from '@/components/icons/IconFemale.svg'
           :avatar="IconFemale"
           :count="3"   
         />
+
+
         </div>
       </div>
     </section>
-
 
   
   </div>
 </template>
 
-
+<script>
+export default {
+  data() {
+    return {
+      url: 'https://www.youtube.com/results?search_query=descargar+una+fill+de+figma'
+    }
+  },
+  methods: {
+    openLink() {
+      window.open(this.url, '_blank');
+    }
+  }
+}
+</script>
 
 <style scoped>
 /* Base */
@@ -275,7 +299,6 @@ import IconFemale from '@/components/icons/IconFemale.svg'
 .product-container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 1.25rem;
 }
 
 
@@ -283,42 +306,48 @@ import IconFemale from '@/components/icons/IconFemale.svg'
 .product-hero-title {
   font-family: var(--tipografia);
   font-weight: 900;
-  font-size: 90px;
-  text-align: center;
+  font-size: 80px;
   font-weight: black;
-  color: #0f2147;
+  color: black;
   text-decoration: underline 4px #0f2147;
   text-underline-offset: 20px;
   margin: 0;
+  margin-left: 70px;
 }
 
 .product-intro {
-  background: linear-gradient(135deg,#53e0f3 0%, #2a74ff 100%);
+  display: flex;
+  flex-direction: column;
   padding: 10px 0 10px;
   color: #fff;
-  height: 650px;
+  height: 92vh;
+    box-sizing: border-box;
+  gap: 30px;
+  background-image: url('@/components/icons/ImageProductVitarRecorner.jpg');
+  background-size: 100% 120%;
+  background-repeat: no-repeat;
 }
 .product-intro-grid {
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: clamp(1rem, 2.5vw, 2rem);
-  align-items: center;
-  padding: 2rem;
+  display: flex;
+  
   border-radius: 16px;
-  backdrop-filter: blur(2px);
+margin: 0;
+margin-left: 70px;
 }
 .product-intro-heading {
-  font-size: 60px;
+  font-size: 40px;
   font-weight: black;
+  text-align: center;
   line-height: 1.15;
   margin: 0 0 .75rem;
   color: #0b1634;
-  text-align: center;
+  justify-content: center;
 }
 .product-intro-lead {
   text-align: center;
-  font-size: 30px;
-  font-weight: 900;
+  padding: 10px;
+  font-size: 27px;
+  font-weight: var(--semibold  );
   line-height: 1.6;
   color: #f2f6ff;
   margin: 0 0 1.5rem;
@@ -344,10 +373,11 @@ import IconFemale from '@/components/icons/IconFemale.svg'
 .product-features {
   display: flex;
   align-items: center;
-  background:white;
+  background: #f5f7fb;
   height: 92vh;
   padding: 5rem .5rem;
   box-sizing: border-box;
+  
 }
 
 .product-section-title {
@@ -355,8 +385,9 @@ import IconFemale from '@/components/icons/IconFemale.svg'
   text-align: center;
   font-size: 50px;
   font-weight: var(--semibold);
-  margin: 0 0 30px;
-  color:#0f2147;
+  margin: 0;
+  margin-top: 20px;
+  color:#1F2B6C;
 }
 .product-features-grid {
   display: flex;
@@ -372,12 +403,12 @@ import IconFemale from '@/components/icons/IconFemale.svg'
 /* === PARA QUIÉN ES (COMPACTO) === */
 .product-forwho {
   display: flex;
-  background: linear-gradient(135deg,#4f9dfd 0%, #20dff1 100%);
   padding:0;
   color:#0b1634;
   height: 92vh;
   align-items: center;
   box-sizing: border-box;
+  background: #f5f7fb;
 }
 .product-forwho-lead {
   font-family: var(--tipografia);
@@ -411,14 +442,7 @@ import IconFemale from '@/components/icons/IconFemale.svg'
   flex-wrap: wrap;
   justify-content: center;
 }
-.product-how-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem 1rem 1.25rem;
-  box-shadow: 0 8px 18px rgba(0,0,0,.06);
-  text-align: center;
-  position: relative;
-}
+
 .product-step-badge {
   position: absolute;
   top: -10px;
@@ -453,10 +477,12 @@ import IconFemale from '@/components/icons/IconFemale.svg'
 /* === MÉTRICAS (COMPACTO) === */
 .product-metrics {
   display: flex;
-  background: linear-gradient(135deg,#20dff1 0%, #4f9dfd 100%);
+  background: #f5f7fb;
   padding: 0;
   box-sizing: border-box;
   height: 92vh;
+  align-items: center;
+  justify-content: center;
   
 }
 .product-metrics-title {
@@ -466,26 +492,58 @@ import IconFemale from '@/components/icons/IconFemale.svg'
   font-size: 60px;
   color: #0f2147;
   margin: 0 0 1rem;
+  margin-bottom: 10px;
 }
 .product-metrics-grid {
   display: flex;
   gap: 70px;
 }
 
-/* TESTIMONIOS (ligero ajuste) */
+
 .product-testimonials {
-  background: #f5f7fb;
-  padding: clamp(1.25rem, 2vw, 2rem) 0;
+  display: flex;
+  flex-direction: column;
+  padding:0;
+  height: 92vh;
+  align-items: center;
+  justify-content: center;
+ background: #f5f7fb;
+  box-sizing: border-box;
 }
 .product-testimonials-grid {
-  display:grid;
+  display:flex;
   grid-template-columns: repeat(2,1fr);
-  gap: 1.25rem;
+  gap: 80px;
+
+
+}
+.product-intro-text
+{
+  background: rgba(255,255,255,0.40);
+  padding: 20px 0;
+  border-radius: 50px;
 }
 
-
-
-
+.DownloadNow
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
+  width: 400px;
+  font-family: var(--tipografia);
+  font-weight: var(--semibold);
+  font-size: 25px;
+  border-radius: 20px;
+}
+.DownloadContend
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Responsive */
 @media (max-width: 1000px) {

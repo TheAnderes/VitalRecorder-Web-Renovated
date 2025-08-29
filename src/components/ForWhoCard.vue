@@ -25,13 +25,13 @@ export default {
   background: #ffffff;
   border-radius: 16px;
   text-align:center;
-  box-shadow: 0 10px 22px rgba(15,33,71,.12);
-  width: 200px;
-  height: 195px;
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
+  width: 210px;
+  height: 170px;
 }
 .product-forwho-icon-mask{
-  width: 109px;
-  height: 109px;
+  width: 90px;
+  height: 90px;
   display: inline-block;
   margin-bottom: .25rem;
 }
@@ -41,7 +41,7 @@ export default {
   font-weight:600;
   width: 191px;
   color:#0f2147;
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 9px;
   margin-top: 8px;
 }

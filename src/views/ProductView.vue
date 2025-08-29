@@ -2,6 +2,7 @@
 
 import TestimonialCard from '@/components/TestimonialCard.vue';
 import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
+import InformationProductCard from '@/components/InformationProductCard.vue';
 
 import IconWathVital from '@/components/icons/IconWatHVitalRecorder.svg';
 
@@ -9,11 +10,13 @@ import IconVitalConnect from '@/components/icons/IconVitalConnect.svg';
 
 
 import ButtonSecondary from '@/components/SecondaryButton.vue';
+import ButtonPrimary from '@/components/PrimaryButton.vue';
 
 
 import IconMale from '@/components/icons/IconMale.svg'
 import IconFemale from '@/components/icons/IconFemale.svg'
 import SecondaryButton from '@/components/SecondaryButton.vue';
+import PrimaryButton from '@/components/PrimaryButton.vue';
 
 </script>
 <template>
@@ -21,22 +24,18 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
       <h1 class="product-hero-title">Productos</h1>
-      <div class="product-container product-intro-grid">
+      <div class="product-container">
         <div class="product-intro-text">
           <p class="product-intro-lead">
-            Soluciones tecnológicas para una vida más autónoma y saludable.
+            Soluciones <br/> tecnológicas para una vida más autónoma y saludable.
           </p>
           <div class="product-intro-actions">
-            <ButtonSecondary 
+            <PrimaryButton
               root="contact-us" 
               name="Contactanos"
               />
           </div>
         </div>
-
-        <img src="@/components/icons/ImagePhone.png" class="product-intro-media">
-
-        </img>
 
       </div>
     </section>
@@ -49,9 +48,9 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
         <div class="product-one-grid">
           <div class="product-one-grid-text">
             <h2 class="product-one-text"> Tu recordatorio Inteligente</h2>
-            <div class="product-one-grid-box">
-              Una manilla inteligente y una aplicación móvil que te ayudan a gestionar tus medicamentos y tareas diarias, garantizando tranquilidad para toda la familia.
-            </div>
+            <InformationProductCard
+              text="Una manilla inteligente y una aplicación móvil que te ayudan a gestionar tus medicamentos y tareas diarias, garantizando tranquilidad para toda la familia."
+              />
             <SecondaryButton 
               root="contact-us" 
               name="Contactanos"
@@ -84,12 +83,12 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
           </div>
           <div class="product-two-grid-text">
             <h2 class="product-one-text"> Tu recordatorio Inteligente</h2>
-            <div class="product-two-grid-box">
-              Un sistema de monitoreo no invasivo que utiliza sensores inteligentes para alertar a los familiares sobre cualquier situación de emergencia en el hogar, sin invadir la privacidad.
-            </div>
+            <InformationProductCard
+              text="Un sistema de monitoreo no invasivo que utiliza sensores inteligentes para alertar a los familiares sobre cualquier situación de emergencia en el hogar, sin invadir la privacidad."
+              />
             <SecondaryButton 
               root="product2" 
-              name="Mas Información"
+              name="Contactanos"
               />
           </div>
         </div>
@@ -156,21 +155,29 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
 .product-hero-title {
   font-family: var(--tipografia);
   font-weight: 900;
-  font-size: 90px;
+  font-size: 80px;
   text-align: center;
   font-weight: black;
-  color: #0f2147;
+  color:black ;
   text-decoration: underline 4px #0f2147;
   text-underline-offset: 20px;
   margin: 0;
 }
 
 .product-intro {
+  display: flex;
   background: linear-gradient(135deg,#53e0f3 0%, #2a74ff 100%);
   padding: 10px 0 10px;
   color: #fff;
-  height: 100vh;
+  height: 92vh;
   box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  background-image: url('@/components/icons/ImageProductPrincipal.jpg');
+  background-size: 100% 140%;
+  background-repeat: no-repeat;
 }
 .product-intro-grid {
   display: grid;
@@ -178,7 +185,6 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
   gap: clamp(1rem, 2.5vw, 2rem);
   align-items: center;
   padding: 2rem;
-  border: 1px dashed rgba(255,255,255,.35);
   padding: clamp(1rem, 2.2vw, 1.75rem);
   border-radius: 16px;
   backdrop-filter: blur(2px);
@@ -187,9 +193,9 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
 .product-intro-lead {
   text-align: center;
   font-size: 50px;
-  font-weight: var(--bold);
+  font-weight: var(--semibold);
   line-height: 1.55;
-  color: #f2f6ff;
+  color: black;
   margin: 0 0 1.5rem;
   font-family: var(--tipografia);
 }
@@ -213,14 +219,18 @@ height: 450px;
 {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 20px;
+  background: rgba(255,255,255,0.70);
+  height: auto;
+  width: 800px;
+  padding-bottom: 20px;
+  border-radius: 50px;
 }
 
 /* === CARACTERÍSTICAS (COMPACTO) === */
 .product-one {
   display: flex;
   align-items: center;
-  background:white;
   height: 92vh;
   box-sizing: border-box;
 }
@@ -228,31 +238,16 @@ height: 450px;
 .product-sections-title {
   font-family: var(--tipografia);
   text-align: center;
-  font-size: 60px;
-  font-weight: var(--black);
+  font-size: 50px;
+  font-weight: var(--semibold);
   margin: 0;
-  color:#0f2147;
+  color:#1F2B6C;
 }
 .product-one-grid {
   display: flex;
   gap: 20px;
 }
-.product-one-grid-box
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 450px;
-  height: 250px;
-  font-family: var(--tipografia);
-  font-weight: var(--regular);
-  font-size: 25px;
-  text-align: center;
-  background: linear-gradient(135deg,#53e0f3 0%, #2a74ff 100%);
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding: 25px;
-}
+
 .product-one-grid-text
 {
   display: flex;
@@ -265,8 +260,8 @@ height: 450px;
 {
   font-family: var(--tipografia);
   font-weight: var(--semibold);
-  color: #0f2147;
-  font-size: 50px;
+  color: #1F2B6C;
+  font-size: 40px;
   text-align: center;
   margin: 0;
 }
@@ -275,7 +270,7 @@ height: 450px;
 /* === PARA QUIÉN ES (COMPACTO) === */
 .product-two {
   display: flex;
-  background: linear-gradient(135deg,#00F2FE 24%, #4481EB 83%);
+
   padding: clamp(1.25rem, 2vw, 2rem) 0;
   color:#0b1634;
   height: 92vh;
@@ -296,22 +291,7 @@ height: 450px;
   justify-content: center;
   gap: 30px;
 }
-.product-two-grid-box
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 500px;
-  height: 250px;
-  font-family: var(--tipografia);
-  font-weight: var(--medium);
-  font-size: 33px;
-  text-align: center;
-  color: #ffffff;
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding: 25px;
-}
+
 .product-how {
   display: flex;
   background: #f5f7fb;
@@ -383,7 +363,6 @@ height: 450px;
 
 /* TESTIMONIOS (ligero ajuste) */
 .product-testimonials {
-  background: #f5f7fb;
   padding: clamp(1.25rem, 2vw, 2rem) 0;
   height: 85vh;
   display: flex;

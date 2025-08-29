@@ -56,13 +56,13 @@ export default {
     justify-content: center;
   background:#fff;
   border-radius:12px;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
   padding:16px 18px;
   display:flex;
   flex-direction:column;
   gap:10px;
-  width: 300px;
-  height: 200px;
+  width: 250px;
+  height: 180px;
 }
 
 /* Header */
@@ -83,8 +83,8 @@ export default {
   border:2px solid transparent;
 }
 .product-step-number {
-  font-weight: 900;
-  font-size: 28px; /* más grande para que se note el borde */
+  font-weight: 800;
+  font-size: 20px; /* más grande para que se note el borde */
   line-height: 1;
 
   /* Texto transparente */
@@ -97,7 +97,7 @@ export default {
   margin:0;
   font-family: var(--tipografia);
   font-weight:600;
-  font-size:23px;
+  font-size:20px;
   color:#0f2147;
 }
 
@@ -111,9 +111,10 @@ export default {
 .product-how-text{
   margin:0;
   color:#777;
-  font-size:17px;
+  font-size:14px;
   line-height:1.35;
   width: 160px;
+  text-align: center;
 }
 /* Icono con degradado (usando la máscara) */
 .product-how-icon-mask{

@@ -348,6 +348,7 @@ import IconFemale from '@/components/icons/IconFemale.svg'
   height: 92vh;
   padding: 5rem .5rem;
   box-sizing: border-box;
+    background: radial-gradient(circle, #FFFFFF 0%, #00F2FE 100%);
 }
 
 .product-section-title {
@@ -404,6 +405,7 @@ import IconFemale from '@/components/icons/IconFemale.svg'
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+    background: radial-gradient(circle, #FFFFFF 0%, #00F2FE 100%);
 }
 .product-how-grid {
   display: flex;

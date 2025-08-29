@@ -24,7 +24,7 @@ body {
 }
 :root
 {
-  --tipografia: "Lato", sans-serif;
+  --tipografia: "Poppins", sans-serif;
 
   /* === ESCALAS === */
   --black:900;

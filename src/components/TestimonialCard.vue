@@ -72,7 +72,7 @@ export default {
   background: #fff;
   border-radius: 14px;
   padding: 1.25rem;
-  box-shadow: 10px 8px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 6px 8px 12px rgba(68, 129, 235, 0.8);
   display: flex;
   flex-direction: column;
   gap: 0.8rem;

@@ -20,19 +20,19 @@ export default {
 <style scoped>
 /* Usa tus estilos existentes de la card. Solo añadimos la “caja” del icono */
 .product-metric-card {
-    width: 190px;
-    height: 180px;
+    width: 260px;
+    height: 220px;
   background: #fff;
   border-radius: 18px;
   padding: 1rem;
   text-align: center;
-  box-shadow: 0 12px 26px rgba(15,33,71,.16);
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
   box-sizing: border-box;
   
 }
 .product-metric-icon {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
   display: inline-block;
   margin-bottom: .25rem;
 }

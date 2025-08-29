@@ -25,9 +25,9 @@ export default {
   align-items: center;
   background: #fff;
   text-align: center;
-  width: 220px;
+  width: 240px;
   box-sizing: border-box;
-  box-shadow: 7px 7px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
   border-radius: 35px;
   row-gap: 10px;
   padding: 10px 0;
@@ -38,11 +38,11 @@ export default {
   margin-bottom: .5rem;
 }
 .product-feature-title {
-  font-size: 20px;
+  font-size: 18spx;
   font-family: var(--tipografia);
   font-weight:semibold;
   margin: .15rem 0 .25rem;
-  color: #0f2147;
+  color: #1f2b6c;
 }
 .product-feature-text {
   color: #5b6575;
