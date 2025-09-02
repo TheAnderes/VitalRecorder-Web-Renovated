@@ -40,7 +40,30 @@ import IconMale from '@/components/icons/IconMale.svg'
 import IconFemale from '@/components/icons/IconFemale.svg'
 import PrimaryButton from '@/components/PrimaryButton.vue';
 
+import { onMounted, onUnmounted } from 'vue';
 
+let observer = null;
+
+onMounted(() => {
+  const options = { threshold: 0.1 }; // Cuando el 10% del elemento es visible
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Si el elemento está en vista, agrega la clase para activar la transición
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target); // Deja de observar el elemento
+      }
+    });
+  }, options);
+
+  // Observar todos los elementos con la clase 'fade-in-on-scroll'
+  document.querySelectorAll(".fade-in-on-scroll").forEach((el) => observer.observe(el));
+});
+
+onUnmounted(() => {
+  // Cuando el componente se desmonta, desconectamos el observador
+  if (observer) observer.disconnect();
+});
 </script>
 <template>
   <div class="product-view">
@@ -71,7 +94,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
     </section>
 
     <!-- CARACTERÍSTICAS -->
-    <section class="product-features">
+    <section class="product-features fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
 <!-- Targetas de Caracteristicas -->
@@ -107,7 +130,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
     </section>
 
     <!-- PARA QUIÉN ES -->
-    <section class="product-forwho">
+    <section class="product-forwho fade-in-on-scroll ">
       <div class="product-container">
         <h2 class="product-section-title">Beneficios de Vital Recorder</h2>
         <p class="product-forwho-lead">
@@ -152,7 +175,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
     </section>
 
     <!-- CÓMO FUNCIONA -->
-    <section class="product-how">
+    <section class="product-how fade-in-on-scroll ">
       <div class="product-container">
         <h2 class="product-section-title">¿Cómo funciona Vital Recorder?</h2>
 
@@ -162,7 +185,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
               title="Configura en la app"
               text="Descarga la aplicación en Google Play."
               :icon="IconApp"
-              url="https://cuevana.pro/pelicula/las-guerreras-k-pop"
+              url="https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing"
           />
           <HowCard
               :step="2"
@@ -202,7 +225,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
     </section>
 
     <!-- MÉTRICAS / PRIORIDAD -->
-    <section class="product-metrics">
+    <section class="product-metrics fade-in-on-scroll ">
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
@@ -245,7 +268,7 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
         
       </div>
     </section>
-    <section class="product-testimonials">
+    <section class="product-testimonials fade-in-on-scroll ">
       <div class="product-container ">
         <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
 
@@ -273,11 +296,11 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
   </div>
 </template>
 
-<script>
+<script >
 export default {
   data() {
     return {
-      url: 'https://www.youtube.com/results?search_query=descargar+una+fill+de+figma'
+      url: 'https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing'
     }
   },
   methods: {
@@ -533,6 +556,7 @@ margin-left: 70px;
   gap: 10px;
   box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
   width: 400px;
+  height: 180px;
   font-family: var(--tipografia);
   font-weight: var(--semibold);
   font-size: 25px;
@@ -550,5 +574,14 @@ margin-left: 70px;
   .product-intro-grid { grid-template-columns: 1fr; }
   .product-testimonials-grid { grid-template-columns: 1fr; }
   .product-cta-grid { grid-template-columns: 1fr; }
+}
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.fade-in-on-scroll.is-visible{
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
