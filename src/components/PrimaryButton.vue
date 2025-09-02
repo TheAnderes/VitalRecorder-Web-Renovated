@@ -1,0 +1,71 @@
+<template>
+  <router-link :to="`/${root}`" class="product-btn boton-primary">
+    <div class="btn-content">
+
+      <img :src="icon" v-if="icon" class="icon-button"></img> 
+      <span v-if="name">{{ name }}</span> 
+
+    </div>
+  </router-link>
+</template>
+
+<script>
+export default {
+  name: "ButtonPrimary",
+  props: {
+    root: { type: String, required: true },
+    name: { type: String, required: false }, // 'name' ahora es opcional
+    icon: { type: String, required: false }, // Nueva prop para el ícono
+  },
+};
+</script>
+
+<style scoped>
+.product-btn {
+  display: flex;
+  font-family: var(--tipografia);
+  font-size: 24px;
+  font-weight: 900;
+  padding: 5.14px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  border: 2px solid transparent;
+  height: 36px;
+  width: 220px;
+}
+
+.product-btn:hover { 
+  transform: translateY(-2px); 
+}
+
+.boton-secondary {
+  background: transparent;
+  color: #0f2147;
+  border-color: #0f2147;
+}
+
+.boton-primary {
+  background: #0f2147;
+  color: #fff;
+  border-color: #0f2147;
+}
+
+.boton-primary:hover { 
+  background: #1b2e63; 
+}
+
+.btn-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.btn-content span {
+  font-size: 16px; /* Ajusta el tamaño del texto si es necesario */
+}
+
+</style>

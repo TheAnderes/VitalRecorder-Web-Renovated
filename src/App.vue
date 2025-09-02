@@ -22,4 +22,19 @@ body {
   margin: 0;
   padding: 0;
 }
+:root
+{
+  --tipografia: "Poppins", sans-serif;
+
+  /* === ESCALAS === */
+  --black:900;
+  --extrabold:800;
+  --bold:700;
+  --semibold:600;
+  --medium:500;
+  --regular:400;
+  --light:300;
+  --extralight:200;
+  --thin:100;
+}
 </style>
