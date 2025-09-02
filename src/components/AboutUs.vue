@@ -1,53 +1,67 @@
+<script setup>
+import { onMounted, onUnmounted } from "vue";
+
+let observer = null;
+onMounted(() => {
+  const options = { threshold: 0.1 };
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, options);
+  document
+    .querySelectorAll(".fade-in-on-scroll")
+    .forEach((el) => observer.observe(el));
+});
+onUnmounted(() => {
+  if (observer) observer.disconnect();
+});
+</script>
+
 <template>
-  <div class="about-us-page">
-    <!-- ===== SECCIÓN 1: SOBRE NOSOTROS ===== -->
+  <div class="about-view">
     <section class="hero-section">
-      <div class="container">
-        <h1 class="main-title"><span>Sobre Nosotros</span></h1>
-
-        <div class="hero-content">
-          <div class="info-card">
-            <h2>Acerca de Nosotros</h2>
-            <p>
-              Somos una empresa que busca soluciones tecnológicas innovadoras,
-              que puedan mejorar la calidad de vida de las personas, ofreciendo productos como
-              soluciones a problemas del día a día a personas de todas las edades.
-            </p>
-          </div>
-
-          <div class="image-container">
-            <img :src="teamImage" alt="Equipo de trabajo en una reunión">
-          </div>
+      <div class="hero-background-image"></div>
+      <div class="hero-content-wrapper">
+        <h1 class="hero-main-title">Sobre Nosotros</h1>
+        <div class="hero-content-box">
+          <h2>Acerca de Nosotros</h2>
+          <p>
+            Somos una empresa que busca soluciones tecnológicas innovadoras, que
+            puedan mejorar la calidad de vida de las personas, ofreciendo
+            productos como soluciones a problemas del día a día a personas de
+            todas las edades.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ===== SECCIÓN 2: QUIÉNES SOMOS ===== -->
-    <section class="who-we-are-section">
-      <div class="container">
+    <section class="mission-section fade-in-on-scroll">
+      <div class="about-container">
         <h2 class="section-title">Quiénes Somos</h2>
-
-        <div class="mission-vision-values">
-          <!-- Misión al centro -->
-          <div class="details-card mission">
+        <div class="mission-grid">
+          <div class="mission-blob">
             <h3>Nuestra Misión</h3>
             <p>
-              Nuestra misión es crear tecnología que se adapte a la vida de las personas, no al revés.
+              Nuestra misión es crear tecnología que se adapte a la vida de las
+              personas, no al revés.
             </p>
           </div>
-
-          <!-- Visión a la izquierda -->
-          <div class="details-card small">
+          <div class="mission-blob">
             <h3>Visión</h3>
             <p>
-              Ser la empresa líder en soluciones tecnológicas para el bienestar y la autonomía de las
-              personas en Latinoamérica.
+              Ser la empresa líder en soluciones tecnológicas para el bienestar
+              y la autonomía de las personas en Latinoamérica.
             </p>
           </div>
-
-          <!-- Valores a la derecha -->
-          <div class="details-card small">
+        </div>
+        <div class="values-blob-wrapper">
+          <div class="mission-blob values-blob">
             <h3>Valores</h3>
+            <p>Nuestros valores son:</p>
             <ul>
               <li>Innovación</li>
               <li>Empatía</li>
@@ -59,266 +73,189 @@
       </div>
     </section>
 
-    <!-- ===== SECCIÓN 3: EQUIPO ===== -->
-    <section class="team-section">
-      <div class="container">
-        <h2 class="section-title team-title">Conoce a Nuestro Equipo</h2>
-
+    <section class="team-section fade-in-on-scroll">
+      <div class="about-container">
+        <h2 class="section-title teal">Conoce a Nuestro Equipo</h2>
         <div class="team-grid">
-          <div
-            v-for="member in teamMembers"
-            :key="member.name"
-            class="team-member-card"
-          >
-            <p class="member-name" v-html="member.name.replace('\n','<br>')"></p>
-
-            <!-- Avatar circular debajo del nombre -->
-            <div class="avatar" :title="member.name.replace('\n',' ')">
-              <template v-if="member.photo">
-                <img :src="member.photo" :alt="`Foto de ${member.name}`" />
-              </template>
-              <template v-else>
-                <span class="initials">{{ getInitials(member.name) }}</span>
-              </template>
-            </div>
-          </div>
+          <div class="team-member-card">Fernando Choque</div>
+          <div class="team-member-card">Denis Ramos</div>
+          <div class="team-member-card">Andres Marca</div>
+          <div class="team-member-card">Carla Arancibia</div>
+          <div class="team-member-card">Josue Guevara</div>
         </div>
       </div>
     </section>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import teamImage from '@/assets/us.jpg' // cambia por tu ruta si es distinto
-
-// Puedes asignar 'photo' si ya tienes imágenes por persona.
-// Si 'photo' es null, se mostrarán iniciales dentro del círculo.
-const teamMembers = ref([
-  { name: 'Josue\nGuevara',  photo: null },
-  { name: 'Fernando\nChoque', photo: null },
-  { name: 'Carla\nArancibia', photo: null },
-  { name: 'Denis\nRamos',     photo: null },
-  { name: 'Andres\nMarca',    photo: null },
-])
-
-/** Devuelve iniciales desde "Nombre\nApellido" o "Nombre Apellido" */
-const getInitials = (fullName) => {
-  const clear = fullName.replace('\n', ' ').trim()
-  return clear
-    .split(/\s+/)
-    .slice(0, 2)
-    .map(w => w[0]?.toUpperCase() ?? '')
-    .join('')
-}
-</script>
-
 <style scoped>
-/* ===== Base ===== */
-.about-us-page {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #1a1a1a;
+.about-view {
+  font-family: "Poppins", "Inter", sans-serif;
+  color: #0f2147;
+  background-color: #ffffff;
 }
 
-.container {
-  width: min(1100px, 92%);
+.about-container {
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 3.5rem 0;
+  padding: 0 1.5rem;
+}
+
+section {
+  padding: 6rem 0;
+  overflow: hidden;
 }
 
 .section-title {
+  font-size: 2.8rem;
+  font-weight: 600;
+  margin-bottom: 4rem;
   text-align: center;
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
-  font-weight: 800;
-  margin: 0 0 2rem;
+}
+.section-title.teal {
+  color: #14b8a6;
 }
 
 .hero-section {
-  background: linear-gradient(90deg, #37c8ee, #8e7ff2);
-  color: white;
-  padding: 3rem 0;
-  width: 100%;
-  margin: 0;
-}
-
-.main-title {
-  text-align: center;
-  font-size: clamp(2.2rem, 4vw, 2.8rem);
-  margin: 0 0 2.2rem;
-  letter-spacing: .3px;
-}
-
-.main-title span {
-  border-bottom: 3px solid rgba(255,255,255,.85);
-  padding-bottom: .2rem;
-}
-
-.hero-content {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 1.6rem;
+  min-height: 95vh;
+  display: flex;
   align-items: center;
-}
-
-.info-card {
-  background: #fff;
-  color: #2b2b2b;
-  padding: 1.6rem 1.8rem;
-  border-radius: 18px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.12);
-}
-
-.info-card h2 {
-  font-size: 1.15rem;
-  margin: 0 0 .6rem;
-  color: #0f1f3a;
-  font-weight: 800;
-}
-
-.info-card p {
-  line-height: 1.6;
-  margin: 0;
-}
-
-.image-container {
+  justify-content: center;
   position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 14px 28px rgba(0,0,0,.18);
+  text-align: center;
 }
-
-.image-container img {
+.hero-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  display: block;
+  background-image: url("/Seccion 1(1).png");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.8) blur(2px);
+  z-index: 1;
 }
-
-/* ===== Sección 2 ===== */
-.who-we-are-section {
-  background: #f7f9fb;
+.hero-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
 }
-
-.mission-vision-values {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.2rem 2rem;
-  justify-items: center;
-}
-
-.details-card {
-  background: #fff;
-  padding: 1.5rem 1.6rem;
-  border-radius: 14px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.07);
-  text-align: center;
-  width: min(560px, 100%);
-}
-
-.details-card h3 {
-  font-size: 1.15rem;
-  margin: 0 0 .6rem;
-  color: #0f1f3a;
-  font-weight: 800;
-}
-
-.details-card p { margin: 0; line-height: 1.6; }
-
-.details-card.small {
-  width: min(420px, 100%);
-}
-
-.details-card ul {
-  margin: .2rem 0 0;
-  padding: 0;
-  list-style: none;
-  text-align: left;
-  display: inline-block;
-}
-.details-card li { margin: .28rem 0; }
-.details-card li::before {
-  content: '•';
-  color: #00c6ff;
+.hero-main-title {
+  font-size: 6.2rem;
   font-weight: 900;
+  line-height: 1.1;
+  color: #000000;
+  text-decoration: underline;
+  text-underline-offset: 10px;
+}
+.hero-content-box {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3rem 4rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+.hero-content-box h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0 0 1rem 0;
+}
+.hero-content-box p {
+  font-weight: 500;
+  font-size: 1.35rem;
+  max-width: 600px;
+  color: #000000;
+  margin: 0;
+}
+
+.mission-section {
+  background-color: #ffffff;
+}
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.mission-blob {
+  background-color: #ffffff;
+  border-radius: 40px;
+  width: 400px;
+  padding: 2.5rem;
+  box-shadow: 7px 7px 20px #4481eb;
+  text-align: center;
+}
+.mission-blob h3 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #1f2b6c;
+}
+.mission-blob p {
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: #334155;
+  margin: 0;
+}
+.mission-blob ul {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.values-blob-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.values-blob {
+  max-width: 50%;
+}
+.values-blob ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  display: inline-block;
+  text-align: left;
+}
+.values-blob li {
+  margin-bottom: 0.5rem;
+}
+.values-blob li::before {
+  content: "•";
+  font-weight: bold;
   display: inline-block;
   width: 1em;
   margin-left: -1em;
 }
 
-/* En pantallas medianas/grandes, la misión al centro arriba, visión y valores abajo */
-@media (min-width: 820px) {
-  .mission-vision-values {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "mission mission"
-      "vision values";
-  }
-  .mission { grid-area: mission; }
-  .details-card.small:nth-of-type(2) { grid-area: vision; }
-  .details-card.small:nth-of-type(3) { grid-area: values; }
-}
-
-/* ===== Sección 3 ===== */
 .team-section {
-  background: linear-gradient(135deg, #4e54c8 0%, #00c6ff 100%);
+  background-color: #f1f5f9;
 }
-
-.team-title { color: #0d2a4c; }
-
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 1.4rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
 }
-
 .team-member-card {
-  background: #fff;
-  padding: 1.2rem 1rem 1.5rem;
-  border-radius: 18px;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 7px 7px 20px 0px rgba(0, 242, 254, 0.5);
   text-align: center;
-  box-shadow: 0 12px 28px rgba(0,0,0,.12);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #334155;
 }
 
-.member-name {
-  font-size: 1.06rem;
-  font-weight: 800;
-  color: #2b2b2b;
-  line-height: 1.2;
-  margin: 0 0 .9rem;
-  white-space: pre-wrap;
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-
-/* Avatar circular debajo del nombre */
-.avatar {
-  width: 112px;
-  height: 112px;
-  margin: 0 auto;
-  border-radius: 999px;
-  border: 4px solid #e9eef6;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.10);
-  display: grid;
-  place-items: center;
-  background: #f6f8fb;
-  overflow: hidden;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.initials {
-  font-weight: 800;
-  font-size: 1.4rem;
-  color: #3a4b6a;
-  letter-spacing: .5px;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 820px) {
-  .hero-content { grid-template-columns: 1fr; }
-  .image-container img { aspect-ratio: 16 / 10; }
+.fade-in-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
