@@ -12,41 +12,30 @@
 
     <main class="login-card">
       <button class="back-button" aria-label="Volver">
-        &#x2190; 
+        &#x2190;
       </button>
-      
-      <h1 class="title">Inicio de Sesión</h1>
+
+      <h1 class="title">Iniciar Sesión</h1>
       <p class="subtitle">
         ¿Es tu primera vez? <a href="/register">Regístrate aquí</a>
       </p>
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
-          <label for="email">E-mail: <span class="required">*</span></label>
-          <input type="email" id="email" v-model="email" placeholder="tucorreo@gmail.com" required>
+          <label for="email">Correo electrónico: <span class="required">*</span></label>
+          <input type="email" id="email" v-model="email" placeholder="tucorreo@gmail.com" required />
         </div>
 
         <div class="form-group">
           <label for="password">Contraseña: <span class="required">*</span></label>
-          <input type="password" id="password" v-model="password" placeholder="tucorreo@gmail.com" required>
+          <input type="password" id="password" v-model="password" placeholder="tucorreo@gmail.com" required />
         </div>
 
         <a href="/recuperar-contrasena" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
         <button type="submit" class="submit-button">Iniciar Sesión</button>
       </form>
-      
-      <div class="social-login">
-        <p>O conéctate con:</p>
-        <div class="social-icons">
-          <button class="social-button google" aria-label="Iniciar sesión con Google">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-          </button>
-          <button class="social-button facebook" aria-label="Iniciar sesión con Facebook">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook">
-          </button>
-        </div>
-      </div>
+
     </main>
   </div>
 </template>
@@ -60,7 +49,7 @@ const password = ref('');
 const handleLogin = () => {
   console.log('Iniciando sesión con:', {
     email: email.value,
-    password: password.value
+    password: password.value,
   });
 };
 </script>
@@ -70,9 +59,9 @@ const handleLogin = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   font-family: Arial, sans-serif;
-  padding: 5vh 20px 20px 20px; 
+  padding: 10vh 20px 20px 20px; /* Increased top padding (10vh) for more space */
   min-height: 100vh;
   background-color: white;
   box-sizing: border-box;
@@ -81,23 +70,23 @@ const handleLogin = () => {
 .login-header {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px; /* Increased space between logo and text */
   background-color: white;
-  padding: 10px 25px;
+  padding: 20px 30px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem; /* Increased margin */
 }
 
 .brand-mark {
-  height: 50px;
+  height: 70px; /* Increased logo size */
   width: auto;
 }
 
 .brand-text {
   font-weight: 600;
   letter-spacing: 1px;
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: clamp(28px, 3vw, 36px); /* Increased text size */
   background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   -webkit-background-clip: text;
   background-clip: text;
@@ -108,10 +97,10 @@ const handleLogin = () => {
 .login-card {
   position: relative;
   background: linear-gradient(180deg, #00c6ff, #0072ff);
-  padding: 40px 30px 30px;
+  padding: 60px 40px 40px; /* Increased padding for a larger form */
   border-radius: 25px;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px; /* Increased width for the card */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   color: #0d2a4c;
 }
@@ -123,9 +112,9 @@ const handleLogin = () => {
   background-color: rgba(255, 255, 255, 0.3);
   border: none;
   border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  font-size: 1.5rem;
+  width: 40px;
+  height: 40px; /* Increased button size */
+  font-size: 1.7rem;
   color: white;
   cursor: pointer;
   display: flex;
@@ -140,17 +129,17 @@ const handleLogin = () => {
 
 .title {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.5rem; /* Increased title font size */
   font-weight: bold;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #011a3e;
 }
 
 .subtitle {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 0.9rem;
+  font-size: 1rem; /* Increased subtitle font size */
 }
 
 .subtitle a {
@@ -160,49 +149,45 @@ const handleLogin = () => {
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px; /* Increased bottom margin */
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem; /* Increased font size */
   color: #fff;
-}
-
-.form-group .required {
-  color: #ffdddd;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px 15px;
+  padding: 15px 18px; /* Increased padding */
   border: none;
-  border-radius: 15px;
+  border-radius: 20px; /* Increased border radius */
   background-color: white;
   box-sizing: border-box;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased font size */
 }
 
 .forgot-password {
   display: block;
   text-align: left;
-  margin-top: -10px;
-  margin-bottom: 25px;
-  font-size: 0.85rem;
+  margin-top: -12px;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
   color: #fff;
   text-decoration: underline;
 }
 
 .submit-button {
   width: 100%;
-  padding: 15px;
+  padding: 18px;
   background-color: #0d2a4c;
   color: white;
   border: none;
   border-radius: 25px;
-  font-size: 1.1rem;
+  font-size: 1.2rem; /* Increased button text size */
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -214,27 +199,27 @@ const handleLogin = () => {
 
 .social-login {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 30px;
   color: #fff;
 }
 
 .social-login p {
-  margin-bottom: 15px;
-  font-size: 0.9rem;
+  margin-bottom: 20px;
+  font-size: 1rem;
 }
 
 .social-icons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px; /* Increased gap between social buttons */
 }
 
 .social-button {
   background: white;
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 60px; /* Increased size */
+  height: 60px; /* Increased size */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -247,7 +232,7 @@ const handleLogin = () => {
 }
 
 .social-button img {
-  width: 30px;
+  width: 35px;
   height: auto;
 }
 </style>
