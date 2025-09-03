@@ -11,7 +11,7 @@
     </header>
 
     <main class="login-card">
-      <button class="back-button" aria-label="Volver">
+      <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
 
@@ -28,7 +28,7 @@
 
         <div class="form-group">
           <label for="password">Contraseña: <span class="required">*</span></label>
-          <input type="password" id="password" v-model="password" placeholder="tucorreo@gmail.com" required />
+          <input type="password" id="password" v-model="password" placeholder="Contraseña" required />
         </div>
 
         <a href="/recuperar-contrasena" class="forgot-password">¿Olvidaste tu contraseña?</a>
@@ -41,20 +41,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // Importa la configuración de Firebase
+import { useRouter } from "vue-router"; // Importa Vue Router
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
+const router = useRouter(); // Usa Vue Router
 
-const handleLogin = () => {
-  console.log('Iniciando sesión con:', {
-    email: email.value,
-    password: password.value,
-  });
+// Función para manejar el inicio de sesión
+const handleLogin = async () => {
+  try {
+    // Intentamos iniciar sesión con el email y la contraseña proporcionada
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+    const user = userCredential.user;
+    console.log("Usuario logueado exitosamente:", user);
+    
+    // Alerta de éxito
+    alert("Inicio de sesión exitoso!");
+
+    // Redirige al usuario a la vista "VitalRecorder"
+    router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error.message);
+    
+    // Alerta de error
+    alert("Error al iniciar sesión: " + error.message);
+  }
+};
+
+// Función para volver a la página anterior
+const goBack = () => {
+  window.history.back();
 };
 </script>
 
 <style scoped>
+/* Estilos existentes */
 .login-container {
   display: flex;
   flex-direction: column;
@@ -96,12 +120,12 @@ const handleLogin = () => {
 
 .login-card {
   position: relative;
- background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
+  background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
   padding: 60px 40px 40px; /* Increased padding for a larger form */
   border-radius: 25px;
   width: 100%;
   max-width: 600px; /* Increased width for the card */
- box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
 }
 
@@ -195,44 +219,5 @@ const handleLogin = () => {
 
 .submit-button:hover {
   background-color: #1a4a8a;
-}
-
-.social-login {
-  text-align: center;
-  margin-top: 30px;
-  color: #fff;
-}
-
-.social-login p {
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 30px; /* Increased gap between social buttons */
-}
-
-.social-button {
-  background: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px; /* Increased size */
-  height: 60px; /* Increased size */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.social-button:hover {
-  transform: scale(1.1);
-}
-
-.social-button img {
-  width: 35px;
-  height: auto;
 }
 </style>
