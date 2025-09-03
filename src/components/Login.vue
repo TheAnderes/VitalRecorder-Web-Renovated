@@ -96,12 +96,12 @@ const handleLogin = () => {
 
 .login-card {
   position: relative;
-  background: linear-gradient(180deg, #00c6ff, #0072ff);
+ background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
   padding: 60px 40px 40px; /* Increased padding for a larger form */
   border-radius: 25px;
   width: 100%;
   max-width: 600px; /* Increased width for the card */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+ box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
 }
 
