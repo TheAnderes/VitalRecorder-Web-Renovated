@@ -1,12 +1,7 @@
 <template>
   <div class="login-container">
     <header class="login-header">
-      <img
-        class="brand-mark"
-        src="/Logo.png"
-        alt="VITALSYSTEMS Logo Icon"
-        onerror="this.style.display='none'"
-      />
+      <img class="brand-mark" src="/Logo.png" alt="VITALSYSTEMS Logo Icon" onerror="this.style.display='none'" />
       <div class="brand-text">VITALSYSTEMS</div>
     </header>
 
@@ -16,9 +11,7 @@
       </button>
 
       <h1 class="title">Iniciar Sesión</h1>
-      <p class="subtitle">
-        ¿Es tu primera vez? <a href="/register">Regístrate aquí</a>
-      </p>
+      <p class="subtitle">¿Es tu primera vez? <a href="/register">Regístrate aquí</a></p>
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
@@ -36,6 +29,10 @@
         <button type="submit" class="submit-button">Iniciar Sesión</button>
       </form>
 
+      <!-- Alerta de éxito -->
+      <div v-if="successMessage" class="success-alert">
+        <span>{{ successMessage }}</span>
+      </div>
     </main>
   </div>
 </template>
@@ -48,21 +45,23 @@ import { useRouter } from "vue-router"; // Importa Vue Router
 
 const email = ref("");
 const password = ref("");
+const successMessage = ref(""); // Alerta de éxito
 const router = useRouter(); // Usa Vue Router
 
-// Función para manejar el inicio de sesión
 const handleLogin = async () => {
   try {
     // Intentamos iniciar sesión con el email y la contraseña proporcionada
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
     const user = userCredential.user;
     console.log("Usuario logueado exitosamente:", user);
-    
+
     // Alerta de éxito
-    alert("Inicio de sesión exitoso!");
+    successMessage.value = "Inicio de sesión exitoso!";
 
     // Redirige al usuario a la vista "VitalRecorder"
-    router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
+    setTimeout(() => {
+      router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
+    }, 2000); // Espera para que la alerta se vea antes de la redirección
   } catch (error) {
     console.error("Error al iniciar sesión:", error.message);
     
@@ -85,32 +84,68 @@ const goBack = () => {
   align-items: center;
   justify-content: flex-start;
   font-family: Arial, sans-serif;
-  padding: 10vh 20px 20px 20px; /* Increased top padding (10vh) for more space */
+  padding: 10vh 20px 20px 20px;
   min-height: 100vh;
   background-color: white;
   box-sizing: border-box;
 }
 
+/* Alerta de éxito */
+.success-alert {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.5s ease-out, fadeOut 2s ease-out 2.5s;
+  z-index: 10;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(-50%) translateY(-100%);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Resto de los estilos */
 .login-header {
   display: flex;
   align-items: center;
-  gap: 20px; /* Increased space between logo and text */
+  gap: 20px;
   background-color: white;
   padding: 20px 30px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem; /* Increased margin */
+  margin-bottom: 2rem;
 }
 
 .brand-mark {
-  height: 70px; /* Increased logo size */
+  height: 70px;
   width: auto;
 }
 
 .brand-text {
   font-weight: 600;
   letter-spacing: 1px;
-  font-size: clamp(28px, 3vw, 36px); /* Increased text size */
+  font-size: clamp(28px, 3vw, 36px);
   background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   -webkit-background-clip: text;
   background-clip: text;
@@ -118,13 +153,14 @@ const goBack = () => {
   text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
 }
 
+/* Card Styles */
 .login-card {
   position: relative;
   background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
-  padding: 60px 40px 40px; /* Increased padding for a larger form */
+  padding: 60px 40px 40px;
   border-radius: 25px;
   width: 100%;
-  max-width: 600px; /* Increased width for the card */
+  max-width: 600px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
 }
@@ -137,7 +173,7 @@ const goBack = () => {
   border: none;
   border-radius: 50%;
   width: 40px;
-  height: 40px; /* Increased button size */
+  height: 40px;
   font-size: 1.7rem;
   color: white;
   cursor: pointer;
@@ -153,7 +189,7 @@ const goBack = () => {
 
 .title {
   text-align: center;
-  font-size: 2.5rem; /* Increased title font size */
+  font-size: 2.5rem;
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;
@@ -163,7 +199,7 @@ const goBack = () => {
 .subtitle {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 1rem; /* Increased subtitle font size */
+  font-size: 1rem;
 }
 
 .subtitle a {
@@ -173,25 +209,25 @@ const goBack = () => {
 }
 
 .form-group {
-  margin-bottom: 25px; /* Increased bottom margin */
+  margin-bottom: 25px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-  font-size: 1rem; /* Increased font size */
+  font-size: 1rem;
   color: #fff;
 }
 
 .form-group input {
   width: 100%;
-  padding: 15px 18px; /* Increased padding */
+  padding: 15px 18px;
   border: none;
-  border-radius: 20px; /* Increased border radius */
+  border-radius: 20px;
   background-color: white;
   box-sizing: border-box;
-  font-size: 1.1rem; /* Increased font size */
+  font-size: 1.1rem;
 }
 
 .forgot-password {
@@ -211,7 +247,7 @@ const goBack = () => {
   color: white;
   border: none;
   border-radius: 25px;
-  font-size: 1.2rem; /* Increased button text size */
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;

@@ -16,14 +16,28 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 </script>
 
 <style>
-html, #app { height: 100%; margin: 0; }
+html, body, #app { height: 100%; margin: 0; }
 
 body {
   margin: 0;
   padding: 0;
 }
-:root
-{
+
+.min-h-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;  /* Asegura que el contenedor ocupe toda la pantalla */
+}
+
+main {
+  flex-grow: 1;  /* Asegura que el contenido ocupe todo el espacio disponible */
+}
+
+footer {
+  margin-top: auto;  /* Mantiene el footer al final */
+}
+
+:root {
   --tipografia: "Poppins", sans-serif;
 
   /* === ESCALAS === */
