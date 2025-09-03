@@ -1,9 +1,9 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";  
-import { getFirestore } from "firebase/firestore";  
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // Si usas Firestore
 
-// Tu configuración de Firebase
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCc-yl-lleJIzG1MsFgwmozgYIVC2A2SkY",
   authDomain: "vital-recorder.firebaseapp.com",
@@ -17,6 +17,6 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exporta los servicios que necesitarás
-export const auth = getAuth(app); // Para la autenticación
-export const db = getFirestore(app); // Para la base de datos
+// Exporta los servicios que necesitas
+export const auth = getAuth(app); // Autenticación
+export const db = getFirestore(app); // Firestore (si lo necesitas)
