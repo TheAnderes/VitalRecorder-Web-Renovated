@@ -178,7 +178,7 @@ section {
 
 .mission-section {
   background-color: #f1f5f9;
-  height: 80vh;
+  height: 95vh;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
