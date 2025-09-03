@@ -144,6 +144,10 @@ onUnmounted(() => {
 }
 
 .home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -155,7 +159,7 @@ section {
 }
 
 .section-title {
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   font-weight: 600;
   margin-bottom: 4rem;
   text-align: center;
@@ -166,7 +170,8 @@ section {
 }
 
 .hero-section {
-  min-height: 95vh;
+  height: 92vh;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,11 +206,12 @@ section {
   line-height: 1.2;
   color: #ffffff;
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  margin: 0;
 }
 
 .hero-content-box {
   background: rgba(255, 255, 255, 0.2);
-  padding: 3rem 4rem;
+  padding: 2rem 4rem;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
@@ -225,6 +231,8 @@ section {
 
 .about-section {
   background-color: #ffffff;
+  height: 92vh;
+  box-sizing: border-box;
 }
 .about-grid {
   display: grid;
@@ -246,9 +254,15 @@ section {
   color: #334155;
   text-align: center;
 }
+.about-illustration
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .about-illustration img {
-  max-width: 110%;
   height: auto;
+  width: 50%;
   transform: scale(1.1);
 }
 
