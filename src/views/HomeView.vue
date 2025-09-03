@@ -44,7 +44,7 @@ onUnmounted(() => {
           </p>
           <div class="hero-actions">
             <PrimaryButton name="Conoce el producto" root="product" />
-            <SecondaryButton name="Contáctanos" />
+            <SecondaryButton name="Contáctanos" root="contact-us"/>
           </div>
         </div>
       </div>

@@ -114,8 +114,8 @@ function submit() {
   font-family: "Poppins", "Inter", sans-serif;
   color: #0f2147;
   background: linear-gradient(180deg, #a7c7e7, #7fa5c1);
-  padding: 6rem 0;
-  min-height: calc(100vh - 12rem); /* Asegura que ocupe la pantalla */
+  padding: 0.5rem 0; /* Asegura que ocupe la pantalla */
+  margin: 0;
 }
 .contact-container {
   max-width: 1300px;
@@ -131,11 +131,11 @@ function submit() {
   font-weight: 900;
   text-align: center;
   color: #0f2147;
-  margin-bottom: 1rem;
+  margin: 0;
 }
 .subtitle {
   max-width: 650px;
-  margin: 0 auto 3rem;
+  margin: 0 auto ;
   text-align: center;
   color: #475569;
   font-size: 1.1rem;
@@ -145,7 +145,7 @@ function submit() {
   background: #ffffff;
   position: relative;
   border-radius: 24px;
-  padding: 2.5rem;
+  padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
@@ -193,8 +193,8 @@ textarea:focus {
   border-radius: 16px; /* Bordes redondeados */
 }
 .map {
-  width: 100%;
-  height: 100%; /* Ocupa toda la altura de la tarjeta */
+  width: 90%;
+  height: 90%; /* Ocupa toda la altura de la tarjeta */
   min-height: 300px; /* Altura mínima para que no desaparezca */
   border: 2px solid #e2e8f0;
   border-radius: 16px;
