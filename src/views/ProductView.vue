@@ -4,7 +4,7 @@ import TestimonialCard from '@/components/TestimonialCard.vue';
 import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
 import InformationProductCard from '@/components/InformationProductCard.vue';
 
-import IconWathVital from '@/components/icons/IconWatHVitalRecorder.svg';
+import IconWathVital from '@/components/icons/IconWathVitalRecorder.svg';
 
 import IconVitalConnect from '@/components/icons/IconVitalConnect.svg';
 

@@ -8,7 +8,7 @@ import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
 
 import IconWathVital from '@/components/icons/IconWathVitalRecorder.svg';
 import IconGooglePlay from '@/components/icons/IconGooglePlay.svg';
-import iconvitalconnect from '@/components/icons/IconVitalconnect.svg';
+import iconvitalconnect from '@/components/icons/IconVitalConnect.svg';
 
 import ButtonPrimary from '@/components/PrimaryButton.vue';
 import ButtonSecondary from '@/components/SecondaryButton.vue';
