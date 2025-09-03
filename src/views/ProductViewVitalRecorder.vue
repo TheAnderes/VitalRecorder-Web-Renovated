@@ -1,46 +1,45 @@
 <script setup>
-import CharacteristicCard from '@/components/CharacteristicCard.vue';
-import ForWhoCard from '@/components/ForWhoCard.vue';
-import HowCard from '@/components/HowCard.vue';
-import PointViewCard from '@/components/PointViewCard.vue';
-import TestimonialCard from '@/components/TestimonialCard.vue';
-import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
+import CharacteristicCard from "@/components/CharacteristicCard.vue";
+import ForWhoCard from "@/components/ForWhoCard.vue";
+import HowCard from "@/components/HowCard.vue";
+import PointViewCard from "@/components/PointViewCard.vue";
+import TestimonialCard from "@/components/TestimonialCard.vue";
+import IntroIconButtonCard from "@/components/IntroIconButtonCard.vue";
 
-import IconWathVital from '@/components/icons/IconWathVitalRecorder.svg';
-import IconGooglePlay from '@/components/icons/IconGooglePlay.svg';
+import IconWathVital from "@/components/icons/IconWathVitalRecorder.svg";
+import IconGooglePlay from "@/components/icons/IconGooglePlay.svg";
 
-import ButtonPrimary from '@/components/PrimaryButton.vue';
-import ButtonSecondary from '@/components/SecondaryButton.vue';
+import ButtonPrimary from "@/components/PrimaryButton.vue";
+import ButtonSecondary from "@/components/SecondaryButton.vue";
 
-import IconWath from '@/components/icons/IconWatch.svg';
-import IconSincron from '@/components/icons/IconSincron.svg';
-import IconConfigure from '@/components/icons/IconConfigure.svg';
-import IconSave from '@/components/icons/IconSave.svg';
-import IconWathInteligent from '@/components/icons/IconWathInteligent.svg';
+import IconWath from "@/components/icons/IconWatch.svg";
+import IconSincron from "@/components/icons/IconSincron.svg";
+import IconConfigure from "@/components/icons/IconConfigure.svg";
+import IconSave from "@/components/icons/IconSave.svg";
+import IconWathInteligent from "@/components/icons/IconWathInteligent.svg";
 
+import IconConfigureApp from "@/components/icons/IconConfigureApp.svg";
+import IconHandWatch from "@/components/icons/IconHandWatch.svg";
+import IconShare from "@/components/icons/IconShare.svg";
+import IconApp from "@/components/icons/IconApp.svg";
+import IconRegister from "@/components/icons/IconRegister.svg";
+import IconAlertPhone from "@/components/icons/IconAlertPhone.svg";
 
-import IconConfigureApp from '@/components/icons/IconConfigureApp.svg';
-import IconHandWatch from '@/components/icons/IconHandWatch.svg';
-import IconShare from '@/components/icons/IconShare.svg';
-import IconApp from '@/components/icons/IconApp.svg';
-import IconRegister from '@/components/icons/IconRegister.svg';
-import IconAlertPhone from '@/components/icons/IconAlertPhone.svg';
+import IconRank from "@/components/icons/IconRank.svg";
+import IconRing from "@/components/icons/IconRing.svg";
+import IconSupport from "@/components/icons/IconSupport.svg";
+import IconSecurity from "@/components/icons/IconSecurity.svg";
 
-import IconRank from '@/components/icons/IconRank.svg';
-import IconRing from '@/components/icons/IconRing.svg';
-import IconSupport from '@/components/icons/IconSupport.svg';
-import IconSecurity from '@/components/icons/IconSecurity.svg';
+import IconOld from "@/components/icons/IconOld.svg";
+import IconMedic from "@/components/icons/IconMedic.svg";
+import IconFamili from "@/components/icons/IconFamili.svg";
+import IconThing from "@/components/icons/IconThing.svg";
 
-import IconOld from '@/components/icons/IconOld.svg'
-import IconMedic from '@/components/icons/IconMedic.svg'
-import IconFamili from '@/components/icons/IconFamili.svg'
-import IconThing from '@/components/icons/IconThing.svg'
+import IconMale from "@/components/icons/IconMale.svg";
+import IconFemale from "@/components/icons/IconFemale.svg";
+import PrimaryButton from "@/components/PrimaryButton.vue";
 
-import IconMale from '@/components/icons/IconMale.svg'
-import IconFemale from '@/components/icons/IconFemale.svg'
-import PrimaryButton from '@/components/PrimaryButton.vue';
-
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from "vue";
 
 let observer = null;
 
@@ -57,7 +56,9 @@ onMounted(() => {
   }, options);
 
   // Observar todos los elementos con la clase 'fade-in-on-scroll'
-  document.querySelectorAll(".fade-in-on-scroll").forEach((el) => observer.observe(el));
+  document
+    .querySelectorAll(".fade-in-on-scroll")
+    .forEach((el) => observer.observe(el));
 });
 
 onUnmounted(() => {
@@ -69,27 +70,27 @@ onUnmounted(() => {
   <div class="product-view">
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
-      <h1 class="product-hero-title">Vital Recorder</h1>
-      <div class="product-container product-intro-grid">
-        
-        <div class="product-intro-text">
-          <h2 class="product-intro-heading">
-            Nunca Olvides tus<br />Medicamentos
-          </h2>
-          <p class="product-intro-lead">
-            Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
-          </p>
-          <div class="product-intro-actions">
-            <PrimaryButton
-              root="contact-us" 
-              name="Contactanos"
-              />
-                      
-             <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
+      <div class="product-view-vital-recorder-image"></div>
+      <div class="product-view-content-wrapper">
+        <h1 class="product-hero-title">Vital Recorder</h1>
+        <div class="product-container product-intro-grid">
+          <div class="product-intro-text">
+            <h2 class="product-intro-heading">
+              Nunca Olvides tus<br />Medicamentos
+            </h2>
+            <p class="product-intro-lead">
+              Recibe recordatorios y realiza un seguimiento de tus tareas
+              importantes de forma sencilla. Administra tus recordatorios,
+              confirma tareas y comparte el estado con tu familia desde tu
+              teléfono.
+            </p>
+            <div class="product-intro-actions">
+              <PrimaryButton root="contact-us" name="Contactanos" />
+
+              <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
+            </div>
           </div>
         </div>
-
-
       </div>
     </section>
 
@@ -97,218 +98,187 @@ onUnmounted(() => {
     <section class="product-features fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
-<!-- Targetas de Caracteristicas -->
+        <!-- Targetas de Caracteristicas -->
         <div class="product-features-grid">
-            <CharacteristicCard
+          <CharacteristicCard
             :icon="IconConfigure"
             title="Fácil de configurar"
             text="App intuitiva y amigable."
-            />
-            <CharacteristicCard
+          />
+          <CharacteristicCard
             :icon="IconSave"
             title="Seguridad y bienestar"
             text="Notificaciones garantisadas"
-            />
-            <CharacteristicCard
+          />
+          <CharacteristicCard
             :icon="IconWathInteligent"
             title="Manilla Inteligente"
             text="Pulsera ligera, elegante y discreta"
-            />
+          />
           <CharacteristicCard
             :icon="IconWath"
             title="Recordatorios inteligentes"
             text="Alertas de dosis oportunas."
-            />
+          />
           <CharacteristicCard
             :icon="IconSincron"
             title="Sincronización familiar"
             text="Comparte avisos y estado en tiempo real"
-            />
-
+          />
         </div>
       </div>
     </section>
 
     <!-- PARA QUIÉN ES -->
-    <section class="product-forwho fade-in-on-scroll ">
+    <section class="product-forwho fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">Beneficios de Vital Recorder</h2>
         <p class="product-forwho-lead">
-          Diseñado para que cualquier persona pueda mantenerse al día sin complicaciones.
+          Diseñado para que cualquier persona pueda mantenerse al día sin
+          complicaciones.
         </p>
         <!-- PARA QUIÉN ES TARGETAS-->
         <div class="product-forwho-grid">
-          <ForWhoCard
-            :icon="IconFamili"
-            title="Familiares y Cuidadores"  />
-          
-            <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
-          <ForWhoCard
-            :icon="IconMedic"
-            title="Tratamientos Medicos"  />
-          <ForWhoCard
-            :icon="IconOld"
-            title="Personas Mayores"  />
+          <ForWhoCard :icon="IconFamili" title="Familiares y Cuidadores" />
+
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+          <ForWhoCard :icon="IconMedic" title="Tratamientos Medicos" />
+          <ForWhoCard :icon="IconOld" title="Personas Mayores" />
           <ForWhoCard
             :icon="IconThing"
-            title="Personas con olvidos frecuentes"  />
+            title="Personas con olvidos frecuentes"
+          />
         </div>
-        <p class="product-forwho-lead">
-          Vital Recorder te ayuda a...
-        </p>
+        <p class="product-forwho-lead">Vital Recorder te ayuda a...</p>
         <div class="product-forwho-grid">
           <ForWhoCard
-            
-            title="Mejorar la adherencia a tratamientos farmacológicos."  />
-            <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+            title="Mejorar la adherencia a tratamientos farmacológicos."
+          />
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
           <ForWhoCard
-            
-            title="Reducir el estrés y la preocupación de los familiares."  />
+            title="Reducir el estrés y la preocupación de los familiares."
+          />
           <ForWhoCard
-            
-            title="Promover la independencia y autonomía del adulto mayor."  />
+            title="Promover la independencia y autonomía del adulto mayor."
+          />
           <ForWhoCard
-            
-            title="Facilitar la comunicación y el seguimiento de la salud."  />
+            title="Facilitar la comunicación y el seguimiento de la salud."
+          />
         </div>
       </div>
     </section>
 
     <!-- CÓMO FUNCIONA -->
-    <section class="product-how fade-in-on-scroll ">
+    <section class="product-how fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">¿Cómo funciona Vital Recorder?</h2>
 
         <div class="product-how-grid">
-              <HowCard
-              :step="1"
-              title="Configura en la app"
-              text="Descarga la aplicación en Google Play."
-              :icon="IconApp"
-              url="https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view?usp=sharing"
+          <HowCard
+            :step="1"
+            title="Configura en la app"
+            text="Descarga la aplicación en Google Play."
+            :icon="IconApp"
+            url="https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view?usp=sharing"
           />
           <HowCard
-              :step="2"
-              title="Configuración Rápida"
-              text="Programa los horarios de tus medicamentos, citas médicas y tareas importantes."
-              :icon="IconConfigureApp"
-              url="https://cuevana.pro/pelicula/las-guerreras-k-pop"
+            :step="2"
+            title="Configuración Rápida"
+            text="Programa los horarios de tus medicamentos, citas médicas y tareas importantes."
+            :icon="IconConfigureApp"
           />
           <HowCard
-              :step="3"
-              title="Sincronización Inteligente"
-              text="La manilla se sincroniza automáticamente con tu aplicación."
-              :icon="IconHandWatch"
+            :step="3"
+            title="Sincronización Inteligente"
+            text="La manilla se sincroniza automáticamente con tu aplicación."
+            :icon="IconHandWatch"
           />
           <HowCard
-              :step="4"
-              title="Recordatorio en tu Muñeca"
-              text="Cuando es el momento de una tarea, la manilla vibra y se alumbra."
-              :icon="IconShare"
+            :step="4"
+            title="Recordatorio en tu Muñeca"
+            text="Cuando es el momento de una tarea, la manilla vibra y se alumbra."
+            :icon="IconShare"
           />
           <HowCard
-              :step="5"
-              title="Confirmación y Registro"
-              text="El usuario confirma la tarea. Vital Recorder registra un historial."
-              :icon="IconRegister"
+            :step="5"
+            title="Confirmación y Registro"
+            text="El usuario confirma la tarea. Vital Recorder registra un historial."
+            :icon="IconRegister"
           />
           <HowCard
-              :step="6"
-              title="Alerta a la Familia (Opcional)"
-              text="Si el usuario no confirma la tarea después de un tiempo, la aplicación envía una notificación a los familiares."
-              :icon="IconAlertPhone"
-              
+            :step="6"
+            title="Alerta a la Familia (Opcional)"
+            text="Si el usuario no confirma la tarea después de un tiempo, la aplicación envía una notificación a los familiares."
+            :icon="IconAlertPhone"
           />
-          
         </div>
       </div>
     </section>
 
     <!-- MÉTRICAS / PRIORIDAD -->
-    <section class="product-metrics fade-in-on-scroll ">
+    <section class="product-metrics fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
-          Nuestra mayor recompensa es saber que VitalSystems hace una diferencia real en la vida de las personas.
+          Nuestra mayor recompensa es saber que VitalSystems hace una diferencia
+          real en la vida de las personas.
         </p>
         <div class="product-metrics-grid">
-          <PointViewCard
-          :icon="IconRank"
-          valuer="95%"
-          Text="Satisfacción"
-          />
-<PointViewCard
-          :icon="IconRing"
-          valuer="+1K"
-          Text="Recordatorios"
-          />
-<PointViewCard
-          :icon="IconSupport"
-          valuer="24/7"
-          Text="Soporte"
-          />
-          <PointViewCard
-            :icon="IconSecurity"
-            valuer="100%"
-            Text="Privacidad"/>
+          <PointViewCard :icon="IconRank" valuer="95%" Text="Satisfacción" />
+          <PointViewCard :icon="IconRing" valuer="+1K" Text="Recordatorios" />
+          <PointViewCard :icon="IconSupport" valuer="24/7" Text="Soporte" />
+          <PointViewCard :icon="IconSecurity" valuer="100%" Text="Privacidad" />
         </div>
-        <div class="DownloadContend ">
-
+        <div class="DownloadContend">
           <div class="DownloadNow">
-          <p>Descargalo ya</p>
-  <img 
-    :src="IconApp" 
-    class="product-how-icon-mask" 
-    :style="[maskStyle, url ? { cursor: 'pointer' } : {}]" 
-    @click="openLink"
-    alt="icono"
-  />
+            <p>Descargalo ya</p>
+            <img
+              :src="IconApp"
+              class="product-how-icon-mask"
+              :style="[maskStyle, url ? { cursor: 'pointer' } : {}]"
+              @click="openLink"
+              alt="icono"
+            />
+          </div>
         </div>
-        </div>
-        
       </div>
     </section>
-    <section class="product-testimonials fade-in-on-scroll ">
-      <div class="product-container ">
+    <section class="product-testimonials fade-in-on-scroll">
+      <div class="product-container">
         <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
 
         <div class="product-testimonials-grid">
-          
-        <TestimonialCard
-          name="Juan Velozco"
-          quote="Ahora no me olvido de mis pastillas y mis hijos están tranquilos"
-          :avatar="IconMale"
-          :count="5"   
-        />
-        <TestimonialCard
-          name="Maria Pardo"
-          quote="“La sincronización familiar nos avisa si mi papá olvido una toma sus medicamentos a tiempo”"
-          :avatar="IconFemale"
-          :count="3"   
-        />
-
-
+          <TestimonialCard
+            name="Juan Velozco"
+            quote="Ahora no me olvido de mis pastillas y mis hijos están tranquilos"
+            :avatar="IconMale"
+            :count="5"
+          />
+          <TestimonialCard
+            name="Maria Pardo"
+            quote="“La sincronización familiar nos avisa si mi papá olvido una toma sus medicamentos a tiempo”"
+            :avatar="IconFemale"
+            :count="3"
+          />
         </div>
       </div>
     </section>
-
-  
   </div>
 </template>
 
-<script >
+<script>
 export default {
   data() {
     return {
-      url: 'https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing'
-    }
+      url: "https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view",
+    };
   },
   methods: {
     openLink() {
-      window.open(this.url, '_blank');
-    }
-  }
-}
+      window.open(this.url, "_blank");
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -318,12 +288,26 @@ export default {
   color: #0f2147;
   background: #ffffff;
 }
+.product-view-vital-recorder-image {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("@/components/icons/ImageProductVitarRecorner.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.8) blur(2px);
+  z-index: 1;
+}
+.product-view-content-wrapper {
+  z-index: 2;
+}
 
 .product-container {
   max-width: 1100px;
   margin: 0 auto;
 }
-
 
 /* HERO / INTRO */
 .product-hero-title {
@@ -331,11 +315,12 @@ export default {
   font-weight: 900;
   font-size: 80px;
   font-weight: black;
-  color: black;
-  text-decoration: underline 4px #0f2147;
+  color: #ffffff;
+  text-decoration: underline 4px #ffffff;
   text-underline-offset: 20px;
   margin: 0;
   margin-left: 70px;
+  text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
 }
 
 .product-intro {
@@ -344,25 +329,25 @@ export default {
   padding: 10px 0 10px;
   color: #fff;
   height: 92vh;
-    box-sizing: border-box;
+  box-sizing: border-box;
   gap: 30px;
-  background-image: url('@/components/icons/ImageProductVitarRecorner.jpg');
+
   background-size: 100% 120%;
   background-repeat: no-repeat;
 }
 .product-intro-grid {
   display: flex;
-  
+
   border-radius: 16px;
-margin: 0;
-margin-left: 70px;
+  margin: 0;
+  margin-left: 70px;
 }
 .product-intro-heading {
   font-size: 40px;
   font-weight: black;
   text-align: center;
   line-height: 1.15;
-  margin: 0 0 .75rem;
+  margin: 0 0 0.75rem;
   color: #0b1634;
   justify-content: center;
 }
@@ -370,7 +355,7 @@ margin-left: 70px;
   text-align: center;
   padding: 10px;
   font-size: 27px;
-  font-weight: var(--semibold  );
+  font-weight: var(--semibold);
   line-height: 1.6;
   color: #f2f6ff;
   margin: 0 0 1.5rem;
@@ -378,18 +363,26 @@ margin-left: 70px;
   font-family: var(--tipografia);
   width: 600px;
 }
-.product-intro-actions { display:flex; gap:50px; flex-wrap:wrap; justify-content:center; }
+.product-intro-actions {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-.product-intro-media { display:flex; justify-content:center; flex-direction: column; align-items: center;}
-
-
+.product-intro-media {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 
 .product-device-title {
-  margin: .2rem 0 0;
+  margin: 0.2rem 0 0;
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 900;
-  color:#0f2147;
-  letter-spacing:.4px;
+  color: #0f2147;
+  letter-spacing: 0.4px;
 }
 
 /* === CARACTERÍSTICAS (COMPACTO) === */
@@ -398,9 +391,8 @@ margin-left: 70px;
   align-items: center;
   background: #f5f7fb;
   height: 92vh;
-  padding: 5rem .5rem;
+  padding: 5rem 0.5rem;
   box-sizing: border-box;
-  
 }
 
 .product-section-title {
@@ -410,7 +402,7 @@ margin-left: 70px;
   font-weight: var(--semibold);
   margin: 0;
   margin-top: 20px;
-  color:#1F2B6C;
+  color: #1f2b6c;
 }
 .product-features-grid {
   display: flex;
@@ -419,15 +411,13 @@ margin-left: 70px;
   row-gap: 20px;
   align-items: center;
   justify-content: center;
-  
 }
-
 
 /* === PARA QUIÉN ES (COMPACTO) === */
 .product-forwho {
   display: flex;
-  padding:0;
-  color:#0b1634;
+  padding: 0;
+  color: #0b1634;
   height: 92vh;
   align-items: center;
   box-sizing: border-box;
@@ -435,10 +425,10 @@ margin-left: 70px;
 }
 .product-forwho-lead {
   font-family: var(--tipografia);
-  text-align:center;
-  color:#0b1634;
-  font-weight:semibold;
-  margin: .15rem auto 1.25rem;
+  text-align: center;
+  color: #0b1634;
+  font-weight: semibold;
+  margin: 0.15rem auto 1.25rem;
   max-width: 1000px;
   font-size: 25px;
   margin-top: 20px;
@@ -448,7 +438,6 @@ margin-left: 70px;
   justify-content: center;
   gap: 55px;
 }
-
 
 .product-how {
   display: flex;
@@ -478,13 +467,13 @@ margin-left: 70px;
   display: grid;
   place-items: center;
   font-weight: 800;
-  font-size: .9rem;
-  box-shadow: 0 8px 18px rgba(15,33,71,.22);
+  font-size: 0.9rem;
+  box-shadow: 0 8px 18px rgba(15, 33, 71, 0.22);
 }
 .product-how-icon {
   font-size: clamp(1.8rem, 3vw, 2.2rem);
-  margin: .2rem 0 .45rem;
-  background: linear-gradient(90deg,#00f2fe,#4481eb);
+  margin: 0.2rem 0 0.45rem;
+  background: linear-gradient(90deg, #00f2fe, #4481eb);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -493,9 +482,13 @@ margin-left: 70px;
   font-size: 1rem;
   font-weight: 800;
   color: #0f2147;
-  margin: 0 0 .2rem;
+  margin: 0 0 0.2rem;
 }
-.product-how-text { color:#5b6575; margin:0; font-size: .95rem; }
+.product-how-text {
+  color: #5b6575;
+  margin: 0;
+  font-size: 0.95rem;
+}
 
 /* === MÉTRICAS (COMPACTO) === */
 .product-metrics {
@@ -506,11 +499,10 @@ margin-left: 70px;
   height: 92vh;
   align-items: center;
   justify-content: center;
-  
 }
 .product-metrics-title {
   font-family: var(--tipografia);
-  font-weight:var(--semibold);
+  font-weight: var(--semibold);
   text-align: center;
   font-size: 60px;
   color: #0f2147;
@@ -522,33 +514,28 @@ margin-left: 70px;
   gap: 70px;
 }
 
-
 .product-testimonials {
   display: flex;
   flex-direction: column;
-  padding:0;
+  padding: 0;
   height: 92vh;
   align-items: center;
   justify-content: center;
- background: #f5f7fb;
+  background: #f5f7fb;
   box-sizing: border-box;
 }
 .product-testimonials-grid {
-  display:flex;
-  grid-template-columns: repeat(2,1fr);
+  display: flex;
+  grid-template-columns: repeat(2, 1fr);
   gap: 80px;
-
-
 }
-.product-intro-text
-{
-  background: rgba(255,255,255,0.40);
+.product-intro-text {
+  background: rgba(255, 255, 255, 0.4);
   padding: 20px 0;
   border-radius: 50px;
 }
 
-.DownloadNow
-{
+.DownloadNow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,8 +549,7 @@ margin-left: 70px;
   font-size: 25px;
   border-radius: 20px;
 }
-.DownloadContend
-{
+.DownloadContend {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -571,16 +557,35 @@ margin-left: 70px;
 
 /* Responsive */
 @media (max-width: 1000px) {
-  .product-intro-grid { grid-template-columns: 1fr; }
-  .product-testimonials-grid { grid-template-columns: 1fr; }
-  .product-cta-grid { grid-template-columns: 1fr; }
+  .product-intro-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-cta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1340px) {
+  .product-view-content-wrapper {
+    margin-left: 200px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    position: relative;
+    z-index: 2;
+  }
 }
 .fade-in-on-scroll {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 1s ease-out, transform 1s ease-out;
 }
-.fade-in-on-scroll.is-visible{
+.fade-in-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
 }

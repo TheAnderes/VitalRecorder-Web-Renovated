@@ -1,71 +1,77 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-import iconUrl from 'leaflet/dist/images/marker-icon.png'
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
-import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
-L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl })
-const name = ref('')
-const email = ref('')
-const message = ref('')
-const center = [-16.5, -68.1193]
-let mapInstance = null
-let marker = null
-const mapEl = ref(null)
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+// Importa el componente de botón que ya estamos usando en todo el sitio
+import PrimaryButton from "@/components/PrimaryButton.vue";
+
+// Configuración de los iconos del mapa de Leaflet
+import iconUrl from "leaflet/dist/images/marker-icon.png";
+import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl });
+
+// Lógica del formulario y el mapa (sin cambios)
+const name = ref("");
+const email = ref("");
+const message = ref("");
+const center = [-16.5, -68.1193]; // Coordenadas de La Paz
+let mapInstance = null;
+let marker = null;
+const mapEl = ref(null);
 
 onMounted(() => {
   mapInstance = L.map(mapEl.value, {
     center,
     zoom: 14,
-    scrollWheelZoom: true
-  })
+    scrollWheelZoom: true,
+  });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(mapInstance)
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(mapInstance);
 
-  marker = L.marker(center).addTo(mapInstance)
-  marker.bindPopup('<b>VITALSYSTEMS</b><br/>La Paz, Bolivia').openPopup()
+  marker = L.marker(center).addTo(mapInstance);
+  marker.bindPopup("<b>VITALSYSTEMS</b><br/>La Paz, Bolivia").openPopup();
 
-  // Ajuste responsive
-  setTimeout(() => mapInstance.invalidateSize(), 200)
-  window.addEventListener('resize', invalidate)
-})
+  setTimeout(() => mapInstance.invalidateSize(), 200);
+  window.addEventListener("resize", invalidate);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', invalidate)
-  if (mapInstance) mapInstance.remove()
-})
+  window.removeEventListener("resize", invalidate);
+  if (mapInstance) mapInstance.remove();
+});
 
 function invalidate() {
-  if (mapInstance) mapInstance.invalidateSize()
+  if (mapInstance) mapInstance.invalidateSize();
 }
 
 function submit() {
   if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
-    alert('Por favor, completa todos los campos.')
-    return
+    alert("Por favor, completa todos los campos.");
+    return;
   }
-  // Aquí enviarías a tu API (fetch/axios)
-  console.log({ name: name.value, email: email.value, message: message.value })
-  alert('Mensaje enviado. Gracias.')
-  name.value = ''
-  email.value = ''
-  message.value = ''
+  console.log({ name: name.value, email: email.value, message: message.value });
+  alert("Mensaje enviado. Gracias.");
+  name.value = "";
+  email.value = "";
+  message.value = "";
 }
 </script>
 
 <template>
-  <section class="wrap">
-    <div class="hero container">
-      <h1>Contáctanos</h1>
+  <div class="contact-view">
+    <div class="contact-container">
+      <h1 class="section-title">Contáctanos</h1>
       <p class="subtitle">
-        Si tienes preguntas o deseas más información sobre nosotros o nuestros productos, ponte en contacto con nosotros. Estamos aquí para ayudarte.
+        Si tienes preguntas o deseas más información sobre nosotros o nuestros
+        productos, ponte en contacto con nosotros. Estamos aquí para ayudarte.
       </p>
 
-      <div class="card">
+      <div class="contact-card">
         <form class="form" @submit.prevent="submit">
           <label>
             <span>Nombre completo</span>
@@ -74,137 +80,135 @@ function submit() {
 
           <label>
             <span>Correo electrónico</span>
-            <input v-model="email" type="email" placeholder="tucorreo@gmail.com" />
+            <input
+              v-model="email"
+              type="email"
+              placeholder="tucorreo@gmail.com"
+            />
           </label>
 
           <label>
             <span>Mensaje</span>
-            <textarea v-model="message" rows="5" placeholder="Escribe tu mensaje..."></textarea>
+            <textarea
+              v-model="message"
+              rows="5"
+              placeholder="Escribe tu mensaje..."
+            ></textarea>
           </label>
 
-          <button type="submit" class="btn">Enviar Mensaje</button>
+          <!-- CORRECCIÓN: Usamos el componente de botón del proyecto -->
+          <PrimaryButton name="Enviar Mensaje" type="submit" />
         </form>
 
-        <div class="media">
+        <div class="map-media">
           <div ref="mapEl" class="map"></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
+
 <style scoped>
-.wrap {
- background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: 24px 0 36px;
-  min-height: calc(100vh - 180px);
+/* --- ESTILOS GENERALES Y DE PÁGINA --- */
+.contact-view {
+  font-family: "Poppins", "Inter", sans-serif;
+  color: #0f2147;
+  background: linear-gradient(180deg, #a7c7e7, #7fa5c1);
+  padding: 6rem 0;
+  min-height: calc(100vh - 12rem); /* Asegura que ocupe la pantalla */
 }
-.hero { /* tu contenedor interno centrado */
-  max-width: 1150px;
+.contact-container {
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 1.5rem;
 }
-.container { max-width: 1150px; margin: 0 auto; padding: 0 16px; }
 
-h1 {
-  font-size: clamp(28px, 4vw, 48px);
+/* --- ESTILOS DE TEXTO Y TÍTULOS --- */
+.section-title {
+  /* CORRECCIÓN: Usamos el estilo de título del proyecto */
+  font-family: var(--tipografia);
+  font-size: 2.8rem;
+  font-weight: 900;
   text-align: center;
-  color: #0b1020;
-  font-weight: 800;
-  margin-bottom: 10px;
+  color: #0f2147;
+  margin-bottom: 1rem;
 }
-
 .subtitle {
-  max-width: 800px;
-  margin: 0 auto 28px;
+  max-width: 650px;
+  margin: 0 auto 3rem;
   text-align: center;
-  color: #0b1020;
-  opacity: .85;
+  color: #475569;
+  font-size: 1.1rem;
 }
 
-/* Tarjeta */
-.card {
-  background: #fff;
+.contact-card {
+  background: #ffffff;
   position: relative;
-  border-radius: 16px;
-  padding: 28px;
+  border-radius: 24px;
+  padding: 2.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  gap: 2.5rem;
+  box-shadow: 0 0 30px rgba(68, 129, 235, 0.2);
 }
 
-/* Formulario */
+/* --- FORMULARIO --- */
 .form {
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-
 label {
   display: grid;
-  gap: 6px;
-  font-weight: 600;
-  color: #0b1020;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: #0f2147;
 }
-
-input, textarea {
+input,
+textarea {
   width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: #f9fafb;
+  border: 2px solid #e2e8f0;
+  /* CORRECCIÓN: Bordes más redondeados */
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f8fafc;
   outline: none;
-  transition: border 0.2s, background 0.2s;
+  transition: all 0.2s ease-in-out;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 1rem;
 }
-
-input:focus, textarea:focus {
-  border-color: #60a5fa;
+input:focus,
+textarea:focus {
+  border-color: #4481eb; /* Color de acento de la marca */
   background: #fff;
+  box-shadow: 0 0 0 3px rgba(68, 129, 235, 0.2);
 }
 
-.btn {
-  background: #1f2937;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.btn:hover {
-  background: #374151;
-}
+/* El botón .btn ya no es necesario, porque usamos el componente PrimaryButton */
 
-/* Mapa */
-.media {
+/* --- MAPA --- */
+.map-media {
   position: relative;
-  overflow: hidden;      
-  border-radius: 12px;   
+  overflow: hidden;
+  border-radius: 16px; /* Bordes redondeados */
 }
 .map {
   width: 100%;
-  height: 300px;         /* tu altura */
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  height: 100%; /* Ocupa toda la altura de la tarjeta */
+  min-height: 300px; /* Altura mínima para que no desaparezca */
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
   overflow: hidden;
 }
-:deep(.leaflet-container),
-:deep(.leaflet-pane),
-:deep(.leaflet-top),
-:deep(.leaflet-bottom),
-:deep(.leaflet-control) {
+/* Asegura que los controles del mapa sean visibles */
+:deep(.leaflet-container) {
   z-index: 1;
 }
-/* Responsive */
+
+/* --- RESPONSIVE --- */
 @media (max-width: 900px) {
-  .card {
+  .contact-card {
     grid-template-columns: 1fr;
-  }
-  .map {
-    height: 250px;
   }
 }
 </style>

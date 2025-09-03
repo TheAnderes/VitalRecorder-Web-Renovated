@@ -1,47 +1,46 @@
 <script setup>
-import CharacteristicCard from '@/components/CharacteristicCard.vue';
-import ForWhoCard from '@/components/ForWhoCard.vue';
-import HowCard from '@/components/HowCard.vue';
-import PointViewCard from '@/components/PointViewCard.vue';
-import TestimonialCard from '@/components/TestimonialCard.vue';
-import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
+import CharacteristicCard from "@/components/CharacteristicCard.vue";
+import ForWhoCard from "@/components/ForWhoCard.vue";
+import HowCard from "@/components/HowCard.vue";
+import PointViewCard from "@/components/PointViewCard.vue";
+import TestimonialCard from "@/components/TestimonialCard.vue";
+import IntroIconButtonCard from "@/components/IntroIconButtonCard.vue";
 
-import IconWathVital from '@/components/icons/IconWathVitalRecorder.svg';
-import IconGooglePlay from '@/components/icons/IconGooglePlay.svg';
-import iconvitalconnect from '@/components/icons/IconVitalConnect.svg';
+import IconWathVital from "@/components/icons/IconWathVitalRecorder.svg";
+import IconGooglePlay from "@/components/icons/IconGooglePlay.svg";
+import iconvitalconnect from "@/components/icons/IconVitalConnect.svg";
 
-import ButtonPrimary from '@/components/PrimaryButton.vue';
-import ButtonSecondary from '@/components/SecondaryButton.vue';
+import ButtonPrimary from "@/components/PrimaryButton.vue";
+import ButtonSecondary from "@/components/SecondaryButton.vue";
 
-import IconWath from '@/components/icons/IconWatch.svg';
-import IconSincron from '@/components/icons/IconSincron.svg';
-import IconConfigure from '@/components/icons/IconConfigure.svg';
-import IconSave from '@/components/icons/IconSave.svg';
-import IconWathInteligent from '@/components/icons/IconWathInteligent.svg';
+import IconWath from "@/components/icons/IconWatch.svg";
+import IconSincron from "@/components/icons/IconSincron.svg";
+import IconConfigure from "@/components/icons/IconConfigure.svg";
+import IconSave from "@/components/icons/IconSave.svg";
+import IconWathInteligent from "@/components/icons/IconWathInteligent.svg";
 
+import IconConfigureApp from "@/components/icons/IconConfigureApp.svg";
+import IconHandWatch from "@/components/icons/IconHandWatch.svg";
+import IconShare from "@/components/icons/IconShare.svg";
+import IconApp from "@/components/icons/IconApp.svg";
+import IconRegister from "@/components/icons/IconRegister.svg";
+import IconAlertPhone from "@/components/icons/IconAlertPhone.svg";
 
-import IconConfigureApp from '@/components/icons/IconConfigureApp.svg';
-import IconHandWatch from '@/components/icons/IconHandWatch.svg';
-import IconShare from '@/components/icons/IconShare.svg';
-import IconApp from '@/components/icons/IconApp.svg';
-import IconRegister from '@/components/icons/IconRegister.svg';
-import IconAlertPhone from '@/components/icons/IconAlertPhone.svg';
+import IconRank from "@/components/icons/IconRank.svg";
+import IconRing from "@/components/icons/IconRing.svg";
+import IconSupport from "@/components/icons/IconSupport.svg";
+import IconSecurity from "@/components/icons/IconSecurity.svg";
 
-import IconRank from '@/components/icons/IconRank.svg';
-import IconRing from '@/components/icons/IconRing.svg';
-import IconSupport from '@/components/icons/IconSupport.svg';
-import IconSecurity from '@/components/icons/IconSecurity.svg';
+import IconOld from "@/components/icons/IconOld.svg";
+import IconMedic from "@/components/icons/IconMedic.svg";
+import IconFamili from "@/components/icons/IconFamili.svg";
+import IconThing from "@/components/icons/IconThing.svg";
 
-import IconOld from '@/components/icons/IconOld.svg'
-import IconMedic from '@/components/icons/IconMedic.svg'
-import IconFamili from '@/components/icons/IconFamili.svg'
-import IconThing from '@/components/icons/IconThing.svg'
+import IconMale from "@/components/icons/IconMale.svg";
+import IconFemale from "@/components/icons/IconFemale.svg";
+import PrimaryButton from "@/components/PrimaryButton.vue";
 
-import IconMale from '@/components/icons/IconMale.svg'
-import IconFemale from '@/components/icons/IconFemale.svg'
-import PrimaryButton from '@/components/PrimaryButton.vue';
-
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from "vue";
 
 let observer = null;
 
@@ -58,7 +57,9 @@ onMounted(() => {
   }, options);
 
   // Observar todos los elementos con la clase 'fade-in-on-scroll'
-  document.querySelectorAll(".fade-in-on-scroll").forEach((el) => observer.observe(el));
+  document
+    .querySelectorAll(".fade-in-on-scroll")
+    .forEach((el) => observer.observe(el));
 });
 
 onUnmounted(() => {
@@ -72,14 +73,24 @@ onUnmounted(() => {
     <section class="product-intro">
       <h1 class="product-hero-title">Vital Connect</h1>
       <div class="product-container product-intro-grid">
+<<<<<<< HEAD
 
+=======
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
             Siempre conectado con<br />quienes cuidan de ti.
           </h2>
           <p class="product-intro-lead">
+<<<<<<< HEAD
             Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus
             recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
+=======
+            Recibe recordatorios y realiza un seguimiento de tus tareas
+            importantes de forma sencilla. Administra tus recordatorios,
+            confirma tareas y comparte el estado con tu familia desde tu
+            teléfono.
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
           </p>
           <div class="product-intro-actions">
             <PrimaryButton root="contact-us" name="Contactanos" />
@@ -87,8 +98,6 @@ onUnmounted(() => {
             <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
           </div>
         </div>
-
-
       </div>
     </section>
 
@@ -98,22 +107,42 @@ onUnmounted(() => {
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
         <!-- Targetas de Caracteristicas -->
         <div class="product-features-grid">
+<<<<<<< HEAD
           <CharacteristicCard :icon="IconConfigure" title="Fácil de configurar" text="App intuitiva y amigable." />
           <CharacteristicCard :icon="IconSave" title="Seguridad y bienestar" text="Notificaciones garantisadas" />
 
           <CharacteristicCard :icon="IconSincron" title="Sincronización familiar"
             text="Comparte avisos y estado en tiempo real" />
 
+=======
+          <CharacteristicCard
+            :icon="IconConfigure"
+            title="Fácil de configurar"
+            text="App intuitiva y amigable."
+          />
+          <CharacteristicCard
+            :icon="IconSave"
+            title="Seguridad y bienestar"
+            text="Notificaciones garantisadas"
+          />
+
+          <CharacteristicCard
+            :icon="IconSincron"
+            title="Sincronización familiar"
+            text="Comparte avisos y estado en tiempo real"
+          />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
 
     <!-- PARA QUIÉN ES -->
-    <section class="product-forwho fade-in-on-scroll ">
+    <section class="product-forwho fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">Beneficios de Vital Connect</h2>
         <p class="product-forwho-lead">
-          Diseñado para que cualquier persona pueda mantenerse al día sin complicaciones.
+          Diseñado para que cualquier persona pueda mantenerse al día sin
+          complicaciones.
         </p>
         <!-- PARA QUIÉN ES TARGETAS-->
         <div class="product-forwho-grid">
@@ -122,23 +151,42 @@ onUnmounted(() => {
           <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
           <ForWhoCard :icon="IconMedic" title="Tratamientos Medicos" />
           <ForWhoCard :icon="IconOld" title="Personas Mayores" />
+<<<<<<< HEAD
           <ForWhoCard :icon="IconThing" title="Personas con olvidos frecuentes" />
+=======
+          <ForWhoCard
+            :icon="IconThing"
+            title="Personas con olvidos frecuentes"
+          />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
-        <p class="product-forwho-lead">
-          Vital Recorder te ayuda a...
-        </p>
+        <p class="product-forwho-lead">Vital Recorder te ayuda a...</p>
         <div class="product-forwho-grid">
+<<<<<<< HEAD
           <ForWhoCard title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad." />
           <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
           <ForWhoCard title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro." />
           <ForWhoCard title="Más independencia y confianza en su día a día." />
           <ForWhoCard title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas." />
+=======
+          <ForWhoCard
+            title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad."
+          />
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+          <ForWhoCard
+            title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro."
+          />
+          <ForWhoCard title="Más independencia y confianza en su día a día." />
+          <ForWhoCard
+            title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas."
+          />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
 
     <!-- CÓMO FUNCIONA -->
-    <section class="product-how fade-in-on-scroll ">
+    <section class="product-how fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">¿Cómo funciona Vital Connnect?</h2>
 
@@ -166,7 +214,7 @@ onUnmounted(() => {
     </section>
 
     <!-- MÉTRICAS / PRIORIDAD -->
-    <section class="product-metrics fade-in-on-scroll ">
+    <section class="product-metrics fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
@@ -179,8 +227,7 @@ onUnmounted(() => {
           <PointViewCard :icon="IconSupport" valuer="24/7" Text="Soporte" />
           <PointViewCard :icon="IconSecurity" valuer="100%" Text="Privacidad" />
         </div>
-        <div class="DownloadContend ">
-
+        <div class="DownloadContend">
           <div class="DownloadNow">
             <p>Descargalo ya</p>
               <img :src="iconvitalconnect" class="product-how-icon-mask"
@@ -190,8 +237,8 @@ onUnmounted(() => {
 
       </div>
     </section>
-    <section class="product-testimonials fade-in-on-scroll ">
-      <div class="product-container ">
+    <section class="product-testimonials fade-in-on-scroll">
+      <div class="product-container">
         <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
 
         <div class="product-testimonials-grid">
@@ -240,15 +287,16 @@ export default {
   margin: 0 auto;
 }
 
-
 /* HERO / INTRO */
 .product-hero-title {
   font-family: var(--tipografia);
   font-weight: 900;
   font-size: 80px;
   font-weight: black;
-  color: black;
-  text-decoration: underline 4px #0f2147;
+  color: #ffffff;
+  text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  margin: 0;
+  text-decoration: underline 4px #ffffff;
   text-underline-offset: 20px;
   margin: 0;
   margin-left: 70px;
@@ -262,7 +310,7 @@ export default {
   height: 92vh;
   box-sizing: border-box;
   gap: 30px;
-  background-image: url('@/components/icons/vitalconect.jpg');
+  background-image: url("@/components/icons/vitalconect.jpg");
   background-size: 100% 120%;
   background-repeat: no-repeat;
 }
@@ -280,7 +328,7 @@ export default {
   font-weight: black;
   text-align: center;
   line-height: 1.15;
-  margin: 0 0 .75rem;
+  margin: 0 0 0.75rem;
   color: #0b1634;
   justify-content: center;
 }
@@ -297,7 +345,6 @@ export default {
   font-family: var(--tipografia);
   width: 600px;
 }
-
 .product-intro-actions {
   display: flex;
   gap: 50px;
@@ -313,9 +360,15 @@ export default {
 }
 
 
+.product-intro-media {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 
 .product-device-title {
-  margin: .2rem 0 0;
+  margin: 0.2rem 0 0;
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 900;
   color: #0f2147;
@@ -328,9 +381,8 @@ export default {
   align-items: center;
   background: #f5f7fb;
   height: 92vh;
-  padding: 5rem .5rem;
+  padding: 5rem 0.5rem;
   box-sizing: border-box;
-
 }
 
 .product-section-title {
@@ -350,9 +402,7 @@ export default {
   row-gap: 20px;
   align-items: center;
   justify-content: center;
-
 }
-
 
 /* === PARA QUIÉN ES (COMPACTO) === */
 .product-forwho {
@@ -381,7 +431,6 @@ export default {
   justify-content: center;
   gap: 55px;
 }
-
 
 .product-how {
   display: flex;
@@ -429,7 +478,12 @@ export default {
   font-size: 1rem;
   font-weight: 800;
   color: #0f2147;
-  margin: 0 0 .2rem;
+  margin: 0 0 0.2rem;
+}
+.product-how-text {
+  color: #5b6575;
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .product-how-text {
@@ -447,7 +501,6 @@ export default {
   height: 92vh;
   align-items: center;
   justify-content: center;
-
 }
 
 .product-metrics-title {
@@ -465,7 +518,6 @@ export default {
   gap: 70px;
 }
 
-
 .product-testimonials {
   display: flex;
   flex-direction: column;
@@ -481,8 +533,6 @@ export default {
   display: flex;
   grid-template-columns: repeat(2, 1fr);
   gap: 80px;
-
-
 }
 
 .product-intro-text {
@@ -505,13 +555,11 @@ export default {
   font-size: 25px;
   border-radius: 20px;
 }
-
 .DownloadContend {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .product-how-icon-mask {
   width: 150px;
   height: 150px;
@@ -537,7 +585,6 @@ export default {
   transform: translateY(40px);
   transition: opacity 1s ease-out, transform 1s ease-out;
 }
-
 .fade-in-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
