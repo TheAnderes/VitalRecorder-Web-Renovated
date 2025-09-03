@@ -148,8 +148,10 @@ section {
 .hero-main-title {
   font-size: 6.2rem;
   font-weight: 900;
-  line-height: 1.1;
-  color: #000000;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  margin: 0;
   text-decoration: underline;
   text-underline-offset: 10px;
   margin: 0;
@@ -176,7 +178,7 @@ section {
 
 .mission-section {
   background-color: #f1f5f9;
-  height: 92vh;
+  height: 80vh;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
