@@ -8,7 +8,7 @@ import TestimonialCard from "@/components/TestimonialCard.vue";
 import FamilyIllustration from "/white-Photoroom.png";
 import IconMale from "@/components/icons/IconMale.svg";
 import IconFemale from "@/components/icons/IconFemale.svg";
-import IconVitalRecorder from "@/components/icons/IconWatHVitalRecorder.svg";
+import IconVitalRecorder from "@/components/icons/IconWathVitalRecorder.svg";
 import IconVitalConnect from "@/components/icons/IconVitalConnect.svg";
 
 let observer = null;

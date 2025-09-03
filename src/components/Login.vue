@@ -1,24 +1,17 @@
 <template>
   <div class="login-container">
     <header class="login-header">
-      <img
-        class="brand-mark"
-        src="/Logo.png"
-        alt="VITALSYSTEMS Logo Icon"
-        onerror="this.style.display='none'"
-      />
+      <img class="brand-mark" src="/Logo.png" alt="VITALSYSTEMS Logo Icon" onerror="this.style.display='none'" />
       <div class="brand-text">VITALSYSTEMS</div>
     </header>
 
     <main class="login-card">
-      <button class="back-button" aria-label="Volver">
+      <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
 
       <h1 class="title">Iniciar Sesión</h1>
-      <p class="subtitle">
-        ¿Es tu primera vez? <a href="/register">Regístrate aquí</a>
-      </p>
+      <p class="subtitle">¿Es tu primera vez? <a href="/register">Regístrate aquí</a></p>
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
@@ -28,40 +21,78 @@
 
         <div class="form-group">
           <label for="password">Contraseña: <span class="required">*</span></label>
-          <input type="password" id="password" v-model="password" placeholder="tucorreo@gmail.com" required />
+          <input type="password" id="password" v-model="password" placeholder="Contraseña" required />
         </div>
 
         <a href="/recuperar-contrasena" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
         <button type="submit" class="submit-button">Iniciar Sesión</button>
       </form>
-
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // Importa la configuración de Firebase
+import { useRouter } from "vue-router"; // Importa Vue Router
+import Swal from 'sweetalert2'; // Importar SweetAlert2
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
+const router = useRouter(); // Usa Vue Router
 
-const handleLogin = () => {
-  console.log('Iniciando sesión con:', {
-    email: email.value,
-    password: password.value,
-  });
+const handleLogin = async () => {
+  try {
+    // Intentamos iniciar sesión con el email y la contraseña proporcionada
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+    const user = userCredential.user;
+    console.log("Usuario logueado exitosamente:", user);
+
+    // Alerta de éxito con SweetAlert2
+    Swal.fire({
+      icon: 'success',
+      title: '¡Inicio de sesión exitoso!',
+      text: 'Bienvenido a tu página principal.',
+      timer: 2000, // La alerta se cierra automáticamente después de 2 segundos
+      showConfirmButton: false
+    });
+
+    // Redirige al usuario a la vista "VitalRecorder"
+    setTimeout(() => {
+      router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
+    }, 2000); // Espera para que la alerta se vea antes de la redirección
+
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error.message);
+
+    // Alerta de error
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error al iniciar sesión: ' + error.message,
+      timer: 3000,
+      showConfirmButton: true
+    });
+  }
+};
+
+// Función para volver a la página anterior
+const goBack = () => {
+  window.history.back();
 };
 </script>
 
 <style scoped>
+/* Estilos existentes */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   font-family: Arial, sans-serif;
-  padding: 10vh 20px 20px 20px; /* Increased top padding (10vh) for more space */
+  padding: 10vh 20px 20px 20px;
   min-height: 100vh;
   background-color: white;
   box-sizing: border-box;
@@ -70,23 +101,23 @@ const handleLogin = () => {
 .login-header {
   display: flex;
   align-items: center;
-  gap: 20px; /* Increased space between logo and text */
+  gap: 20px;
   background-color: white;
   padding: 20px 30px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem; /* Increased margin */
+  margin-bottom: 2rem;
 }
 
 .brand-mark {
-  height: 70px; /* Increased logo size */
+  height: 70px;
   width: auto;
 }
 
 .brand-text {
   font-weight: 600;
   letter-spacing: 1px;
-  font-size: clamp(28px, 3vw, 36px); /* Increased text size */
+  font-size: clamp(28px, 3vw, 36px);
   background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   -webkit-background-clip: text;
   background-clip: text;
@@ -94,14 +125,15 @@ const handleLogin = () => {
   text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
 }
 
+/* Card Styles */
 .login-card {
   position: relative;
-  background: linear-gradient(180deg, #00c6ff, #0072ff);
-  padding: 60px 40px 40px; /* Increased padding for a larger form */
+  background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
+  padding: 60px 40px 40px;
   border-radius: 25px;
   width: 100%;
-  max-width: 600px; /* Increased width for the card */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
 }
 
@@ -113,7 +145,7 @@ const handleLogin = () => {
   border: none;
   border-radius: 50%;
   width: 40px;
-  height: 40px; /* Increased button size */
+  height: 40px;
   font-size: 1.7rem;
   color: white;
   cursor: pointer;
@@ -129,7 +161,7 @@ const handleLogin = () => {
 
 .title {
   text-align: center;
-  font-size: 2.5rem; /* Increased title font size */
+  font-size: 2.5rem;
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;
@@ -139,7 +171,7 @@ const handleLogin = () => {
 .subtitle {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 1rem; /* Increased subtitle font size */
+  font-size: 1rem;
 }
 
 .subtitle a {
@@ -149,25 +181,25 @@ const handleLogin = () => {
 }
 
 .form-group {
-  margin-bottom: 25px; /* Increased bottom margin */
+  margin-bottom: 25px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-  font-size: 1rem; /* Increased font size */
+  font-size: 1rem;
   color: #fff;
 }
 
 .form-group input {
   width: 100%;
-  padding: 15px 18px; /* Increased padding */
+  padding: 15px 18px;
   border: none;
-  border-radius: 20px; /* Increased border radius */
+  border-radius: 20px;
   background-color: white;
   box-sizing: border-box;
-  font-size: 1.1rem; /* Increased font size */
+  font-size: 1.1rem;
 }
 
 .forgot-password {
@@ -187,7 +219,7 @@ const handleLogin = () => {
   color: white;
   border: none;
   border-radius: 25px;
-  font-size: 1.2rem; /* Increased button text size */
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -195,44 +227,5 @@ const handleLogin = () => {
 
 .submit-button:hover {
   background-color: #1a4a8a;
-}
-
-.social-login {
-  text-align: center;
-  margin-top: 30px;
-  color: #fff;
-}
-
-.social-login p {
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 30px; /* Increased gap between social buttons */
-}
-
-.social-button {
-  background: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px; /* Increased size */
-  height: 60px; /* Increased size */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.social-button:hover {
-  transform: scale(1.1);
-}
-
-.social-button img {
-  width: 35px;
-  height: auto;
 }
 </style>

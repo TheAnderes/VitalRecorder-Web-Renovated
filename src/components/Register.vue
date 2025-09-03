@@ -11,7 +11,7 @@
     </header>
 
     <main class="register-card">
-      <button class="back-button" aria-label="Volver">
+      <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
 
@@ -21,79 +21,186 @@
       </p>
 
       <form @submit.prevent="handleRegister" class="register-form">
-        <div class="form-group">
-          <label for="fullName">Nombre completo: <span class="required">*</span></label>
-          <input id="fullName" v-model="fullName" type="text" placeholder="Juan Pérez" required />
-        </div>
+        <div class="form-group-group">
+          <div class="form-group">
+            <label for="fullName">Nombre completo: <span class="required">*</span></label>
+            <input 
+              id="fullName" 
+              v-model="fullName" 
+              type="text" 
+              placeholder="Juan Pérez" 
+              required 
+            />
+          </div>
 
-        <div class="form-group">
-          <label for="password">Contraseña: <span class="required">*</span></label>
-          <div class="password-field">
+          <div class="form-group">
+            <label for="password">Contraseña: <span class="required">*</span></label>
             <input 
               id="password" 
               v-model="password" 
               type="password" 
               placeholder="••••••••" 
               required 
+              minlength="6"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electrónico: <span class="required">*</span></label>
+            <input 
+              id="email" 
+              v-model="email" 
+              type="email" 
+              placeholder="tucorreo@gmail.com" 
+              required 
             />
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="email">Correo electrónico: <span class="required">*</span></label>
-          <input id="email" v-model="email" type="email" placeholder="tucorreo@gmail.com" required />
+        <div class="form-group-group">
+          <div class="form-group">
+            <label for="phone">Número de celular: <span class="required">*</span></label>
+            <input 
+              id="phone" 
+              v-model="phone" 
+              type="tel" 
+              placeholder="(+591) 70000000" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="dob">Fecha de nacimiento: <span class="required">*</span></label>
+            <input 
+              id="dob" 
+              v-model="dob" 
+              type="date" 
+              required 
+            />
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="phone">Número de celular: <span class="required">*</span></label>
-          <input id="phone" v-model="phone" type="tel" placeholder="(+591) 70000000" required />
-        </div>
-
-        <div class="form-group">
-          <label for="dob">Fecha de nacimiento: <span class="required">*</span></label>
-          <input 
-            id="dob" 
-            v-model="dob" 
-            type="date" 
-            placeholder="DD/MM/YYYY" 
-            required 
-            class="date-picker"
-          />
-        </div>
-
-        <button type="submit" class="submit-button">Registrarse</button>
+        <button type="submit" class="submit-button" :disabled="isLoading">
+          {{ isLoading ? 'Registrando...' : 'Registrarse' }}
+        </button>
       </form>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
+import Swal from 'sweetalert2'; // Importamos SweetAlert2
 
-const fullName = ref('')
-const password = ref('')
-const email = ref('')
-const phone = ref('')
-const dob = ref('')
-const showPassword = ref(false)
+// Variables reactivas
+const fullName = ref('');
+const password = ref('');
+const email = ref('');
+const phone = ref('');
+const dob = ref('');
+const isLoading = ref(false);
 
-const handleRegister = () => {
-  console.log('Registrando:', { fullName: fullName.value, password: password.value, email: email.value, phone: phone.value, dob: dob.value })
-}
+const router = useRouter();
 
-const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
-}
+// Función para manejar el registro de usuario
+const handleRegister = async () => {
+  // Validación básica
+  if (!fullName.value.trim() || !email.value.trim() || !password.value.trim()) {
+    alert('Por favor, completa todos los campos requeridos.');
+    return;
+  }
+
+  if (password.value.length < 6) {
+    alert('La contraseña debe tener al menos 6 caracteres.');
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    // Crear usuario en Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(
+      auth, 
+      email.value.trim(), 
+      password.value
+    );
+    
+    const user = userCredential.user;
+    
+    // Actualizar el perfil del usuario con información adicional
+    await updateProfile(user, {
+      displayName: fullName.value.trim(),
+    });
+
+    console.log("Usuario registrado exitosamente:", user);
+
+    // Mostrar alerta de éxito con SweetAlert2
+    Swal.fire({
+      title: '¡Registro exitoso!',
+      text: 'Bienvenido a VITALSYSTEMS.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        confirmButton: 'swal-btn' // Puedes personalizar el estilo si lo deseas
+      }
+    });
+
+    // Redirigir al login después de la alerta
+    router.push("/login");
+
+  } catch (error) {
+    console.error("Error al registrarse:", error);
+    
+    // Manejo de errores más específico
+    let errorMessage = "Error al registrarse. ";
+    
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        errorMessage += "Este correo electrónico ya está registrado.";
+        break;
+      case 'auth/invalid-email':
+        errorMessage += "El correo electrónico no es válido.";
+        break;
+      case 'auth/operation-not-allowed':
+        errorMessage += "El registro con email/contraseña no está habilitado.";
+        break;
+      case 'auth/weak-password':
+        errorMessage += "La contraseña es muy débil.";
+        break;
+      default:
+        errorMessage += error.message;
+    }
+
+    // Mostrar error con SweetAlert2
+    Swal.fire({
+      title: 'Error',
+      text: errorMessage,
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Función para volver a la página anterior
+const goBack = () => {
+  router.go(-1); // Mejor práctica que window.history.back()
+};
 </script>
 
 <style scoped>
+/* General styles for the container and header */
 .register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   font-family: Arial, sans-serif;
-  padding: 10vh 20px 20px;
+  padding: 10vh 20px 20px 20px;
   min-height: 100vh;
   background-color: white;
   box-sizing: border-box;
@@ -111,14 +218,14 @@ const togglePasswordVisibility = () => {
 }
 
 .brand-mark {
-  height: 50px;
+  height: 70px;
   width: auto;
 }
 
 .brand-text {
   font-weight: 600;
   letter-spacing: 1px;
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: clamp(24px, 2.8vw, 34px);
   background: linear-gradient(90deg, #37c8ee, #8e7ff2);
   -webkit-background-clip: text;
   background-clip: text;
@@ -126,15 +233,16 @@ const togglePasswordVisibility = () => {
   text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
 }
 
+/* Card Styles */
 .register-card {
   position: relative;
-  background: linear-gradient(180deg, #00c6ff, #0072ff);
-  padding: 60px 40px 40px;
+  background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
+  padding: 80px 40px 40px;
   border-radius: 25px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
+  gap: 20px; 
 }
 
 .back-button {
@@ -161,7 +269,7 @@ const togglePasswordVisibility = () => {
 
 .title {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   font-weight: bold;
   margin: 10px 0;
   color: #011a3e;
@@ -170,7 +278,7 @@ const togglePasswordVisibility = () => {
 .subtitle {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .subtitle a {
@@ -179,10 +287,19 @@ const togglePasswordVisibility = () => {
   text-decoration: underline;
 }
 
-.form-group {
+/* Form Group (Columns) */
+.form-group-group {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Esto asegura que todos los inputs se alineen de manera consistente */
+}
 .form-group label {
   display: block;
   margin-bottom: 8px;
@@ -196,79 +313,54 @@ const togglePasswordVisibility = () => {
 }
 
 .form-group input {
-  width: 100%;
-  padding: 12px 15px;
+
+  padding: 15px 20px;
   border: none;
   border-radius: 15px;
   background: #fff;
   box-sizing: border-box;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
-
-.password-field {
-  align-items: center;
-  gap: 10px;
-}
-
-.password-toggle {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%; /* Asegura que las columnas tengan el mismo ancho */
 }
 
 .submit-button {
   width: 100%;
-  padding: 15px;
-  margin-top: 10px;
+  padding: 18px;
+  margin-top: 15px;
   background: #0d2a4c;
   color: #fff;
   border: none;
   border-radius: 25px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
+.submit-button:hover:not(:disabled) {
   background: #1a4a8a;
 }
 
-.social-login {
-  text-align: center;
-  margin-top: 20px;
-  color: #fff;
+.submit-button:disabled {
+  background: #6c7b87;
+  cursor: not-allowed;
 }
 
-.social-login p {
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.social-button {
-  background: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.social-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+/* Responsive */
+@media (max-width: 768px) {
+  .form-group-group {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .register-card {
+    padding: 60px 25px 25px;
+  }
 }
 </style>

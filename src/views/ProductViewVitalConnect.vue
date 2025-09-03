@@ -8,7 +8,7 @@ import IntroIconButtonCard from '@/components/IntroIconButtonCard.vue';
 
 import IconWathVital from '@/components/icons/IconWathVitalRecorder.svg';
 import IconGooglePlay from '@/components/icons/IconGooglePlay.svg';
-import iconvitalconnect from '@/components/icons/IconVitalconnect.svg';
+import iconvitalconnect from '@/components/icons/IconVitalConnect.svg';
 
 import ButtonPrimary from '@/components/PrimaryButton.vue';
 import ButtonSecondary from '@/components/SecondaryButton.vue';
@@ -72,21 +72,19 @@ onUnmounted(() => {
     <section class="product-intro">
       <h1 class="product-hero-title">Vital Connect</h1>
       <div class="product-container product-intro-grid">
-        
+
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
             Siempre conectado con<br />quienes cuidan de ti.
           </h2>
           <p class="product-intro-lead">
-            Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
+            Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus
+            recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
           </p>
           <div class="product-intro-actions">
-            <PrimaryButton
-              root="contact-us" 
-              name="Contactanos"
-              />
-                      
-             <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
+            <PrimaryButton root="contact-us" name="Contactanos" />
+
+            <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
           </div>
         </div>
 
@@ -98,24 +96,13 @@ onUnmounted(() => {
     <section class="product-features fade-in-on-scroll">
       <div class="product-container">
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
-<!-- Targetas de Caracteristicas -->
+        <!-- Targetas de Caracteristicas -->
         <div class="product-features-grid">
-            <CharacteristicCard
-            :icon="IconConfigure"
-            title="Fácil de configurar"
-            text="App intuitiva y amigable."
-            />
-            <CharacteristicCard
-            :icon="IconSave"
-            title="Seguridad y bienestar"
-            text="Notificaciones garantisadas"
-            />
+          <CharacteristicCard :icon="IconConfigure" title="Fácil de configurar" text="App intuitiva y amigable." />
+          <CharacteristicCard :icon="IconSave" title="Seguridad y bienestar" text="Notificaciones garantisadas" />
 
-          <CharacteristicCard
-            :icon="IconSincron"
-            title="Sincronización familiar"
-            text="Comparte avisos y estado en tiempo real"
-            />
+          <CharacteristicCard :icon="IconSincron" title="Sincronización familiar"
+            text="Comparte avisos y estado en tiempo real" />
 
         </div>
       </div>
@@ -130,38 +117,22 @@ onUnmounted(() => {
         </p>
         <!-- PARA QUIÉN ES TARGETAS-->
         <div class="product-forwho-grid">
-          <ForWhoCard
-            :icon="IconFamili"
-            title="Familiares y Cuidadores"  />
-          
-            <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
-          <ForWhoCard
-            :icon="IconMedic"
-            title="Tratamientos Medicos"  />
-          <ForWhoCard
-            :icon="IconOld"
-            title="Personas Mayores"  />
-          <ForWhoCard
-            :icon="IconThing"
-            title="Personas con olvidos frecuentes"  />
+          <ForWhoCard :icon="IconFamili" title="Familiares y Cuidadores" />
+
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+          <ForWhoCard :icon="IconMedic" title="Tratamientos Medicos" />
+          <ForWhoCard :icon="IconOld" title="Personas Mayores" />
+          <ForWhoCard :icon="IconThing" title="Personas con olvidos frecuentes" />
         </div>
         <p class="product-forwho-lead">
           Vital Recorder te ayuda a...
         </p>
         <div class="product-forwho-grid">
-          <ForWhoCard
-            
-            title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad."  />
-            <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
-          <ForWhoCard
-            
-            title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro."  />
-          <ForWhoCard
-            
-            title="Más independencia y confianza en su día a día."  />
-          <ForWhoCard
-            
-            title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas."  />
+          <ForWhoCard title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad." />
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+          <ForWhoCard title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro." />
+          <ForWhoCard title="Más independencia y confianza en su día a día." />
+          <ForWhoCard title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas." />
         </div>
       </div>
     </section>
@@ -172,46 +143,24 @@ onUnmounted(() => {
         <h2 class="product-section-title">¿Cómo funciona Vital Connnect?</h2>
 
         <div class="product-how-grid">
-              <HowCard
-              :step="1"
-              title="Configura en la app"
-              text="Descarga la aplicación en Google Play."
-              :icon="iconvitalconnect "
-              url="https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing"
-          />
-          <HowCard
-              :step="2"
-              title="Configuración Rápida"
-              text="Los usuarios pueden actualizar su estado médico directamente desde la aplicación,"
-              :icon="IconConfigureApp"
-              url="https://cuevana.pro/pelicula/las-guerreras-k-pop"
-          />
-          <HowCard
-              :step="3"
-              title="Familia en todo momento"
-              text="Los familiares pueden acceder a la información del estado de salud del usuario en cualquier momento."
-              :icon="IconFamili"
-          />
-          <HowCard
-              :step="4"
-              title="Bienestar en tiempo real"
-              text="Vital Connect proporciona una vista en tiempo real del bienestar del usuario"
-              :icon="IconShare"
-          />
-          <HowCard
-              :step="5"
-              title="Historial Médico y Seguimiento"
-              text="Vital Connect guarda un historial de actualizaciones médicas para referencia futura."
-              :icon="IconRegister"
-          />
-          <HowCard
-              :step="6"
-              title="Alerta a la Familia (Opcional)"
-              text="Si el usuario no confirma la tarea después de un tiempo, la aplicación envía una notificación a los familiares."
-              :icon="IconAlertPhone"
-              
-          />
-          
+          <HowCard :step="1" title="Configura en la app" text="Descarga la aplicación en Google Play."
+            :icon="iconvitalconnect"
+            url="https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing" />
+          <HowCard :step="2" title="Configuración Rápida"
+            text="Los usuarios pueden actualizar su estado médico directamente desde la aplicación,"
+            :icon="IconConfigureApp" url="https://cuevana.pro/pelicula/las-guerreras-k-pop" />
+          <HowCard :step="3" title="Familia en todo momento"
+            text="Los familiares pueden acceder a la información del estado de salud del usuario en cualquier momento."
+            :icon="IconFamili" />
+          <HowCard :step="4" title="Bienestar en tiempo real"
+            text="Vital Connect proporciona una vista en tiempo real del bienestar del usuario" :icon="IconShare" />
+          <HowCard :step="5" title="Historial Médico y Seguimiento"
+            text="Vital Connect guarda un historial de actualizaciones médicas para referencia futura."
+            :icon="IconRegister" />
+          <HowCard :step="6" title="Alerta a la Familia (Opcional)"
+            text="Si el usuario no confirma la tarea después de un tiempo, la aplicación envía una notificación a los familiares."
+            :icon="IconAlertPhone" />
+
         </div>
       </div>
     </section>
@@ -221,43 +170,24 @@ onUnmounted(() => {
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
-         Vital Connect está diseñado para asegurar que los familiares siempre estén conectados con el bienestar de sus seres queridos en tiempo real.
+          Vital Connect está diseñado para asegurar que los familiares siempre estén conectados con el bienestar de sus
+          seres queridos en tiempo real.
         </p>
         <div class="product-metrics-grid">
-          <PointViewCard
-          :icon="IconRank"
-          valuer="95%"
-          Text="Satisfacción"
-          />
-<PointViewCard
-          :icon="IconRing"
-          valuer="+1K"
-          Text="Recordatorios"
-          />
-<PointViewCard
-          :icon="IconSupport"
-          valuer="24/7"
-          Text="Soporte"
-          />
-          <PointViewCard
-            :icon="IconSecurity"
-            valuer="100%"
-            Text="Privacidad"/>
+          <PointViewCard :icon="IconRank" valuer="95%" Text="Satisfacción" />
+          <PointViewCard :icon="IconRing" valuer="+1K" Text="Recordatorios" />
+          <PointViewCard :icon="IconSupport" valuer="24/7" Text="Soporte" />
+          <PointViewCard :icon="IconSecurity" valuer="100%" Text="Privacidad" />
         </div>
         <div class="DownloadContend ">
 
           <div class="DownloadNow">
-          <p>Descargalo ya</p>
-  <img 
-    :src="iconvitalconnect" 
-    class="product-how-icon-mask" 
-    :style="[maskStyle, url ? { cursor: 'pointer' } : {}]" 
-    @click="openLink"
-    alt="icono"
-  />
+            <p>Descargalo ya</p>
+              <img :src="iconvitalconnect" class="product-how-icon-mask"
+                :style="[maskStyle, url ? { cursor: 'pointer' } : {}]" @click="openLink" alt="icono" />
+          </div>
         </div>
-        </div>
-        
+
       </div>
     </section>
     <section class="product-testimonials fade-in-on-scroll ">
@@ -265,39 +195,33 @@ onUnmounted(() => {
         <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
 
         <div class="product-testimonials-grid">
-          
-        <TestimonialCard
-          name="Juan Velozco"
-          quote="Gracias a Vital Connect, ahora puedo gestionar mi salud de manera más autónoma, y mis hijos están tranquilos."
-          :avatar="IconMale"
-          :count="5"   
-        />
-        <TestimonialCard
-          name="Maria Pardo"
-          quote="me da la tranquilidad de saber, si mi papá no actualiza su estado de salud, recibiré una notificación"
-          :avatar="IconFemale"
-          :count="3"   
-        />
+
+          <TestimonialCard name="Juan Velozco"
+            quote="Gracias a Vital Connect, ahora puedo gestionar mi salud de manera más autónoma, y mis hijos están tranquilos."
+            :avatar="IconMale" :count="5" />
+          <TestimonialCard name="Maria Pardo"
+            quote="me da la tranquilidad de saber, si mi papá no actualiza su estado de salud, recibiré una notificación"
+            :avatar="IconFemale" :count="3" />
 
 
         </div>
       </div>
     </section>
 
-  
+
   </div>
 </template>
 
-<script >
+<script>
 export default {
   data() {
     return {
-      url: 'https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing'
+      url: 'https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view?usp=sharing'
     }
   },
   methods: {
     openLink() {
-      window.open(this.url, '_blank');
+      window.open(this.url);
     }
   }
 }
@@ -336,19 +260,21 @@ export default {
   padding: 10px 0 10px;
   color: #fff;
   height: 92vh;
-    box-sizing: border-box;
+  box-sizing: border-box;
   gap: 30px;
   background-image: url('@/components/icons/vitalconect.jpg');
   background-size: 100% 120%;
   background-repeat: no-repeat;
 }
+
 .product-intro-grid {
   display: flex;
-  
+
   border-radius: 16px;
-margin: 0;
-margin-left: 70px;
+  margin: 0;
+  margin-left: 70px;
 }
+
 .product-intro-heading {
   font-size: 40px;
   font-weight: black;
@@ -358,11 +284,12 @@ margin-left: 70px;
   color: #0b1634;
   justify-content: center;
 }
+
 .product-intro-lead {
   text-align: center;
   padding: 10px;
   font-size: 27px;
-  font-weight: var(--semibold  );
+  font-weight: var(--semibold);
   line-height: 1.6;
   color: #414143;
   margin: 0 0 1.5rem;
@@ -370,9 +297,20 @@ margin-left: 70px;
   font-family: var(--tipografia);
   width: 600px;
 }
-.product-intro-actions { display:flex; gap:50px; flex-wrap:wrap; justify-content:center; }
 
-.product-intro-media { display:flex; justify-content:center; flex-direction: column; align-items: center;}
+.product-intro-actions {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-intro-media {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 
 
 
@@ -380,8 +318,8 @@ margin-left: 70px;
   margin: .2rem 0 0;
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 900;
-  color:#0f2147;
-  letter-spacing:.4px;
+  color: #0f2147;
+  letter-spacing: .4px;
 }
 
 /* === CARACTERÍSTICAS (COMPACTO) === */
@@ -392,7 +330,7 @@ margin-left: 70px;
   height: 92vh;
   padding: 5rem .5rem;
   box-sizing: border-box;
-  
+
 }
 
 .product-section-title {
@@ -402,8 +340,9 @@ margin-left: 70px;
   font-weight: var(--semibold);
   margin: 0;
   margin-top: 20px;
-  color:#1F2B6C;
+  color: #1F2B6C;
 }
+
 .product-features-grid {
   display: flex;
   flex-wrap: wrap;
@@ -411,30 +350,32 @@ margin-left: 70px;
   row-gap: 20px;
   align-items: center;
   justify-content: center;
-  
+
 }
 
 
 /* === PARA QUIÉN ES (COMPACTO) === */
 .product-forwho {
   display: flex;
-  padding:0;
-  color:#0b1634;
+  padding: 0;
+  color: #0b1634;
   height: 92vh;
   align-items: center;
   box-sizing: border-box;
   background: #f5f7fb;
 }
+
 .product-forwho-lead {
   font-family: var(--tipografia);
-  text-align:center;
-  color:#0b1634;
-  font-weight:semibold;
+  text-align: center;
+  color: #0b1634;
+  font-weight: semibold;
   margin: .15rem auto 1.25rem;
   max-width: 1000px;
   font-size: 25px;
   margin-top: 20px;
 }
+
 .product-forwho-grid {
   display: flex;
   justify-content: center;
@@ -451,6 +392,7 @@ margin-left: 70px;
   justify-content: center;
   box-sizing: border-box;
 }
+
 .product-how-grid {
   display: flex;
   gap: 30px;
@@ -471,23 +413,30 @@ margin-left: 70px;
   place-items: center;
   font-weight: 800;
   font-size: .9rem;
-  box-shadow: 0 8px 18px rgba(15,33,71,.22);
+  box-shadow: 0 8px 18px rgba(15, 33, 71, .22);
 }
+
 .product-how-icon {
   font-size: clamp(1.8rem, 3vw, 2.2rem);
   margin: .2rem 0 .45rem;
-  background: linear-gradient(90deg,#00f2fe,#4481eb);
+  background: linear-gradient(90deg, #00f2fe, #4481eb);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
+
 .product-how-title {
   font-size: 1rem;
   font-weight: 800;
   color: #0f2147;
   margin: 0 0 .2rem;
 }
-.product-how-text { color:#5b6575; margin:0; font-size: .95rem; }
+
+.product-how-text {
+  color: #5b6575;
+  margin: 0;
+  font-size: .95rem;
+}
 
 /* === MÉTRICAS (COMPACTO) === */
 .product-metrics {
@@ -498,17 +447,19 @@ margin-left: 70px;
   height: 92vh;
   align-items: center;
   justify-content: center;
-  
+
 }
+
 .product-metrics-title {
   font-family: var(--tipografia);
-  font-weight:var(--semibold);
+  font-weight: var(--semibold);
   text-align: center;
   font-size: 60px;
   color: #0f2147;
   margin: 0 0 1rem;
   margin-bottom: 10px;
 }
+
 .product-metrics-grid {
   display: flex;
   gap: 70px;
@@ -518,29 +469,29 @@ margin-left: 70px;
 .product-testimonials {
   display: flex;
   flex-direction: column;
-  padding:0;
+  padding: 0;
   height: 92vh;
   align-items: center;
   justify-content: center;
- background: #f5f7fb;
+  background: #f5f7fb;
   box-sizing: border-box;
 }
+
 .product-testimonials-grid {
-  display:flex;
-  grid-template-columns: repeat(2,1fr);
+  display: flex;
+  grid-template-columns: repeat(2, 1fr);
   gap: 80px;
 
 
 }
-.product-intro-text
-{
-  background: rgba(255,255,255,0.40);
+
+.product-intro-text {
+  background: rgba(255, 255, 255, 0.40);
   padding: 20px 0;
   border-radius: 50px;
 }
 
-.DownloadNow
-{
+.DownloadNow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -554,29 +505,40 @@ margin-left: 70px;
   font-size: 25px;
   border-radius: 20px;
 }
-.DownloadContend
-{
+
+.DownloadContend {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.product-how-icon-mask
-{
+
+.product-how-icon-mask {
   width: 150px;
   height: 150px;
 }
+
 /* Responsive */
 @media (max-width: 1000px) {
-  .product-intro-grid { grid-template-columns: 1fr; }
-  .product-testimonials-grid { grid-template-columns: 1fr; }
-  .product-cta-grid { grid-template-columns: 1fr; }
+  .product-intro-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-cta-grid {
+    grid-template-columns: 1fr;
+  }
 }
+
 .fade-in-on-scroll {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 1s ease-out, transform 1s ease-out;
 }
-.fade-in-on-scroll.is-visible{
+
+.fade-in-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
