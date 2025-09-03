@@ -226,10 +226,10 @@ const goBack = () => {
   background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
   padding: 80px 40px 40px;
   border-radius: 25px;
-  width: 100%;
-  max-width: 600px;
+  width: 800px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
   color: #0d2a4c;
+  gap: 20px; 
 }
 
 .back-button {
@@ -283,15 +283,15 @@ const goBack = () => {
 }
 
 .form-group {
-  flex: 1;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Esto asegura que todos los inputs se alineen de manera consistente */
 }
-
 .form-group label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #fff;
 }
 
@@ -300,13 +300,20 @@ const goBack = () => {
 }
 
 .form-group input {
-  width: 100%;
+
   padding: 15px 20px;
   border: none;
   border-radius: 15px;
   background: #fff;
   box-sizing: border-box;
   font-size: 1.1rem;
+}
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%; /* Asegura que las columnas tengan el mismo ancho */
 }
 
 .submit-button {
