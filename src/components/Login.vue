@@ -28,11 +28,6 @@
 
         <button type="submit" class="submit-button">Iniciar Sesión</button>
       </form>
-
-      <!-- Alerta de éxito -->
-      <div v-if="successMessage" class="success-alert">
-        <span>{{ successMessage }}</span>
-      </div>
     </main>
   </div>
 </template>
@@ -42,10 +37,10 @@ import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase"; // Importa la configuración de Firebase
 import { useRouter } from "vue-router"; // Importa Vue Router
+import Swal from 'sweetalert2'; // Importar SweetAlert2
 
 const email = ref("");
 const password = ref("");
-const successMessage = ref(""); // Alerta de éxito
 const router = useRouter(); // Usa Vue Router
 
 const handleLogin = async () => {
@@ -55,18 +50,31 @@ const handleLogin = async () => {
     const user = userCredential.user;
     console.log("Usuario logueado exitosamente:", user);
 
-    // Alerta de éxito
-    successMessage.value = "Inicio de sesión exitoso!";
+    // Alerta de éxito con SweetAlert2
+    Swal.fire({
+      icon: 'success',
+      title: '¡Inicio de sesión exitoso!',
+      text: 'Bienvenido a tu página principal.',
+      timer: 2000, // La alerta se cierra automáticamente después de 2 segundos
+      showConfirmButton: false
+    });
 
     // Redirige al usuario a la vista "VitalRecorder"
     setTimeout(() => {
       router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
     }, 2000); // Espera para que la alerta se vea antes de la redirección
+
   } catch (error) {
     console.error("Error al iniciar sesión:", error.message);
-    
+
     // Alerta de error
-    alert("Error al iniciar sesión: " + error.message);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error al iniciar sesión: ' + error.message,
+      timer: 3000,
+      showConfirmButton: true
+    });
   }
 };
 
@@ -90,42 +98,6 @@ const goBack = () => {
   box-sizing: border-box;
 }
 
-/* Alerta de éxito */
-.success-alert {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 1.2rem;
-  font-family: "Poppins", sans-serif;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  animation: slideIn 0.5s ease-out, fadeOut 2s ease-out 2.5s;
-  z-index: 10;
-}
-
-@keyframes slideIn {
-  0% {
-    transform: translateX(-50%) translateY(-100%);
-  }
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Resto de los estilos */
 .login-header {
   display: flex;
   align-items: center;

@@ -93,6 +93,7 @@ import { ref } from 'vue';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
+import Swal from 'sweetalert2'; // Importamos SweetAlert2
 
 // Variables reactivas
 const fullName = ref('');
@@ -136,12 +137,18 @@ const handleRegister = async () => {
 
     console.log("Usuario registrado exitosamente:", user);
 
-    // Aquí podrías guardar información adicional en Firestore si lo necesitas
-    // como el teléfono y fecha de nacimiento
+    // Mostrar alerta de éxito con SweetAlert2
+    Swal.fire({
+      title: '¡Registro exitoso!',
+      text: 'Bienvenido a VITALSYSTEMS.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        confirmButton: 'swal-btn' // Puedes personalizar el estilo si lo deseas
+      }
+    });
 
-    alert("¡Registro exitoso! Bienvenido a VITALSYSTEMS.");
-    
-    // Redirigir al login o dashboard
+    // Redirigir al login después de la alerta
     router.push("/login");
 
   } catch (error) {
@@ -166,8 +173,14 @@ const handleRegister = async () => {
       default:
         errorMessage += error.message;
     }
-    
-    alert(errorMessage);
+
+    // Mostrar error con SweetAlert2
+    Swal.fire({
+      title: 'Error',
+      text: errorMessage,
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
   } finally {
     isLoading.value = false;
   }
