@@ -11,7 +11,7 @@
     </header>
 
     <main class="register-card">
-      <button class="back-button" aria-label="Volver">
+      <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
 
@@ -21,38 +21,68 @@
       </p>
 
       <form @submit.prevent="handleRegister" class="register-form">
-        <!-- Form Group for Name, Password, Email -->
         <div class="form-group-group">
           <div class="form-group">
             <label for="fullName">Nombre completo: <span class="required">*</span></label>
-            <input id="fullName" v-model="fullName" type="text" placeholder="Juan Pérez" required />
+            <input 
+              id="fullName" 
+              v-model="fullName" 
+              type="text" 
+              placeholder="Juan Pérez" 
+              required 
+            />
           </div>
 
           <div class="form-group">
             <label for="password">Contraseña: <span class="required">*</span></label>
-            <input id="password" v-model="password" type="password" placeholder="••••••••" required />
+            <input 
+              id="password" 
+              v-model="password" 
+              type="password" 
+              placeholder="••••••••" 
+              required 
+              minlength="6"
+            />
           </div>
 
           <div class="form-group">
             <label for="email">Correo electrónico: <span class="required">*</span></label>
-            <input id="email" v-model="email" type="email" placeholder="tucorreo@gmail.com" required />
+            <input 
+              id="email" 
+              v-model="email" 
+              type="email" 
+              placeholder="tucorreo@gmail.com" 
+              required 
+            />
           </div>
         </div>
 
-        <!-- Form Group for Phone and Date of Birth -->
         <div class="form-group-group">
           <div class="form-group">
             <label for="phone">Número de celular: <span class="required">*</span></label>
-            <input id="phone" v-model="phone" type="tel" placeholder="(+591) 70000000" required />
+            <input 
+              id="phone" 
+              v-model="phone" 
+              type="tel" 
+              placeholder="(+591) 70000000" 
+              required 
+            />
           </div>
 
           <div class="form-group">
             <label for="dob">Fecha de nacimiento: <span class="required">*</span></label>
-            <input id="dob" v-model="dob" type="date" placeholder="dd/mm/yyyy" required />
+            <input 
+              id="dob" 
+              v-model="dob" 
+              type="date" 
+              required 
+            />
           </div>
         </div>
 
-        <button type="submit" class="submit-button">Registrarse</button>
+        <button type="submit" class="submit-button" :disabled="isLoading">
+          {{ isLoading ? 'Registrando...' : 'Registrarse' }}
+        </button>
       </form>
     </main>
   </div>
@@ -60,21 +90,92 @@
 
 <script setup>
 import { ref } from 'vue';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
 
+// Variables reactivas
 const fullName = ref('');
 const password = ref('');
 const email = ref('');
 const phone = ref('');
 const dob = ref('');
+const isLoading = ref(false);
 
-const handleRegister = () => {
-  console.log('Registrando:', {
-    fullName: fullName.value,
-    password: password.value,
-    email: email.value,
-    phone: phone.value,
-    dob: dob.value,
-  });
+const router = useRouter();
+
+// Función para manejar el registro de usuario
+const handleRegister = async () => {
+  // Validación básica
+  if (!fullName.value.trim() || !email.value.trim() || !password.value.trim()) {
+    alert('Por favor, completa todos los campos requeridos.');
+    return;
+  }
+
+  if (password.value.length < 6) {
+    alert('La contraseña debe tener al menos 6 caracteres.');
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    // Crear usuario en Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(
+      auth, 
+      email.value.trim(), 
+      password.value
+    );
+    
+    const user = userCredential.user;
+    
+    // Actualizar el perfil del usuario con información adicional
+    await updateProfile(user, {
+      displayName: fullName.value.trim(),
+    });
+
+    console.log("Usuario registrado exitosamente:", user);
+
+    // Aquí podrías guardar información adicional en Firestore si lo necesitas
+    // como el teléfono y fecha de nacimiento
+
+    alert("¡Registro exitoso! Bienvenido a VITALSYSTEMS.");
+    
+    // Redirigir al login o dashboard
+    router.push("/login");
+
+  } catch (error) {
+    console.error("Error al registrarse:", error);
+    
+    // Manejo de errores más específico
+    let errorMessage = "Error al registrarse. ";
+    
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        errorMessage += "Este correo electrónico ya está registrado.";
+        break;
+      case 'auth/invalid-email':
+        errorMessage += "El correo electrónico no es válido.";
+        break;
+      case 'auth/operation-not-allowed':
+        errorMessage += "El registro con email/contraseña no está habilitado.";
+        break;
+      case 'auth/weak-password':
+        errorMessage += "La contraseña es muy débil.";
+        break;
+      default:
+        errorMessage += error.message;
+    }
+    
+    alert(errorMessage);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Función para volver a la página anterior
+const goBack = () => {
+  router.go(-1); // Mejor práctica que window.history.back()
 };
 </script>
 
@@ -222,7 +323,24 @@ const handleRegister = () => {
   transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
+.submit-button:hover:not(:disabled) {
   background: #1a4a8a;
+}
+
+.submit-button:disabled {
+  background: #6c7b87;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-group-group {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .register-card {
+    padding: 60px 25px 25px;
+  }
 }
 </style>
