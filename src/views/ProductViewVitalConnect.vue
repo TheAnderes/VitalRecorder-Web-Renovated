@@ -73,24 +73,15 @@ onUnmounted(() => {
     <section class="product-intro">
       <h1 class="product-hero-title">Vital Connect</h1>
       <div class="product-container product-intro-grid">
-<<<<<<< HEAD
-
-=======
->>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
             Siempre conectado con<br />quienes cuidan de ti.
           </h2>
           <p class="product-intro-lead">
-<<<<<<< HEAD
-            Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus
-            recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
-=======
             Recibe recordatorios y realiza un seguimiento de tus tareas
             importantes de forma sencilla. Administra tus recordatorios,
             confirma tareas y comparte el estado con tu familia desde tu
             teléfono.
->>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
           </p>
           <div class="product-intro-actions">
             <PrimaryButton root="contact-us" name="Contactanos" />
@@ -107,14 +98,6 @@ onUnmounted(() => {
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
         <!-- Targetas de Caracteristicas -->
         <div class="product-features-grid">
-<<<<<<< HEAD
-          <CharacteristicCard :icon="IconConfigure" title="Fácil de configurar" text="App intuitiva y amigable." />
-          <CharacteristicCard :icon="IconSave" title="Seguridad y bienestar" text="Notificaciones garantisadas" />
-
-          <CharacteristicCard :icon="IconSincron" title="Sincronización familiar"
-            text="Comparte avisos y estado en tiempo real" />
-
-=======
           <CharacteristicCard
             :icon="IconConfigure"
             title="Fácil de configurar"
@@ -131,7 +114,6 @@ onUnmounted(() => {
             title="Sincronización familiar"
             text="Comparte avisos y estado en tiempo real"
           />
->>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
@@ -151,24 +133,13 @@ onUnmounted(() => {
           <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
           <ForWhoCard :icon="IconMedic" title="Tratamientos Medicos" />
           <ForWhoCard :icon="IconOld" title="Personas Mayores" />
-<<<<<<< HEAD
-          <ForWhoCard :icon="IconThing" title="Personas con olvidos frecuentes" />
-=======
           <ForWhoCard
             :icon="IconThing"
             title="Personas con olvidos frecuentes"
           />
->>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
         <p class="product-forwho-lead">Vital Recorder te ayuda a...</p>
         <div class="product-forwho-grid">
-<<<<<<< HEAD
-          <ForWhoCard title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad." />
-          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
-          <ForWhoCard title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro." />
-          <ForWhoCard title="Más independencia y confianza en su día a día." />
-          <ForWhoCard title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas." />
-=======
           <ForWhoCard
             title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad."
           />
@@ -180,7 +151,6 @@ onUnmounted(() => {
           <ForWhoCard
             title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas."
           />
->>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
