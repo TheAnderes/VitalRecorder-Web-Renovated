@@ -63,10 +63,10 @@ onUnmounted(() => {
             <h3>Valores</h3>
             <p>Nuestros valores son:</p>
             <ul>
-              <li>Innovación</li>
-              <li>Empatía</li>
-              <li>Confianza</li>
-              <li>Accesibilidad</li>
+              <li style="font-size: 16px;">Innovación</li>
+              <li style="font-size: 16px;">Empatía</li>
+              <li style="font-size: 16px;">Confianza</li>
+              <li style="font-size: 16px;">Accesibilidad</li>
             </ul>
           </div>
         </div>
@@ -107,9 +107,9 @@ section {
 }
 
 .section-title {
-  font-size: 2.8rem;
+  font-size: 2.7rem;
   font-weight: 600;
-  margin-bottom: 4rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 .section-title.teal {
@@ -117,12 +117,13 @@ section {
 }
 
 .hero-section {
-  min-height: 95vh;
+  height: 95vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   text-align: center;
+  box-sizing:border-box;
 }
 .hero-background-image {
   position: absolute;
@@ -151,6 +152,7 @@ section {
   color: #000000;
   text-decoration: underline;
   text-underline-offset: 10px;
+  margin: 0;
 }
 .hero-content-box {
   background: rgba(255, 255, 255, 0.2);
@@ -173,7 +175,11 @@ section {
 }
 
 .mission-section {
-  background-color: #ffffff;
+  background-color: #f1f5f9;
+  height: 92vh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 .mission-grid {
   display: grid;
@@ -185,7 +191,7 @@ section {
   background-color: #ffffff;
   border-radius: 40px;
   width: 400px;
-  padding: 2.5rem;
+  padding: 0.5rem;
   box-shadow: 7px 7px 20px #4481eb;
   text-align: center;
 }

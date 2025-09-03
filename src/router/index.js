@@ -8,7 +8,7 @@ const routes = [
   { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
   { path: '/product', name: 'product', component: () => import('@/views/ProductView.vue') },
   { path: '/product1', name: 'product1', component: () => import('@/views/ProductViewVitalRecorder.vue') },
-    { path: '/product2', name: 'product2', component: () => import('@/views/ProductViewVitalConnect.vue') },
+    { path: '/product2', name: 'product2', component: () => import('@/views//ProductViewVitalConnect.vue') },
   
 ];
 
