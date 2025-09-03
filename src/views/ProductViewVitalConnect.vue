@@ -73,15 +73,24 @@ onUnmounted(() => {
     <section class="product-intro">
       <h1 class="product-hero-title">Vital Connect</h1>
       <div class="product-container product-intro-grid">
+<<<<<<< HEAD
+
+=======
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         <div class="product-intro-text">
           <h2 class="product-intro-heading">
             Siempre conectado con<br />quienes cuidan de ti.
           </h2>
           <p class="product-intro-lead">
+<<<<<<< HEAD
+            Recibe recordatorios y realiza un seguimiento de tus tareas importantes de forma sencilla. Administra tus
+            recordatorios, confirma tareas y comparte el estado con tu familia desde tu teléfono.
+=======
             Recibe recordatorios y realiza un seguimiento de tus tareas
             importantes de forma sencilla. Administra tus recordatorios,
             confirma tareas y comparte el estado con tu familia desde tu
             teléfono.
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
           </p>
           <div class="product-intro-actions">
             <PrimaryButton root="contact-us" name="Contactanos" />
@@ -98,6 +107,14 @@ onUnmounted(() => {
         <h2 class="product-section-title">Características que Cuidan de Ti</h2>
         <!-- Targetas de Caracteristicas -->
         <div class="product-features-grid">
+<<<<<<< HEAD
+          <CharacteristicCard :icon="IconConfigure" title="Fácil de configurar" text="App intuitiva y amigable." />
+          <CharacteristicCard :icon="IconSave" title="Seguridad y bienestar" text="Notificaciones garantisadas" />
+
+          <CharacteristicCard :icon="IconSincron" title="Sincronización familiar"
+            text="Comparte avisos y estado en tiempo real" />
+
+=======
           <CharacteristicCard
             :icon="IconConfigure"
             title="Fácil de configurar"
@@ -114,6 +131,7 @@ onUnmounted(() => {
             title="Sincronización familiar"
             text="Comparte avisos y estado en tiempo real"
           />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
@@ -133,13 +151,24 @@ onUnmounted(() => {
           <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
           <ForWhoCard :icon="IconMedic" title="Tratamientos Medicos" />
           <ForWhoCard :icon="IconOld" title="Personas Mayores" />
+<<<<<<< HEAD
+          <ForWhoCard :icon="IconThing" title="Personas con olvidos frecuentes" />
+=======
           <ForWhoCard
             :icon="IconThing"
             title="Personas con olvidos frecuentes"
           />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
         <p class="product-forwho-lead">Vital Recorder te ayuda a...</p>
         <div class="product-forwho-grid">
+<<<<<<< HEAD
+          <ForWhoCard title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad." />
+          <!-- puedes eliminar el icon y solo poner el texto se acomodara solo al medio -->
+          <ForWhoCard title="Apoyo en la adherencia a tratamientos, recordatorios y seguimiento seguro." />
+          <ForWhoCard title="Más independencia y confianza en su día a día." />
+          <ForWhoCard title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas." />
+=======
           <ForWhoCard
             title="Acceden al estado del paciente en tiempo real, con mayor tranquilidad."
           />
@@ -151,6 +180,7 @@ onUnmounted(() => {
           <ForWhoCard
             title="Recordatorios y alertas que facilitan el cumplimiento de sus rutinas."
           />
+>>>>>>> cd516283dfb3043eb15ed5eab66e550a5ef90a70
         </div>
       </div>
     </section>
@@ -161,44 +191,24 @@ onUnmounted(() => {
         <h2 class="product-section-title">¿Cómo funciona Vital Connnect?</h2>
 
         <div class="product-how-grid">
-          <HowCard
-            :step="1"
-            title="Configura en la app"
-            text="Descarga la aplicación en Google Play."
+          <HowCard :step="1" title="Configura en la app" text="Descarga la aplicación en Google Play."
             :icon="iconvitalconnect"
-            url="https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view"
-          />
-          <HowCard
-            :step="2"
-            title="Configuración Rápida"
+            url="https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing" />
+          <HowCard :step="2" title="Configuración Rápida"
             text="Los usuarios pueden actualizar su estado médico directamente desde la aplicación,"
-            :icon="IconConfigureApp"
-            url="https://cuevana.pro/pelicula/las-guerreras-k-pop"
-          />
-          <HowCard
-            :step="3"
-            title="Familia en todo momento"
+            :icon="IconConfigureApp" url="https://cuevana.pro/pelicula/las-guerreras-k-pop" />
+          <HowCard :step="3" title="Familia en todo momento"
             text="Los familiares pueden acceder a la información del estado de salud del usuario en cualquier momento."
-            :icon="IconFamili"
-          />
-          <HowCard
-            :step="4"
-            title="Bienestar en tiempo real"
-            text="Vital Connect proporciona una vista en tiempo real del bienestar del usuario"
-            :icon="IconShare"
-          />
-          <HowCard
-            :step="5"
-            title="Historial Médico y Seguimiento"
+            :icon="IconFamili" />
+          <HowCard :step="4" title="Bienestar en tiempo real"
+            text="Vital Connect proporciona una vista en tiempo real del bienestar del usuario" :icon="IconShare" />
+          <HowCard :step="5" title="Historial Médico y Seguimiento"
             text="Vital Connect guarda un historial de actualizaciones médicas para referencia futura."
-            :icon="IconRegister"
-          />
-          <HowCard
-            :step="6"
-            title="Alerta a la Familia (Opcional)"
+            :icon="IconRegister" />
+          <HowCard :step="6" title="Alerta a la Familia (Opcional)"
             text="Si el usuario no confirma la tarea después de un tiempo, la aplicación envía una notificación a los familiares."
-            :icon="IconAlertPhone"
-          />
+            :icon="IconAlertPhone" />
+
         </div>
       </div>
     </section>
@@ -208,9 +218,8 @@ onUnmounted(() => {
       <div class="product-container">
         <h2 class="product-metrics-title">Tu bienestar es nuestra prioridad</h2>
         <p class="product-forwho-lead">
-          Vital Connect está diseñado para asegurar que los familiares siempre
-          estén conectados con el bienestar de sus seres queridos en tiempo
-          real.
+          Vital Connect está diseñado para asegurar que los familiares siempre estén conectados con el bienestar de sus
+          seres queridos en tiempo real.
         </p>
         <div class="product-metrics-grid">
           <PointViewCard :icon="IconRank" valuer="95%" Text="Satisfacción" />
@@ -221,15 +230,11 @@ onUnmounted(() => {
         <div class="DownloadContend">
           <div class="DownloadNow">
             <p>Descargalo ya</p>
-            <img
-              :src="iconvitalconnect"
-              class="product-how-icon-mask"
-              :style="[maskStyle, url ? { cursor: 'pointer' } : {}]"
-              @click="openLink"
-              alt="icono"
-            />
+              <img :src="iconvitalconnect" class="product-how-icon-mask"
+                :style="[maskStyle, url ? { cursor: 'pointer' } : {}]" @click="openLink" alt="icono" />
           </div>
         </div>
+
       </div>
     </section>
     <section class="product-testimonials fade-in-on-scroll">
@@ -237,21 +242,20 @@ onUnmounted(() => {
         <h2 class="product-metrics-title">Lo que dicen nuestros usuarios</h2>
 
         <div class="product-testimonials-grid">
-          <TestimonialCard
-            name="Juan Velozco"
+
+          <TestimonialCard name="Juan Velozco"
             quote="Gracias a Vital Connect, ahora puedo gestionar mi salud de manera más autónoma, y mis hijos están tranquilos."
-            :avatar="IconMale"
-            :count="5"
-          />
-          <TestimonialCard
-            name="Maria Pardo"
+            :avatar="IconMale" :count="5" />
+          <TestimonialCard name="Maria Pardo"
             quote="me da la tranquilidad de saber, si mi papá no actualiza su estado de salud, recibiré una notificación"
-            :avatar="IconFemale"
-            :count="3"
-          />
+            :avatar="IconFemale" :count="3" />
+
+
         </div>
       </div>
     </section>
+
+
   </div>
 </template>
 
@@ -259,15 +263,15 @@ onUnmounted(() => {
 export default {
   data() {
     return {
-      url: "https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view",
-    };
+      url: 'https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view?usp=sharing'
+    }
   },
   methods: {
     openLink() {
-      window.open(this.url, "_blank");
-    },
-  },
-};
+      window.open(this.url);
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -310,6 +314,7 @@ export default {
   background-size: 100% 120%;
   background-repeat: no-repeat;
 }
+
 .product-intro-grid {
   display: flex;
 
@@ -317,6 +322,7 @@ export default {
   margin: 0;
   margin-left: 70px;
 }
+
 .product-intro-heading {
   font-size: 40px;
   font-weight: black;
@@ -326,6 +332,7 @@ export default {
   color: #0b1634;
   justify-content: center;
 }
+
 .product-intro-lead {
   text-align: center;
   padding: 10px;
@@ -352,12 +359,20 @@ export default {
   align-items: center;
 }
 
+
+.product-intro-media {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .product-device-title {
   margin: 0.2rem 0 0;
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 900;
   color: #0f2147;
-  letter-spacing: 0.4px;
+  letter-spacing: .4px;
 }
 
 /* === CARACTERÍSTICAS (COMPACTO) === */
@@ -377,8 +392,9 @@ export default {
   font-weight: var(--semibold);
   margin: 0;
   margin-top: 20px;
-  color: #1f2b6c;
+  color: #1F2B6C;
 }
+
 .product-features-grid {
   display: flex;
   flex-wrap: wrap;
@@ -398,16 +414,18 @@ export default {
   box-sizing: border-box;
   background: #f5f7fb;
 }
+
 .product-forwho-lead {
   font-family: var(--tipografia);
   text-align: center;
   color: #0b1634;
   font-weight: semibold;
-  margin: 0.15rem auto 1.25rem;
+  margin: .15rem auto 1.25rem;
   max-width: 1000px;
   font-size: 25px;
   margin-top: 20px;
 }
+
 .product-forwho-grid {
   display: flex;
   justify-content: center;
@@ -423,6 +441,7 @@ export default {
   justify-content: center;
   box-sizing: border-box;
 }
+
 .product-how-grid {
   display: flex;
   gap: 30px;
@@ -442,17 +461,19 @@ export default {
   display: grid;
   place-items: center;
   font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 0 8px 18px rgba(15, 33, 71, 0.22);
+  font-size: .9rem;
+  box-shadow: 0 8px 18px rgba(15, 33, 71, .22);
 }
+
 .product-how-icon {
   font-size: clamp(1.8rem, 3vw, 2.2rem);
-  margin: 0.2rem 0 0.45rem;
+  margin: .2rem 0 .45rem;
   background: linear-gradient(90deg, #00f2fe, #4481eb);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
+
 .product-how-title {
   font-size: 1rem;
   font-weight: 800;
@@ -465,6 +486,12 @@ export default {
   font-size: 0.95rem;
 }
 
+.product-how-text {
+  color: #5b6575;
+  margin: 0;
+  font-size: .95rem;
+}
+
 /* === MÉTRICAS (COMPACTO) === */
 .product-metrics {
   display: flex;
@@ -475,6 +502,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .product-metrics-title {
   font-family: var(--tipografia);
   font-weight: var(--semibold);
@@ -484,6 +512,7 @@ export default {
   margin: 0 0 1rem;
   margin-bottom: 10px;
 }
+
 .product-metrics-grid {
   display: flex;
   gap: 70px;
@@ -499,13 +528,15 @@ export default {
   background: #f5f7fb;
   box-sizing: border-box;
 }
+
 .product-testimonials-grid {
   display: flex;
   grid-template-columns: repeat(2, 1fr);
   gap: 80px;
 }
+
 .product-intro-text {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.40);
   padding: 20px 0;
   border-radius: 50px;
 }
@@ -533,18 +564,22 @@ export default {
   width: 150px;
   height: 150px;
 }
+
 /* Responsive */
 @media (max-width: 1000px) {
   .product-intro-grid {
     grid-template-columns: 1fr;
   }
+
   .product-testimonials-grid {
     grid-template-columns: 1fr;
   }
+
   .product-cta-grid {
     grid-template-columns: 1fr;
   }
 }
+
 .fade-in-on-scroll {
   opacity: 0;
   transform: translateY(40px);
