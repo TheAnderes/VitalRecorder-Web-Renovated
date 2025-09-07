@@ -3,12 +3,8 @@
     <div class="shell row">
       <!-- Marca -->
       <div class="brand">
-        <img
-          class="brand-mark"
-          src="/Logo.png"
-          alt="VITALSYSTEMS"
-          onerror="this.src='/favicon.ico'; this.classList.add('fallback')"
-        />
+        <img class="brand-mark" src="/Logo.png" alt="VITALSYSTEMS"
+          onerror="this.src='/favicon.ico'; this.classList.add('fallback')" />
         <div class="brand-text">VITALSYSTEMS</div>
       </div>
 
@@ -80,12 +76,13 @@
             <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g4" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
+                  <stop offset="0" stop-color="#2dd4bf" />
+                  <stop offset="1" stop-color="#60a5fa" />
                 </linearGradient>
               </defs>
-              <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" fill="none" stroke="url(#g4)" stroke-width="1.8"/>
-              <circle cx="12" cy="10" r="2.5" fill="none" stroke="url(#g4)" stroke-width="1.8"/>
+              <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" fill="none" stroke="url(#g4)"
+                stroke-width="1.8" />
+              <circle cx="12" cy="10" r="2.5" fill="none" stroke="url(#g4)" stroke-width="1.8" />
             </svg>
           </span>
           <span>12 de Calacoto, La Paz - Bolivia</span>
@@ -97,12 +94,13 @@
             <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g5" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
+                  <stop offset="0" stop-color="#2dd4bf" />
+                  <stop offset="1" stop-color="#60a5fa" />
                 </linearGradient>
               </defs>
-              <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#g5)" stroke-width="1.8"/>
-              <path d="M4 7l8 6 8-6" fill="none" stroke="url(#g5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#g5)" stroke-width="1.8" />
+              <path d="M4 7l8 6 8-6" fill="none" stroke="url(#g5)" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
           </span>
           <a href="mailto:contacto@vitalsystems.com">contacto@vitalsystems.com</a>
@@ -114,12 +112,12 @@
             <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g6" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
+                  <stop offset="0" stop-color="#2dd4bf" />
+                  <stop offset="1" stop-color="#60a5fa" />
                 </linearGradient>
               </defs>
-              <path d="M6 3l3 3-2 2a12 12 0 0 0 8 8l2-2 3 3-2 3c-8 1-15-6-14-14L6 3Z"
-                    fill="none" stroke="url(#g6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 3l3 3-2 2a12 12 0 0 0 8 8l2-2 3 3-2 3c-8 1-15-6-14-14L6 3Z" fill="none" stroke="url(#g6)"
+                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </span>
           <a href="tel:+59173577561">+591 73577561</a>
@@ -132,11 +130,13 @@
 </template>
 
 <style scoped>
-.footer{
-  background:#0e1b2f; color:#cbd5e1;
+.footer {
+  background: #0e1b2f;
+  color: #cbd5e1;
   padding-top: clamp(18px, 3vh, 28px);
 }
-.shell{
+
+.shell {
   width: clamp(320px, 92vw, 1400px);
   margin: 0 auto;
   padding: 0 clamp(12px, 2vw, 28px) clamp(16px, 3vh, 22px);
@@ -151,7 +151,7 @@
 }
 
 /* Marca */
-.brand{
+.brand {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -203,15 +203,20 @@ a:hover{ text-decoration: underline; }
   display:grid; place-items:center;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
 }
-.ico svg{ width: 20px; height: 20px; display:block; }
+
+.ico svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
 
 /* Copyright */
-.legal{
-  text-align:center;
+.legal {
+  text-align: center;
   font-size: clamp(.85rem, .95vw, .95rem);
-  color:#93a7c2;
+  color: #93a7c2;
   padding: 12px 0 18px;
-  border-top: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid rgba(255, 255, 255, .06);
   margin-top: clamp(14px, 2vh, 22px);
 }
 
