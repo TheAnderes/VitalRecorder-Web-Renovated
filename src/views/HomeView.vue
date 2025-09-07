@@ -331,4 +331,137 @@ section {
   opacity: 1;
   transform: translateY(0);
 }
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  /* Layout base */
+  .home-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+  section {
+    padding: 28px 0;
+  }
+  .section-title {
+    font-size: clamp(1.35rem, 6.5vw, 1.9rem);
+    margin-bottom: 1.75rem;
+  }
+
+  /* HERO */
+  .hero-section {
+    height: auto;
+    padding: 48px 0 32px;
+  }
+  .hero-background-image {
+    filter: brightness(0.78) blur(1.5px);
+  }
+  .hero-content-wrapper {
+    gap: 14px;
+    padding: 0 6px;
+  }
+  .hero-main-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.15;
+    text-shadow: 0 4px 10px rgba(0,0,0,.45);
+  }
+  .hero-content-box {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .hero-content-box p {
+    max-width: 100%;
+    margin: 0 0 14px 0;
+    font-size: clamp(1rem, 4.5vw, 1.1rem);
+  }
+  .hero-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  /* Si tus botones renderizan como <a> o <button>, esto los hace full width */
+  .hero-actions :deep(a),
+  .hero-actions :deep(button) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ABOUT */
+  .about-section {
+    height: auto;
+    padding: 32px 0;
+  }
+  .about-grid {
+    grid-template-columns: 1fr; /* apilar */
+    gap: 18px;
+    margin-top: 10px;
+  }
+  .about-blob {
+    padding: 16px;
+    border-radius: 18px;
+    box-shadow: 4px 6px 14px rgba(68,129,235,.35);
+  }
+  .about-blob p {
+    font-size: clamp(0.98rem, 4.3vw, 1.05rem);
+    line-height: 1.55;
+  }
+  .about-illustration img {
+    width: min(82%, 360px);
+    transform: none;
+  }
+
+  /* PRODUCTS */
+  .products-section { padding-top: 24px; }
+  .product-row,
+  .product-row.reverse {
+    grid-template-columns: 1fr; /* apilar */
+    gap: 16px;
+    margin-bottom: 26px;
+    direction: initial; /* neutraliza el reverse */
+  }
+  .description-blob {
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 4px 6px 14px rgba(0,242,254,.35);
+  }
+  .description-blob p {
+    font-size: clamp(0.98rem, 4.3vw, 1.05rem);
+    line-height: 1.55;
+  }
+  .product-card { padding-top: 4px; }
+  .product-icon {
+    height: clamp(120px, 28vw, 170px);
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+  /* Botón del product-card a lo ancho si corresponde */
+  .product-card :deep(a),
+  .product-card :deep(button) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    gap: 14px;
+    padding-bottom: 24px;
+    margin-top: 10px;
+  }
+
+  /* Animaciones: suaviza distancias */
+  .fade-in-on-scroll {
+    transform: translateY(24px);
+  }
+}
+
+/* ===== EXTRAPEQUEÑO (≤380px) ===== */
+@media (max-width: 380px) {
+  .hero-section { padding: 36px 0 24px; }
+  .hero-content-box { padding: 12px; border-radius: 12px; }
+  .about-blob { padding: 12px; border-radius: 14px; }
+  .description-blob { padding: 12px; border-radius: 14px; }
+}
+
+/* Evita scroll horizontal accidental en móvil */
+:root, html, body { overflow-x: hidden; }
+
 </style>

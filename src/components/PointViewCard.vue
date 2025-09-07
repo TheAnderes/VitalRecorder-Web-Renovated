@@ -49,4 +49,41 @@ export default {
   font-size: 20px;
   font-family: var(--tipografia);
 }
+@media (max-width: 768px) {
+  .product-metric-card {
+    width: 100%;           /* fluido */
+    max-width: 320px;      /* límite cómodo en móvil */
+    height: auto;          /* sin alto fijo */
+    padding: 14px;
+    border-radius: 16px;
+    box-shadow: 4px 6px 12px rgba(68,129,235,.28);
+  }
+
+  .product-metric-icon {
+    width: clamp(64px, 26vw, 88px);
+    height: clamp(64px, 26vw, 88px);
+    margin-bottom: 8px;
+  }
+
+  .product-metric-value {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .product-metric-label {
+    font-size: clamp(0.95rem, 4.3vw, 1.05rem);
+  }
+}
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .product-metric-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .product-metric-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
 </style>

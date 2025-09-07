@@ -206,9 +206,80 @@ textarea:focus {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 900px) {
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  .contact-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+    line-height: 1.1;
+    margin-bottom: .5rem;
+  }
+  .subtitle {
+    font-size: clamp(0.98rem, 4.2vw, 1.05rem);
+    max-width: 100%;
+    margin: 0 auto 16px;
+    line-height: 1.5;
+  }
+
   .contact-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr;   /* apilar */
+    gap: 16px;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(68,129,235,.18);
+  }
+
+  /* Formulario */
+  .form {
+    gap: 12px;
+  }
+  label { gap: 6px; }
+  input, textarea {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 12px;
+    width: 90%;
+  }
+
+  /* Haz el PrimaryButton a lo ancho (funciona si el botón rinde <a> o <button>) */
+  .form :deep(a),
+  .form :deep(button) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Mapa */
+  .map-media {
+    border-radius: 14px;
+  }
+
+  /* IMPORTANTE:
+     Tu .map tenía width:90% y height:90%; en móvil causa recortes.
+     Lo forzamos a ancho completo y altura controlada. */
+  .map {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 320px;        /* alto cómodo en móvil */
+    aspect-ratio: 16/12;      /* mantiene proporción, Leaflet se adapta */
+    border-radius: 14px;
+  }
+
+  /* Controles Leaflet más cómodos al tacto */
+  :deep(.leaflet-control-zoom a) {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
   }
 }
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .contact-card { padding: 12px; border-radius: 12px; }
+  .map { min-height: 280px; aspect-ratio: 4/3; }
+}
+
 </style>

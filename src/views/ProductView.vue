@@ -173,6 +173,7 @@ onUnmounted(() => {
 
 .product-intro {
   display: flex;
+  position: relative;
   padding: 10px 0 10px;
   color: #fff;
   height: 92vh;
@@ -231,15 +232,6 @@ onUnmounted(() => {
   gap: 50px;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.product-intro-media {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  width: 450px;
-  height: 450px;
 }
 
 .product-device-title {
@@ -476,5 +468,141 @@ onUnmounted(() => {
 .fade-in-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+@media (max-width: 768px) {
+  .product-container{
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+@media (max-width: 768px) {
+  .product-intro {
+    height: auto;
+    padding: 48px 0 36px;
+    gap: 20px;
+    background-size: cover;
+  }
+
+  .product-view-image {
+    filter: brightness(0.75) blur(1.5px);
+  }
+
+  .product-content-wrapper {
+    width: 100vw;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .product-hero-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    text-underline-offset: 10px;
+    text-shadow: 0 4px 10px rgba(0,0,0,.45);
+  }
+
+  .product-intro-text {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    border-radius: 18px;
+    gap: 12px;
+    background: rgba(255,255,255,.82);
+    box-sizing: border-box;
+  }
+
+  .product-intro-lead {
+    font-size: clamp(1.1rem, 5.3vw, 1.6rem);
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-intro-actions {
+    gap: 16px;
+  }
+
+  /* Secciones 1 y 2: apilar y quitar alturas fijas */
+  .product-one,
+  .product-two {
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .product-one-grid,
+  .product-two-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .product-one-text {
+    font-size: clamp(1.25rem, 6vw, 1.6rem);
+  }
+
+  .product-sections-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+
+  /* Cómo funciona / métricas / CTA: más aire y columnas a una */
+  .product-how {
+    height: auto;
+    padding: 36px 0;
+  }
+
+  .product-how-grid,
+  .product-metrics-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .product-metrics-title {
+    font-size: clamp(1.4rem, 7vw, 2.1rem);
+    margin-bottom: .75rem;
+  }
+
+  .product-cta {
+    padding: 32px 0;
+  }
+
+  .product-cta-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .product-cta-textbox {
+    border-radius: 14px;
+    font-size: .98rem;
+  }
+
+  /* Testimonios */
+  .product-testimonials {
+    height: auto;
+    padding: 10px 10px;
+    gap: 20px;
+  }
+
+  .product-testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+
+  /* Tarjetas internas: ancho fluido */
+  .product-one-grid-image,
+  .product-one-grid-text,
+  .product-two-grid-text {
+    width: 100%;
+  }
+}
+
+/* Ajustes extra para pantallas muy pequeñas (≤380px) */
+@media (max-width: 380px) {
+  .product-intro {
+    padding: 36px 0 28px;
+  }
+
+  .product-intro-text {
+    padding: 12px;
+    border-radius: 14px;
+  }
 }
 </style>

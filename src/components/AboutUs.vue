@@ -266,4 +266,121 @@ section {
   opacity: 1;
   transform: translateY(0);
 }
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  .about-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  section {
+    padding: 32px 0; /* menos aire en móvil */
+  }
+
+  .section-title {
+    font-size: clamp(1.35rem, 6.5vw, 1.9rem);
+    margin-bottom: 1rem;
+  }
+
+  /* HERO */
+  .hero-section {
+    height: auto;              /* quita 95vh */
+    padding: 48px 0 28px;
+  }
+  .hero-background-image {
+    filter: brightness(0.78) blur(1.5px);
+  }
+  .hero-content-wrapper {
+    gap: 14px;
+    padding: 0 6px;
+  }
+  .hero-main-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.15;
+    text-underline-offset: 6px;
+    text-shadow: 0 4px 10px rgba(0,0,0,.45);
+  }
+  .hero-content-box {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .hero-content-box h2 {
+    font-size: clamp(1.1rem, 5.5vw, 1.3rem);
+    margin-bottom: .5rem;
+  }
+  .hero-content-box p {
+    font-size: clamp(1rem, 4.4vw, 1.1rem);
+    max-width: 100%;
+  }
+
+  /* MISIÓN / VISIÓN / VALORES */
+  .mission-section {
+    height: auto;           /* quita 95vh */
+    padding: 28px 0;
+    margin: 0;
+  }
+  .mission-grid {
+    grid-template-columns: 1fr; /* apilar */
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .mission-blob {
+    width: 100%;            /* antes: 400px */
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: 4px 6px 14px rgba(68,129,235,.35);
+    box-sizing: border-box;
+  }
+  .mission-blob h3 {
+    font-size: clamp(1.1rem, 5.5vw, 1.3rem);
+    margin-bottom: .5rem;
+  }
+  .mission-blob p,
+  .mission-blob ul {
+    font-size: clamp(0.98rem, 4.3vw, 1.05rem);
+    line-height: 1.55;
+  }
+
+  .values-blob-wrapper {
+    justify-content: stretch;
+  }
+  .values-blob {
+    max-width: 100%;
+  }
+  .values-blob ul {
+    margin-top: .25rem;
+  }
+
+  /* EQUIPO */
+  .team-section { padding: 28px 0; }
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil ancho */
+    gap: 14px;
+  }
+  .team-member-card {
+    padding: 16px;
+    font-size: 1.05rem;
+    border-radius: 16px;
+    box-shadow: 4px 6px 14px rgba(0,242,254,.35);
+  }
+
+  /* Animación más corta en móvil */
+  .fade-in-on-scroll {
+    transform: translateY(24px);
+  }
+}
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .team-grid {
+    grid-template-columns: 1fr; /* una columna en pantallas muy pequeñas */
+  }
+  .mission-blob { padding: 12px; border-radius: 14px; }
+  .hero-content-box { padding: 12px; border-radius: 12px; }
+}
+
+/* Evita scroll horizontal accidental */
+:root, html, body { overflow-x: hidden; }
 </style>

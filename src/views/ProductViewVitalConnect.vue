@@ -559,4 +559,145 @@ export default {
   opacity: 1;
   transform: translateY(0);
 }
+@media (max-width: 768px) {
+  .product-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  /* HERO / INTRO */
+  .product-intro {
+    height: auto;                 /* quitar 92vh */
+    padding: 48px 0 28px;
+    gap: 18px;
+    background-size: cover;       /* en lugar de 100% 120% */
+    background-position: center;
+  }
+  .product-hero-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    margin-left: 0;
+    text-align: center;
+    text-underline-offset: 10px;
+    text-shadow: 0 4px 10px rgba(0,0,0,.45);
+  }
+  .product-intro-grid { margin-left: 0; }
+  .product-intro-text {
+    padding: 12px 10px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.5);
+  }
+  .product-intro-heading {
+    font-size: clamp(1.3rem, 6.5vw, 1.8rem);
+    margin-bottom: .5rem;
+  }
+  .product-intro-lead {
+    width: 100%;                  /* antes: 600px */
+    font-size: clamp(1rem, 4.6vw, 1.15rem);
+    line-height: 1.5;
+    padding: 0 6px;
+    margin-bottom: 1rem;
+  }
+  .product-intro-actions {
+    gap: 12px;
+    justify-content: center;
+  }
+  /* Botones a lo ancho si renderizan <a>/<button> */
+  .product-intro-actions :deep(a),
+  .product-intro-actions :deep(button) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* CARACTERÍSTICAS */
+  .product-features {
+    height: auto;
+    padding: 32px 0;
+  }
+  .product-section-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+    margin-top: 0;
+  }
+  .product-features-grid {
+    column-gap: 16px;             /* antes: 190px */
+    row-gap: 14px;
+    padding: 0 2px;
+    justify-content: center;
+  }
+
+  /* PARA QUIÉN ES */
+  .product-forwho {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-forwho-lead {
+    max-width: 100%;
+    font-size: clamp(1rem, 4.8vw, 1.15rem);
+    margin: 10px auto 14px;
+    padding: 0 6px;
+  }
+  .product-forwho-grid {
+    flex-wrap: wrap;
+    gap: 14px;                    /* antes: 55px */
+    justify-content: center;
+  }
+
+  /* CÓMO FUNCIONA */
+  .product-how {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-how-grid {
+    gap: 14px;                    /* antes: 30px */
+    justify-content: center;
+  }
+
+  /* MÉTRICAS */
+  .product-metrics {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-metrics-title {
+    font-size: clamp(1.4rem, 7vw, 2.1rem);
+    margin-bottom: 10px;
+  }
+  .product-metrics-grid {
+    flex-wrap: wrap;
+    gap: 16px;                    /* antes: 70px */
+    justify-content: center;
+  }
+  .DownloadContend { padding: 0 2px; }
+  .DownloadNow {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    padding: 14px;
+    font-size: clamp(1rem, 5vw, 1.2rem);
+    border-radius: 16px;
+    gap: 12px;
+  }
+  .product-how-icon-mask {        /* ícono de descarga */
+    width: clamp(84px, 28vw, 110px);
+    height: clamp(84px, 28vw, 110px);
+  }
+
+  /* TESTIMONIOS */
+  .product-testimonials {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-testimonials-grid {
+    flex-direction: column;
+    gap: 14px;                    /* antes: 80px */
+  }
+}
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .product-intro { padding: 36px 0 22px; }
+  .product-intro-text { border-radius: 14px; }
+  .DownloadNow { padding: 12px; border-radius: 12px; }
+}
+
+/* Evita scroll horizontal accidental en móvil */
+:root, html, body { overflow-x: hidden; }
 </style>

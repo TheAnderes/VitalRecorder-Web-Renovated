@@ -45,4 +45,45 @@ export default {
   margin-bottom: 9px;
   margin-top: 8px;
 }
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  .product-forwho-card {
+    width: 100%;            /* ocupa todo el ancho del contenedor */
+    max-width: 300px;       /* límite para que no crezca demasiado */
+    height: auto;           /* se adapta al contenido */
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .product-forwho-icon-mask {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 8px;
+  }
+
+  .product-forwho-title {
+    width: 100%;            /* ya no forzamos 191px */
+    font-size: clamp(0.95rem, 4.5vw, 1.05rem);
+    margin: 6px 0 4px;
+  }
+}
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .product-forwho-card {
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .product-forwho-icon-mask {
+    width: 60px;
+    height: 60px;
+  }
+
+  .product-forwho-title {
+    font-size: clamp(0.9rem, 4vw, 1rem);
+  }
+}
+
 </style>

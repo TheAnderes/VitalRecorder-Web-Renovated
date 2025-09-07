@@ -288,18 +288,7 @@ export default {
   color: #0f2147;
   background: #ffffff;
 }
-.product-view-vital-recorder-image {
-  position: absolute;
-  top: 30px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("@/components/icons/ImageProductVitarRecorner.jpg");
-  background-size: cover;
-  background-position: center;
-  filter: brightness(0.8) blur(2px);
-  z-index: 1;
-}
+
 .product-view-content-wrapper {
   z-index: 2;
 }
@@ -312,12 +301,12 @@ export default {
 /* HERO / INTRO */
 .product-hero-title {
   font-family: var(--tipografia);
-  font-weight: 900;
+  font-weight: var(--black);
   font-size: 80px;
   font-weight: black;
   color: #ffffff;
   text-decoration: underline 4px #ffffff;
-  text-underline-offset: 20px;
+  text-underline-offset: 9px;
   margin: 0;
   margin-left: 70px;
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
@@ -325,15 +314,27 @@ export default {
 
 .product-intro {
   display: flex;
+  position: relative;
   flex-direction: column;
   padding: 10px 0 10px;
   color: #fff;
   height: 92vh;
   box-sizing: border-box;
   gap: 30px;
-
   background-size: 100% 120%;
   background-repeat: no-repeat;
+}
+.product-view-vital-recorder-image {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("@/components/icons/ImageProductVitarRecorner.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.8) blur(2px);
+  z-index: 1;
 }
 .product-intro-grid {
   display: flex;
@@ -554,39 +555,142 @@ export default {
   justify-content: center;
   align-items: center;
 }
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  .product-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
 
-/* Responsive */
-@media (max-width: 1000px) {
-  .product-intro-grid {
-    grid-template-columns: 1fr;
+  /* HERO / INTRO */
+  .product-intro {
+    height: auto;
+    padding: 48px 0 28px;
+    background-size: cover;
+    gap: 18px;
+  }
+  .product-view-vital-recorder-image {
+    filter: brightness(0.78) blur(1.5px);
+  }
+  .product-view-content-wrapper { padding: 0 6px; }
+  .product-hero-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    margin-left: 0;
+    text-underline-offset: 6px;
+    text-shadow: 0 4px 10px rgba(0,0,0,.45);
+    text-align: center;
+  }
+  .product-intro-grid { margin-left: 0; }
+  .product-intro-text {
+    padding: 12px 10px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.5);
+  }
+  .product-intro-heading {
+    font-size: clamp(1.3rem, 6.5vw, 1.8rem);
+    margin-bottom: .5rem;
+  }
+  .product-intro-lead {
+    width: 100%;
+    font-size: clamp(1rem, 4.6vw, 1.15rem);
+    line-height: 1.5;
+    padding: 0 8px;
+    margin-bottom: 1rem;
+  }
+  .product-intro-actions {
+    gap: 12px;
+    justify-content: center;
+  }
+  /* Si tus botones renderizan <a>/<button>, esto los hace full width */
+  .product-intro-actions :deep(a),
+  .product-intro-actions :deep(button) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* CARACTERÍSTICAS */
+  .product-features {
+    height: auto;
+    padding: 32px 0;
+  }
+  .product-section-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+    margin-top: 0;
+  }
+  .product-features-grid {
+    column-gap: 16px;
+    row-gap: 14px;
+    padding: 0 2px;
+  }
+
+  /* PARA QUIÉN ES */
+  .product-forwho {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-forwho-lead {
+    max-width: 100%;
+    font-size: clamp(1rem, 4.8vw, 1.15rem);
+    margin: 10px auto 14px;
+  }
+  .product-forwho-grid {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  /* CÓMO FUNCIONA */
+  .product-how {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-how-grid {
+    gap: 14px;
+  }
+
+  /* MÉTRICAS */
+  .product-metrics {
+    height: auto;
+    padding: 28px 0;
+  }
+  .product-metrics-title {
+    font-size: clamp(1.4rem, 7vw, 2.1rem);
+    margin-bottom: 10px;
+  }
+  .product-metrics-grid {
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  .DownloadContend { padding: 0 2px; }
+  .DownloadNow {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    padding: 14px;
+    font-size: clamp(1rem, 5vw, 1.2rem);
+    border-radius: 16px;
+    gap: 12px;
+  }
+
+  /* TESTIMONIOS */
+  .product-testimonials {
+    height: auto;
+    padding: 28px 0;
   }
   .product-testimonials-grid {
-    grid-template-columns: 1fr;
-  }
-  .product-cta-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 14px;
   }
 }
 
-@media (min-width: 1340px) {
-  .product-view-content-wrapper {
-    margin-left: 200px;
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 30px;
-    position: relative;
-    z-index: 2;
-  }
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .product-intro { padding: 36px 0 22px; }
+  .product-intro-text { border-radius: 14px; }
+  .DownloadNow { padding: 12px; border-radius: 12px; }
 }
-.fade-in-on-scroll {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 1s ease-out, transform 1s ease-out;
-}
-.fade-in-on-scroll.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+
+/* Evita scroll horizontal accidental en móvil */
+:root, html, body { overflow-x: hidden; }
+
 </style>

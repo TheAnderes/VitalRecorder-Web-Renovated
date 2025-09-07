@@ -52,4 +52,42 @@ export default {
     margin: 0;
     width: 180px;
 }
+/* ===== MOBILE ONLY (≤768px) ===== */
+@media (max-width: 768px) {
+  .product-feature-card {
+    width: 100%;             /* ocupa todo el ancho disponible */
+    max-width: 320px;        /* límite razonable */
+    padding: 16px;
+    border-radius: 20px;
+    row-gap: 12px;
+  }
+
+  .product-feature-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .product-feature-title {
+    font-size: clamp(1rem, 5vw, 1.2rem);
+    margin: .25rem 0;
+  }
+
+  .product-feature-text {
+    width: 100%;             /* fluido */
+    font-size: clamp(0.9rem, 4.3vw, 1rem);
+    line-height: 1.45;
+  }
+}
+
+/* ===== EXTRA PEQUEÑO (≤480px) ===== */
+@media (max-width: 480px) {
+  .product-feature-card {
+    padding: 12px;
+    border-radius: 14px;
+  }
+  .product-feature-icon {
+    width: 64px;
+    height: 64px;
+  }
+}
 </style>

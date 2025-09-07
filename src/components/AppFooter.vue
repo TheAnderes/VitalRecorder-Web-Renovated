@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="shell row">
       <!-- Marca -->
       <div class="brand">
@@ -13,63 +13,71 @@
       </div>
 
       <!-- Redes -->
-      <ul class="social">
+      <ul class="social" aria-label="Redes sociales">
         <li>
-          <span class="ico">
-            <!-- Facebook -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <defs>
-                <linearGradient id="g" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
-                </linearGradient>
-              </defs>
-              <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z"
-                    fill="none" stroke="url(#g)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <a href="#" rel="noopener">Facebook</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <span class="ico">
+              <!-- Facebook -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z"
+                      fill="none" stroke="url(#g)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="social-text">Facebook</span>
+          </a>
         </li>
+
         <li>
-          <span class="ico">
-            <!-- Instagram -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <defs>
-                <linearGradient id="g2" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
-                </linearGradient>
-              </defs>
-              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
-              <circle cx="12" cy="12" r="3.5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
-              <circle cx="17.5" cy="6.5" r="1" fill="url(#g2)"/>
-            </svg>
-          </span>
-          <a href="#" rel="noopener">Instagram</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <span class="ico">
+              <!-- Instagram -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g2" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="3.5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="url(#g2)"/>
+              </svg>
+            </span>
+            <span class="social-text">Instagram</span>
+          </a>
         </li>
+
         <li>
-          <span class="ico">
-            <!-- X / Twitter -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <defs>
-                <linearGradient id="g3" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf"/>
-                  <stop offset="1" stop-color="#60a5fa"/>
-                </linearGradient>
-              </defs>
-              <path d="M4 4l16 16M20 4L4 20" fill="none" stroke="url(#g3)" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <a href="#" rel="noopener">X / Twitter</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
+            <span class="ico">
+              <!-- X / Twitter -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g3" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <path d="M4 4l16 16M20 4L4 20" fill="none" stroke="url(#g3)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="social-text">X / Twitter</span>
+          </a>
         </li>
       </ul>
 
       <!-- Contacto -->
-      <ul class="contact">
+      <ul class="contact" aria-label="Información de contacto">
         <li>
-          <span class="ico">
+          <span class="ico" aria-hidden="true">
             <!-- Pin -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g4" x1="0" x2="1">
                   <stop offset="0" stop-color="#2dd4bf"/>
@@ -82,10 +90,11 @@
           </span>
           <span>12 de Calacoto, La Paz - Bolivia</span>
         </li>
+
         <li>
-          <span class="ico">
+          <span class="ico" aria-hidden="true">
             <!-- Sobre -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g5" x1="0" x2="1">
                   <stop offset="0" stop-color="#2dd4bf"/>
@@ -98,10 +107,11 @@
           </span>
           <a href="mailto:contacto@vitalsystems.com">contacto@vitalsystems.com</a>
         </li>
+
         <li>
-          <span class="ico">
+          <span class="ico" aria-hidden="true">
             <!-- Teléfono -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
               <defs>
                 <linearGradient id="g6" x1="0" x2="1">
                   <stop offset="0" stop-color="#2dd4bf"/>
@@ -131,43 +141,65 @@
   margin: 0 auto;
   padding: 0 clamp(12px, 2vw, 28px) clamp(16px, 3vh, 22px);
 }
+
+/* Grid base: 3 columnas en desktop, apilado en móvil */
 .row{
   display: grid;
-  grid-template-columns: 1.1fr 1fr 1.2fr;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
   gap: clamp(16px, 3vw, 48px);
-  align-items: center;
+  align-items: start;
 }
 
 /* Marca */
 .brand{
   display: flex;
-  flex-direction: column;   /* logo arriba, texto abajo */
-  align-items: center;      /* centra horizontalmente el logo y el texto */
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  justify-self: center;     /* centra la columna completa dentro del grid */
+  justify-self: center;
   gap: clamp(10px, 1.2vw, 14px);
 }
-
-/* Asegura que la imagen se centre y no deje espacio raro */
 .brand-mark{
   display: block;
-  margin: 0 auto;           /* extra por si acaso */
+  margin: 0 auto;
   width: clamp(84px, 11vw, 130px);
   height: auto;
 }
-.brand-text{ font-weight: 500; letter-spacing: .2px; font-size: clamp(22px, 2.6vw, 34px); background: linear-gradient(90deg,#2dd4bf,#60a5fa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand-text{
+  font-weight: 500;
+  letter-spacing: .2px;
+  font-size: clamp(22px, 2.6vw, 34px);
+  background: linear-gradient(90deg,#2dd4bf,#60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 /* Listas */
-.social, .contact{ list-style: none; padding:0; margin:0; display:grid; gap: 14px; }
-.social li, .contact li{ display:flex; align-items:center; gap: 12px; }
+.social, .contact{
+  list-style: none;
+  padding:0; margin:0;
+  display:grid;
+  gap: 14px;
+}
+.social li, .contact li{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+.social a{
+  display: inline-flex;      /* hace clicable el icono + texto */
+  align-items: center;
+  gap: 12px;
+}
 a{ color:#9cc2ff; text-decoration:none; }
 a:hover{ text-decoration: underline; }
 
 /* Íconos */
 .ico{
-  width: 34px; height: 34px; min-width:34px;
+  width: 36px; height: 36px; min-width:36px;
   border-radius: 999px;
-  background: rgba(255,255,255,.04);
+  background: rgba(255,255,255,.05);
   display:grid; place-items:center;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
 }
@@ -183,13 +215,29 @@ a:hover{ text-decoration: underline; }
   margin-top: clamp(14px, 2vh, 22px);
 }
 
-/* Responsive */
+/* Responsivo */
 @media (max-width: 980px){
-  .row{ grid-template-columns: 1fr; align-items: start; }
-    .brand{
-    align-items: center;     /* centro en pantallas pequeñas */
-    text-align: center;
+  .row{
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
-  .social, .contact{ justify-items: start; }
+  .brand{
+    order: 1;
+  }
+  .social{
+    order: 2;
+    justify-items: start;
+  }
+  .contact{
+    order: 3;
+    justify-items: start;
+  }
+}
+
+/* Micro-ajustes para pantallas muy pequeñas */
+@media (max-width: 420px){
+  .brand-mark{ width: 78px; }
+  .ico{ width: 34px; height: 34px; }
+  .social li, .contact li{ gap: 10px; }
 }
 </style>

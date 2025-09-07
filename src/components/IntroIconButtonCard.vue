@@ -37,4 +37,32 @@ export default {
   width: auto;
   height: 400px;
 }
+.product-intro-media
+{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .product-intro-media {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-intro-icon {
+    width: 100%;
+    max-width: 420px;
+    height:70vw;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+/* Muy pequeño (≤380px): limita altura visual */
+@media (max-width: 380px) {
+  .product-intro-icon {
+    max-width: 320px;
+  }
+}
 </style>
