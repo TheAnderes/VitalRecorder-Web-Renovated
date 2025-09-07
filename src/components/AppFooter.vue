@@ -9,64 +9,74 @@
       </div>
 
       <!-- Redes -->
-      <ul class="social" aria-label="Redes sociales">
-        <li>
-          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <span class="ico">
-              <!-- Facebook -->
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="g" x1="0" x2="1">
-                    <stop offset="0" stop-color="#2dd4bf"/>
-                    <stop offset="1" stop-color="#60a5fa"/>
-                  </linearGradient>
-                </defs>
-                <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z"
-                      fill="none" stroke="url(#g)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="social-text">Facebook</span>
-          </a>
-        </li>
+<ul class="social" aria-label="Redes sociales">
+  <li>
+    <a href="https://www.facebook.com/share/1BAv4qKUap/"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Facebook — VITALSYSTEMS">
+      <span class="ico">
+        <!-- Facebook -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="#2dd4bf"/>
+              <stop offset="1" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+          <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z"
+                fill="none" stroke="url(#g)" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="social-text">Facebook</span>
+    </a>
+  </li>
 
-        <li>
-          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <span class="ico">
-              <!-- Instagram -->
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="g2" x1="0" x2="1">
-                    <stop offset="0" stop-color="#2dd4bf"/>
-                    <stop offset="1" stop-color="#60a5fa"/>
-                  </linearGradient>
-                </defs>
-                <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
-                <circle cx="12" cy="12" r="3.5" fill="none" stroke="url(#g2)" stroke-width="1.8"/>
-                <circle cx="17.5" cy="6.5" r="1" fill="url(#g2)"/>
-              </svg>
-            </span>
-            <span class="social-text">Instagram</span>
-          </a>
-        </li>
+  <li>
+    <a href="https://www.instagram.com/vital.systems/"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Instagram — VITALSYSTEMS">
+      <span class="ico">
+        <!-- Instagram -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="g2" x1="0" x2="1">
+              <stop offset="0" stop-color="#2dd4bf"/>
+              <stop offset="1" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+          <rect x="3" y="3" width="18" height="18" rx="5"
+                fill="none" stroke="url(#g2)" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="3.5"
+                  fill="none" stroke="url(#g2)" stroke-width="1.8"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="url(#g2)"/>
+        </svg>
+      </span>
+      <span class="social-text">Instagram</span>
+    </a>
+  </li>
 
-        <li>
-          <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
-            <span class="ico">
-              <!-- X / Twitter -->
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <defs>
-                  <linearGradient id="g3" x1="0" x2="1">
-                    <stop offset="0" stop-color="#2dd4bf"/>
-                    <stop offset="1" stop-color="#60a5fa"/>
-                  </linearGradient>
-                </defs>
-                <path d="M4 4l16 16M20 4L4 20" fill="none" stroke="url(#g3)" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <span class="social-text">X / Twitter</span>
-          </a>
-        </li>
-      </ul>
+  <li>
+    <a href="https://x.com/VitalSystemsUWU"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="X / Twitter — VITALSYSTEMS">
+      <span class="ico">
+        <!-- X / Twitter -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="g3" x1="0" x2="1">
+              <stop offset="0" stop-color="#2dd4bf"/>
+              <stop offset="1" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+        <path d="M4 4l16 16M20 4L4 20"
+              fill="none" stroke="url(#g3)" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="social-text">X / Twitter</span>
+    </a>
+  </li>
+</ul>
 
       <!-- Contacto -->
       <ul class="contact" aria-label="Información de contacto">
