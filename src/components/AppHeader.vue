@@ -244,6 +244,7 @@ router.afterEach(() => {
   border-radius: 10px;
   text-decoration: none;
   color: #cbd5e1;
+  font-size: 12px
 }
 .btn:hover { background: #334155; }
 
