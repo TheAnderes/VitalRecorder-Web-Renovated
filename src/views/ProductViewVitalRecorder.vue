@@ -451,9 +451,10 @@ export default {
 }
 .product-how-grid {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: stretch;
 }
 
 .product-step-badge {

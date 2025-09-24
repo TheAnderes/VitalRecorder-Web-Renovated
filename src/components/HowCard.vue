@@ -55,14 +55,14 @@ export default {
 /* Card */
 .how-card
 {
-    display: flex;
-    justify-content: center;
-  padding:16px 18px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  width: 250px;
-  height: 180px;
+  display: flex;
+  justify-content: center;
+  padding: 16px 18px;
+  flex-direction: column;
+  gap: 10px;
+  width: 280px;
+  min-height: 200px;
+  height: auto;
   box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4); /* Override BaseCard's shadow */
 }
 
@@ -102,34 +102,66 @@ export default {
   color:#0f2147;
 }
 
-/* Body: texto izquierda + icono derecha */
+/* Body: texto arriba + icono abajo */
 .product-step-body{
-  display:flex;
-  align-items:center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
+  flex: 1;
 }
 .product-how-text{
-  margin:0;
-  color:#777;
-  font-size:14px;
-  line-height:1.35;
-  width: 160px;
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.4;
   text-align: center;
+  max-width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 /* Icono con degradado (usando la máscara) */
 .product-how-icon-mask{
-  width:110px; height:110px;
-  justify-self:end;
+  width: 80px; 
+  height: 80px;
+  flex-shrink: 0;
 }
 
 /* Responsive */
-@media (max-width: 700px){
-  .product-step-body{
-    grid-template-columns: 1fr;
+@media (max-width: 768px){
+  .how-card {
+    width: 100%;
+    max-width: 300px;
+    min-height: 220px;
   }
+  
+  .product-how-text {
+    font-size: 13px;
+  }
+  
+  .product-how-title {
+    font-size: 18px;
+  }
+
   .product-how-icon-mask{
-    justify-self:center;
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px){
+  .how-card {
+    max-width: 280px;
+    padding: 14px 16px;
+  }
+  
+  .product-step-badge-head {
+    gap: 12px;
+  }
+  
+  .product-how-title {
+    font-size: 16px;
   }
 }
 </style>
