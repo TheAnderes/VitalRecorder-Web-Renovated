@@ -9,7 +9,7 @@
       </button>
 
       <!-- Marca centrada en móvil -->
-      <div class="brand">
+      <router-link to="/" class="brand" @click="closeMenu">
         <img
           class="brand-mark"
           src="/Logo.png"
@@ -17,7 +17,7 @@
           onerror="this.src='/favicon.ico'; this.classList.add('fallback')"
         />
         <div class="brand-text">VITALSYSTEMS</div>
-      </div>
+      </router-link>
 
       <!-- Auth: DERECHA en móvil -->
       <div class="auth-slot">
@@ -130,23 +130,49 @@ router.afterEach(() => {
   align-items: center;
   gap: 10px;
   justify-self: center;
-  font-weight: 700;
-  letter-spacing: .4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.brand:hover {
+  transform: scale(1.02);
 }
 
 .brand img {
   width: clamp(32px, 8vw, 50px);
   height: auto;
+  transition: transform 0.2s ease;
+}
+
+.brand:hover img {
+  transform: scale(1.05);
 }
 
 .brand-text {
   font-weight: 500;
   letter-spacing: .2px;
   font-size: clamp(18px, 5vw, 28px);
-  background: var(--gradient-primary);
+  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
   -webkit-background-clip: text;
   background-clip: text;
-  color: white;
+  color: transparent;
+  transition: transform 0.2s ease;
+}
+
+.brand:hover .brand-text {
+  transform: scale(1.02);
+}
+
+/* Fallback para navegadores que no soportan background-clip */
+@supports not (-webkit-background-clip: text) {
+  .brand-text {
+    background: none;
+    color: #60a5fa !important;
+    -webkit-text-fill-color: initial;
+  }
 }
 
 .hamburger {

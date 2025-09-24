@@ -6,8 +6,9 @@
         src="/Logo.png"
         alt="VITALSYSTEMS Logo Icon"
         onerror="this.style.display='none'"
+        @click="goHome"
       />
-      <div class="brand-text">VITALSYSTEMS</div>
+      <div class="brand-text" @click="goHome">VITALSYSTEMS</div>
     </header>
 
     <BaseCard class="register-card">
@@ -181,6 +182,11 @@ const handleRegister = async () => {
 const goBack = () => {
   router.go(-1); // Mejor práctica que window.history.back()
 };
+
+// Función para ir al inicio
+const goHome = () => {
+  router.push('/');
+};
 </script>
 
 <style scoped>
@@ -212,17 +218,29 @@ const goBack = () => {
 .brand-mark {
   height: clamp(40px, 8vw, 60px);
   width: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.brand-mark:hover {
+  transform: scale(1.05);
 }
 
 .brand-text {
-  font-weight: 700;
-  font-size: clamp(1.2rem, 5vw, 2rem);
-  background: var(--gradient-primary);
+  font-weight: 500;
+  letter-spacing: .2px;
+  font-size: clamp(18px, 5vw, 28px);
+  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
   -webkit-background-clip: text;
   background-clip: text;
-  color: #1f2b6c; /* Fallback color */
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.brand-text:hover {
+  transform: scale(1.02);
 }
 
 /* Fallback para navegadores que no soportan background-clip */

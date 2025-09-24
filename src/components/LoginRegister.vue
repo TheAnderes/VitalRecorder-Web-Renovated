@@ -2,8 +2,14 @@
   <div class="auth-container">
     <!-- Header común -->
     <header class="auth-header">
-      <img class="brand-mark" src="/Logo.png" alt="VITALSYSTEMS Logo Icon" onerror="this.style.display='none'" />
-      <div class="brand-text">VITALSYSTEMS</div>
+      <img 
+        class="brand-mark" 
+        src="/Logo.png" 
+        alt="VITALSYSTEMS Logo Icon" 
+        onerror="this.style.display='none'"
+        @click="goHome"
+      />
+      <div class="brand-text" @click="goHome">VITALSYSTEMS</div>
     </header>
 
     <!-- Contenedor principal -->
@@ -117,7 +123,7 @@
     </div>
 
     <!-- Indicadores para móvil -->
-    <div class="mobile-tabs">
+    <div class="mobile-tabs" :class="{ 'register-active': activePanel === 'register' }">
       <button 
         class="tab-button" 
         :class="{ 'active': activePanel === 'login' }"
@@ -192,6 +198,10 @@ const switchToRegister = () => {
 
 const goBack = () => {
   window.history.back()
+}
+
+const goHome = () => {
+  router.push('/')
 }
 
 // Función de login
@@ -351,16 +361,29 @@ const handleRegister = async () => {
 .brand-mark {
   height: clamp(40px, 8vw, 60px);
   width: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.brand-mark:hover {
+  transform: scale(1.05);
 }
 
 .brand-text {
-  font-weight: 700;
-  font-size: clamp(1.2rem, 5vw, 2rem);
-  background: var(--gradient-primary);
+  font-weight: 500;
+  letter-spacing: .2px;
+  font-size: clamp(18px, 5vw, 28px);
+  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
   -webkit-background-clip: text;
   background-clip: text;
-  color: #1f2b6c;
+  color: transparent;
   white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.brand-text:hover {
+  transform: scale(1.02);
 }
 
 /* Fallback para navegadores que no soportan background-clip */
@@ -471,29 +494,68 @@ const handleRegister = async () => {
 
 .mobile-tabs {
   display: none;
-  gap: 0.5rem;
+  position: relative;
   margin-bottom: 1rem;
-  background: white;
-  padding: 0.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.mobile-tabs::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+  border-radius: 12px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+  z-index: 1;
+}
+
+.mobile-tabs.register-active::before {
+  transform: translateX(calc(100% + 4px));
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
 }
 
 .tab-button {
-  padding: 0.75rem 1.5rem;
+  position: relative;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 12px;
   background: transparent;
-  color: #666;
+  color: #64748b;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  color: #475569;
+  transform: translateY(-1px);
 }
 
 .tab-button.active {
-  background: var(--gradient-primary);
   color: white;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+}
+
+.tab-button.active:hover {
+  color: white;
+  transform: translateY(0);
 }
 
 /* Desktop view - lado a lado */
