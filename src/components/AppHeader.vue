@@ -58,7 +58,7 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { signOut } from 'firebase/auth'
+import { signOut } from '../firebase'
 import { auth } from '../firebase'
 
 const user = ref(null)
@@ -103,33 +103,28 @@ router.afterEach(() => {
 </script>
 
 <style scoped>
-
-/* Header base */
 .header {
   background: #0f172a;
   color: #fff;
   position: sticky;
   top: 0;
-  z-index: 5000;
+  z-index: 9999;
   width: 100%;
-  font-family: var(--tipografia);
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
 }
 
-/* Contenedor: grid para móvil (3 columnas) y flex en desktop */
 .shell {
   width: clamp(320px, 92vw, 1440px);
   margin: 0 auto;
   height: clamp(56px, 7vh, 72px);
   padding: 0 clamp(12px, 2vw, 28px);
-
   display: grid;
-  grid-template-columns: auto 1fr auto; /* [hamburger] [brand centrada] [login] */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   column-gap: 12px;
 }
 
-/* Marca */
 .brand {
   display: flex;
   align-items: center;
@@ -138,21 +133,22 @@ router.afterEach(() => {
   font-weight: 700;
   letter-spacing: .4px;
 }
+
 .brand img {
   width: clamp(32px, 8vw, 50px);
   height: auto;
 }
+
 .brand-text {
   font-weight: 500;
   letter-spacing: .2px;
   font-size: clamp(18px, 5vw, 28px);
-  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  color: white;
 }
 
-/* Botón menú (3 líneas) */
 .hamburger {
   display: inline-flex;
   flex-direction: column;
@@ -164,6 +160,7 @@ router.afterEach(() => {
   width: 36px;
   height: 36px;
 }
+
 .hamburger span {
   display: block;
   width: 24px;
@@ -172,14 +169,23 @@ router.afterEach(() => {
   border-radius: 3px;
   transition: transform .3s ease, opacity .3s ease;
 }
-.hamburger span.open:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-.hamburger span.open:nth-child(2) { opacity: 0; }
-.hamburger span.open:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-/* Slot de autenticación */
-.auth-slot { justify-self: end; }
+.hamburger span.open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
 
-/* Links escritorio */
+.hamburger span.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger span.open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.auth-slot {
+  justify-self: end;
+}
+
 .links {
   display: none;
   align-items: center;
@@ -189,7 +195,6 @@ router.afterEach(() => {
   padding: 0;
 }
 
-/* Overlay móvil */
 .mobile-overlay {
   position: fixed;
   inset: 0;
@@ -199,11 +204,13 @@ router.afterEach(() => {
   flex-direction: column;
   z-index: 6000;
 }
+
 .overlay-header {
   display: flex;
   justify-content: flex-end;
   padding: 12px 16px;
 }
+
 .close {
   background: transparent;
   border: none;
@@ -212,6 +219,7 @@ router.afterEach(() => {
   line-height: 1;
   cursor: pointer;
 }
+
 .overlay-links {
   list-style: none;
   padding: 24px;
@@ -220,52 +228,93 @@ router.afterEach(() => {
   flex-direction: column;
   gap: 14px;
 }
+
 .overlay-links a {
   color: #e2e8f0;
   text-decoration: none;
   font-size: 1.05rem;
 }
-.overlay-links a.router-link-active { color: #fff; }
-.overlay-auth { margin-top: 12px; }
+
+.overlay-links a.router-link-active {
+  color: #fff;
+}
+
+.overlay-auth {
+  margin-top: 12px;
+}
+
 .btn.full {
   display: block;
   width: 100%;
   text-align: center;
 }
 
-/* Transiciones overlay */
-.fade-enter-active, .fade-leave-active { transition: opacity .2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .2s ease;
+}
 
-/* Botón genérico */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .btn {
   background: #1e293b;
   padding: .5em .9em;
   border-radius: 10px;
   text-decoration: none;
   color: #cbd5e1;
-  font-size: 12px
+  font-size: 14px;
+  border: 1px solid transparent;
+  transition: background .3s, color .3s;
+  white-space: nowrap; /* Evita que el texto del botón se divida */
 }
-.btn:hover { background: #334155; }
 
-/* Escritorio */
+
+.btn:hover {
+  background: #334155;
+  color: #fff;
+}
+
 @media (min-width: 1024px) {
   .shell {
     display: flex;
     justify-content: space-between;
   }
-  .hamburger { display: none; }
-  .auth-slot { order: 3; }
-  .brand { order: 1; justify-self: unset; }
+
+  .hamburger {
+    display: none;
+  }
+
+  .auth-slot {
+    order: 3;
+  }
+
+  .brand {
+    order: 1;
+    justify-self: unset;
+  }
+
   .links {
     display: flex;
     order: 2;
     margin-left: auto;
     margin-right: 16px;
   }
-  .brand-text { font-size: clamp(22px, 2.6vw, 34px); }
+
+  .brand-text {
+    font-size: clamp(22px, 2.6vw, 34px);
+  }
 }
 
-a { color: #cbd5e1; text-decoration: none; font-size: clamp(.9rem, 1vw, 1rem); }
-a.router-link-active { color: #fff; }
+a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: clamp(.9rem, 1vw, 1rem);
+}
+
+a.router-link-active {
+  color: #fff;
+}
 </style>

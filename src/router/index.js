@@ -2,9 +2,16 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   { path: '/contact-us', name: 'contact', component: () => import('@/views/ContactView.vue') },
-  { path: '/login', name: 'login', component: () => import('@/components/Login.vue') },
+  // Rutas unificadas de autenticación
+  { path: '/auth', name: 'auth', component: () => import('@/components/LoginRegister.vue') },
+  // Rutas de compatibilidad que redirigen al componente unificado
+  { path: '/login', redirect: '/auth' },
+  { path: '/register', redirect: '/auth' },
+  // Rutas individuales para casos específicos (mantener por compatibilidad)
+  { path: '/login-only', name: 'login-only', component: () => import('@/components/Login.vue') },
+  { path: '/register-only', name: 'register-only', component: () => import('@/components/Register.vue') },
+  
   { path: '/about-us', name: 'about-us', component: () => import('@/components/AboutUs.vue') },
-  { path: '/register', name: 'register', component: () => import('@/components/Register.vue') },
   { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
   { path: '/product', name: 'product', component: () => import('@/views/ProductView.vue') },
   { path: '/product1', name: 'product1', component: () => import('@/views/ProductViewVitalRecorder.vue') },

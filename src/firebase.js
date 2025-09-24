@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { getFirestore } from "firebase/firestore"; // Si usas Firestore
 
 // Configuración de Firebase
@@ -20,3 +20,4 @@ const app = initializeApp(firebaseConfig);
 // Exporta los servicios que necesitas
 export const auth = getAuth(app); // Autenticación
 export const db = getFirestore(app); // Firestore (si lo necesitas)
+export { signOut };

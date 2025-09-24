@@ -5,7 +5,7 @@
       <div class="brand-text">VITALSYSTEMS</div>
     </header>
 
-    <main class="login-card">
+    <BaseCard class="login-card">
       <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
@@ -14,21 +14,29 @@
       <p class="subtitle">¿Es tu primera vez? <a href="/register">Regístrate aquí</a></p>
 
       <form @submit.prevent="handleLogin" class="login-form">
-        <div class="form-group">
-          <label for="email">Correo electrónico: <span class="required">*</span></label>
-          <input type="email" id="email" v-model="email" placeholder="tucorreo@gmail.com" required />
-        </div>
+        <BaseInput
+          label="Correo electrónico:"
+          id="email"
+          type="email"
+          v-model="email"
+          placeholder="tucorreo@gmail.com"
+          required
+        />
 
-        <div class="form-group">
-          <label for="password">Contraseña: <span class="required">*</span></label>
-          <input type="password" id="password" v-model="password" placeholder="Contraseña" required />
-        </div>
+        <BaseInput
+          label="Contraseña:"
+          id="password"
+          type="password"
+          v-model="password"
+          placeholder="Contraseña"
+          required
+        />
 
         <a href="/recuperar-contrasena" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
-        <button type="submit" class="submit-button">Iniciar Sesión</button>
+        <PrimaryButton type="submit" name="Iniciar Sesión" />
       </form>
-    </main>
+    </BaseCard>
   </div>
 </template>
 
@@ -38,6 +46,9 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase"; // Importa la configuración de Firebase
 import { useRouter } from "vue-router"; // Importa Vue Router
 import Swal from 'sweetalert2'; // Importar SweetAlert2
+import PrimaryButton from './PrimaryButton.vue';
+import BaseCard from './BaseCard.vue';
+import BaseInput from './BaseInput.vue';
 
 const email = ref("");
 const password = ref("");
@@ -62,7 +73,7 @@ const handleLogin = async () => {
     // Redirige al usuario a la vista "VitalRecorder"
     setTimeout(() => {
       router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
-    }, 2000); // Espera para que la alerta se vea antes de la redirección
+    }, 2000);
 
   } catch (error) {
     console.error("Error al iniciar sesión:", error.message);
@@ -85,147 +96,146 @@ const goBack = () => {
 </script>
 
 <style scoped>
-/* Estilos existentes */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  font-family: Arial, sans-serif;
-  padding: 10vh 20px 20px 20px;
+  justify-content: center;
   min-height: 100vh;
-  background-color: white;
+  padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1rem);
+  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+  font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
 }
 
 .login-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: clamp(0.75rem, 3vw, 1.25rem);
   background-color: white;
-  padding: 20px 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem;
+  padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: clamp(1rem, 4vw, 2rem);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .brand-mark {
-  height: 70px;
+  height: clamp(40px, 8vw, 60px);
   width: auto;
 }
 
 .brand-text {
-  font-weight: 600;
-  letter-spacing: 1px;
-  font-size: clamp(28px, 3vw, 36px);
-  background: linear-gradient(90deg, #37c8ee, #8e7ff2);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 5vw, 2rem);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+  color: #1f2b6c; /* Fallback color */
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
-/* Card Styles */
+/* Fallback para navegadores que no soportan background-clip */
+@supports not (-webkit-background-clip: text) {
+  .brand-text {
+    background: none;
+    color: #1f2b6c !important;
+    -webkit-text-fill-color: initial;
+  }
+}
+
 .login-card {
   position: relative;
-  background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
-  padding: 60px 40px 40px;
-  border-radius: 25px;
+  background: #ffffff;
+  padding: clamp(2rem, 6vw, 3.5rem) clamp(1rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
+  border-radius: 1.5rem;
   width: 100%;
-  max-width: 600px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-  color: #0d2a4c;
+  max-width: 450px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  color: #333;
+  box-sizing: border-box;
 }
 
 .back-button {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  background-color: rgba(255, 255, 255, 0.3);
+  top: 1rem;
+  left: 1rem;
+  background: #f1f1f1;
   border: none;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  font-size: 1.7rem;
-  color: white;
+  font-size: 1.5rem;
+  color: #555;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+  display: grid;
+  place-items: center;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .back-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+  background: #e0e0e0;
+  color: #000;
 }
 
 .title {
   text-align: center;
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  color: #011a3e;
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: clamp(0.75rem, 3vw, 1rem);
+  color: #1f2b6c;
+  line-height: 1.2;
 }
 
 .subtitle {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 1rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  line-height: 1.4;
 }
 
 .subtitle a {
-  color: #011a3e;
-  font-weight: bold;
-  text-decoration: underline;
+  color: var(--blue-primary);
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.form-group {
-  margin-bottom: 25px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-  font-size: 1rem;
-  color: #fff;
-}
-
-.form-group input {
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 4vw, 1.5rem);
   width: 100%;
-  padding: 15px 18px;
-  border: none;
-  border-radius: 20px;
-  background-color: white;
-  box-sizing: border-box;
-  font-size: 1.1rem;
 }
 
 .forgot-password {
   display: block;
-  text-align: left;
-  margin-top: -12px;
-  margin-bottom: 30px;
-  font-size: 0.9rem;
-  color: #fff;
-  text-decoration: underline;
+  text-align: right;
+  margin-top: clamp(-0.75rem, -2vw, -1rem);
+  margin-bottom: clamp(0.75rem, 3vw, 1rem);
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  color: var(--blue-secondary);
+  text-decoration: none;
 }
 
-.submit-button {
-  width: 100%;
-  padding: 18px;
-  background-color: #0d2a4c;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+@media (max-width: 480px) {
+    .login-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
 
-.submit-button:hover {
-  background-color: #1a4a8a;
+    .brand-text {
+        font-size: 1.5rem;
+    }
+
+    .login-card {
+        padding: 3rem 1.5rem 2rem;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
 }
 </style>

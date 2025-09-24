@@ -143,116 +143,169 @@
 .footer {
   background: #0e1b2f;
   color: #cbd5e1;
-  padding-top: clamp(18px, 3vh, 28px);
+  padding-top: clamp(24px, 4vh, 48px);
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
 }
 
 .shell {
   width: clamp(320px, 92vw, 1400px);
   margin: 0 auto;
-  padding: 0 clamp(12px, 2vw, 28px) clamp(16px, 3vh, 22px);
+  padding: 0 clamp(16px, 2vw, 32px) clamp(20px, 3vh, 28px);
+  box-sizing: border-box;
 }
 
-/* Grid base: 3 columnas en desktop, apilado en móvil */
-.row{
+.row {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1.2fr;
-  gap: clamp(16px, 3vw, 48px);
+  gap: clamp(24px, 4vw, 64px);
   align-items: start;
+  justify-items: center;
 }
 
-/* Marca */
 .brand {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   justify-self: center;
-  gap: clamp(10px, 1.2vw, 14px);
+  gap: clamp(12px, 1.5vw, 18px);
 }
-.brand-mark{
+
+.brand-mark {
   display: block;
   margin: 0 auto;
-  width: clamp(84px, 11vw, 130px);
+  width: clamp(90px, 12vw, 140px);
   height: auto;
 }
-.brand-text{
+
+.brand-text {
   font-weight: 500;
-  letter-spacing: .2px;
-  font-size: clamp(22px, 2.6vw, 34px);
-  background: linear-gradient(90deg,#2dd4bf,#60a5fa);
+  letter-spacing: .3px;
+  font-size: clamp(24px, 2.8vw, 36px);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Listas */
-.social, .contact{
+.social,
+.contact {
   list-style: none;
-  padding:0; margin:0;
-  display:grid;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.social li,
+.contact li {
+  display: flex;
+  align-items: center;
   gap: 14px;
 }
-.social li, .contact li{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-}
-.social a{
-  display: inline-flex;      /* hace clicable el icono + texto */
-  align-items: center;
-  gap: 12px;
-}
-a{ color:#9cc2ff; text-decoration:none; }
-a:hover{ text-decoration: underline; }
 
-/* Íconos */
-.ico{
-  width: 36px; height: 36px; min-width:36px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.05);
-  display:grid; place-items:center;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+.social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+a {
+  color: #9cc2ff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+}
+
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.ico {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .05);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+  transition: background-color 0.3s ease;
+}
+
+a:hover .ico {
+  background: rgba(255, 255, 255, .1);
 }
 
 .ico svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: block;
 }
 
-/* Copyright */
 .legal {
   text-align: center;
   font-size: clamp(.85rem, .95vw, .95rem);
   color: #93a7c2;
-  padding: 12px 0 18px;
-  border-top: 1px solid rgba(255, 255, 255, .06);
-  margin-top: clamp(14px, 2vh, 22px);
+  padding: 16px 0 24px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  margin-top: clamp(20px, 3vh, 32px);
 }
 
-/* Responsivo */
-@media (max-width: 980px){
-  .row{
+@media (max-width: 980px) {
+  .row {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 2.5rem;
+    text-align: center;
   }
-  .brand{
-    order: 1;
+
+  .brand, .social, .contact {
+    justify-self: center;
   }
-  .social{
-    order: 2;
-    justify-items: start;
+
+  .social, .contact {
+    display: grid;
+    justify-items: center;
   }
-  .contact{
-    order: 3;
-    justify-items: start;
+
+  .social li, .contact li {
+    display: inline-flex;
+    text-align: left;
+    max-width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
-/* Micro-ajustes para pantallas muy pequeñas */
-@media (max-width: 420px){
-  .brand-mark{ width: 78px; }
-  .ico{ width: 34px; height: 34px; }
-  .social li, .contact li{ gap: 10px; }
+@media (max-width: 480px) {
+  a {
+    font-size: 0.85rem;
+  }
+
+  .shell {
+    padding: 0 1rem 1.5rem;
+  }
+
+  .brand-text {
+    font-size: clamp(20px, 2.4vw, 26px);
+  }
+
+  .ico {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+
+  .ico svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .social li,
+  .contact li {
+    gap: 10px;
+  }
 }
 </style>

@@ -1,17 +1,19 @@
 <template>
-  <article class="product-feature-card">
-    
+  <BaseCard class="characteristic-card">
     <h3 class="product-feature-title">{{ title }}</h3>
     <img :src="icon" alt="" class="product-feature-icon" />
     <p class="product-feature-text">{{ text }}</p>
-  </article>
+  </BaseCard>
 </template>
 
 <script>
+import BaseCard from './BaseCard.vue';
+
 export default {
   name: "CharacteristicCard",
+  components: { BaseCard },
   props: {
-    icon: { type: String, required: true }, // aquí va la dirección del SVG
+    icon: { type: String, required: true },
     title: { type: String, required: true },
     text: { type: String, required: true },
   },
@@ -19,21 +21,19 @@ export default {
 </script>
 
 <style scoped>
-.product-feature-card {
+.characteristic-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #fff;
   text-align: center;
-  width: 240px;
-  box-sizing: border-box;
-  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
-  border-radius: 35px;
   row-gap: 10px;
   padding: 10px 0;
+  width: 240px; /* Keep width for now, can be made prop later */
+  border-radius: 35px; /* Override BaseCard's border-radius */
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4); /* Override BaseCard's shadow */
 }
 .product-feature-icon {
-  width: 100px;   /* ajusta el tamaño del ícono */
+  width: 100px;
   height: 100px;
   margin-bottom: .5rem;
 }
@@ -47,16 +47,16 @@ export default {
 .product-feature-text {
   color: #5b6575;
   font-size: 18px;
-    font-family: var(--tipografia);
-    font-weight: var(--regular);
-    margin: 0;
-    width: 180px;
+  font-family: var(--tipografia);
+  font-weight: var(--regular);
+  margin: 0;
+  width: 180px;
 }
 /* ===== MOBILE ONLY (≤768px) ===== */
 @media (max-width: 768px) {
-  .product-feature-card {
-    width: 100%;             /* ocupa todo el ancho disponible */
-    max-width: 320px;        /* límite razonable */
+  .characteristic-card {
+    width: 100%;
+    max-width: 320px;
     padding: 16px;
     border-radius: 20px;
     row-gap: 12px;
@@ -73,7 +73,7 @@ export default {
   }
 
   .product-feature-text {
-    width: 100%;             /* fluido */
+    width: 100%;
     font-size: clamp(0.9rem, 4.3vw, 1rem);
     line-height: 1.45;
   }
@@ -81,7 +81,7 @@ export default {
 
 /* ===== EXTRA PEQUEÑO (≤480px) ===== */
 @media (max-width: 480px) {
-  .product-feature-card {
+  .characteristic-card {
     padding: 12px;
     border-radius: 14px;
   }
@@ -90,4 +90,4 @@ export default {
     height: 64px;
   }
 }
-</style>
+

@@ -1,5 +1,5 @@
 <template>
-  <article class="product-how-card">
+  <BaseCard class="how-card">
     <!-- Cabecera: badge + título -->
     <div class="product-step-badge-head">
       <div class="product-step-badge-cube">
@@ -23,12 +23,15 @@
   alt="icono"
 />
     </div>
-  </article>
+  </BaseCard>
 </template>
 
 <script>
+import BaseCard from './BaseCard.vue';
+
 export default {
   name: "HowCard",
+  components: { BaseCard },
   props: {
     step:  { type: [String, Number], required: true },
     title: { type: String, required: true },
@@ -45,24 +48,22 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
 /* Card */
-.product-how-card
+.how-card
 {
     display: flex;
     justify-content: center;
-  background:#fff;
-  border-radius:12px;
-  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
   padding:16px 18px;
   display:flex;
   flex-direction:column;
   gap:10px;
   width: 250px;
   height: 180px;
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4); /* Override BaseCard's shadow */
 }
 
 /* Header */

@@ -1,14 +1,17 @@
 <template>
-<article class="product-metric-card">
+<BaseCard class="point-view-card">
     <img :src="icon" alt="" class="product-metric-icon"/>
     <div class="product-metric-value">{{ valuer }}</div>
     <div class="product-metric-label">{{ Text }}</div>
-    </article>
+</BaseCard>
 </template>
 
 <script>
+import BaseCard from './BaseCard.vue';
+
 export default {
   name: "PointViewCard",
+  components: { BaseCard },
   props: {
     valuer: { type: String, required: true },
     icon: { type: String, required: true },
@@ -19,14 +22,12 @@ export default {
 
 <style scoped>
 /* Usa tus estilos existentes de la card. Solo añadimos la “caja” del icono */
-.product-metric-card {
+.point-view-card {
     width: 260px;
     height: 220px;
-  background: #fff;
-  border-radius: 18px;
   padding: 1rem;
   text-align: center;
-  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4); /* Override BaseCard's shadow */
   box-sizing: border-box;
   
 }
@@ -50,13 +51,13 @@ export default {
   font-family: var(--tipografia);
 }
 @media (max-width: 768px) {
-  .product-metric-card {
+  .point-view-card {
     width: 100%;           /* fluido */
     max-width: 320px;      /* límite cómodo en móvil */
     height: auto;          /* sin alto fijo */
     padding: 14px;
-    border-radius: 16px;
-    box-shadow: 4px 6px 12px rgba(68,129,235,.28);
+    border-radius: 16px; /* Override BaseCard's border-radius */
+    box-shadow: 4px 6px 12px rgba(68,129,235,.28); /* Override BaseCard's shadow */
   }
 
   .product-metric-icon {
@@ -77,9 +78,9 @@ export default {
 
 /* ===== EXTRA PEQUEÑO (≤480px) ===== */
 @media (max-width: 480px) {
-  .product-metric-card {
+  .point-view-card {
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 12px; /* Override BaseCard's border-radius */
   }
   .product-metric-icon {
     width: 60px;

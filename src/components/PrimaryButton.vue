@@ -1,21 +1,20 @@
 <template>
-  <router-link :to="`/${root}`" class="product-btn boton-primary">
+  <button :type="type" :disabled="disabled" class="product-btn boton-primary">
     <div class="btn-content">
-
-      <img :src="icon" v-if="icon" class="icon-button"></img> 
+      <img :src="icon" v-if="icon" class="icon-button"> 
       <span v-if="name">{{ name }}</span> 
-
     </div>
-  </router-link>
+  </button>
 </template>
 
 <script>
 export default {
-  name: "ButtonPrimary",
+  name: "PrimaryButton",
   props: {
-    root: { type: String, required: true },
-    name: { type: String, required: false }, // 'name' ahora es opcional
-    icon: { type: String, required: false }, // Nueva prop para el ícono
+    name: { type: String, required: false },
+    icon: { type: String, required: false },
+    type: { type: String, default: "button" }, // 'button' or 'submit'
+    disabled: { type: Boolean, default: false },
   },
 };
 </script>
@@ -23,18 +22,21 @@ export default {
 <style scoped>
 .product-btn {
   display: flex;
-  font-family: var(--tipografia);
-  font-size: 24px;
-  font-weight: 900;
-  padding: 5.14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(14px, 4vw, 18px);
+  font-weight: 600;
+  padding: 12px 24px;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 12px;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   border: 2px solid transparent;
-  height: 36px;
-  width: 220px;
+  min-height: 48px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .product-btn:hover { 
@@ -65,7 +67,25 @@ export default {
 }
 
 .btn-content span {
-  font-size: 16px; /* Ajusta el tamaño del texto si es necesario */
+  font-size: clamp(14px, 4vw, 16px);
+  white-space: nowrap;
 }
 
+button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .product-btn {
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+  
+  .btn-content span {
+    font-size: 14px;
+  }
+}
 </style>

@@ -5,6 +5,8 @@ import L from "leaflet";
 
 // Importa el componente de botón que ya estamos usando en todo el sitio
 import PrimaryButton from "@/components/PrimaryButton.vue";
+import BaseCard from './BaseCard.vue';
+import BaseInput from './BaseInput.vue';
 
 // Configuración de los iconos del mapa de Leaflet
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -71,30 +73,35 @@ function submit() {
         productos, ponte en contacto con nosotros. Estamos aquí para ayudarte.
       </p>
 
-      <div class="contact-card">
+      <BaseCard class="contact-card">
         <form class="form" @submit.prevent="submit">
-          <label>
-            <span>Nombre completo</span>
-            <input v-model="name" type="text" placeholder="Juan Miguel..." />
-          </label>
+          <BaseInput
+            label="Nombre completo"
+            id="contact-name"
+            type="text"
+            v-model="name"
+            placeholder="Juan Miguel..."
+            required
+          />
 
-          <label>
-            <span>Correo electrónico</span>
-            <input
-              v-model="email"
-              type="email"
-              placeholder="tucorreo@gmail.com"
-            />
-          </label>
+          <BaseInput
+            label="Correo electrónico"
+            id="contact-email"
+            type="email"
+            v-model="email"
+            placeholder="tucorreo@gmail.com"
+            required
+          />
 
-          <label>
-            <span>Mensaje</span>
-            <textarea
-              v-model="message"
-              rows="5"
-              placeholder="Escribe tu mensaje..."
-            ></textarea>
-          </label>
+          <BaseInput
+            label="Mensaje"
+            id="contact-message"
+type="textarea"
+            v-model="message"
+            placeholder="Escribe tu mensaje..."
+            required
+            rows="5"
+          />
 
           <!-- CORRECCIÓN: Usamos el componente de botón del proyecto -->
           <PrimaryButton name="Enviar Mensaje" type="submit" />
@@ -103,7 +110,7 @@ function submit() {
         <div class="map-media">
           <div ref="mapEl" class="map"></div>
         </div>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -141,48 +148,8 @@ function submit() {
   font-size: 1.1rem;
 }
 
-.contact-card {
-  background: #ffffff;
-  position: relative;
-  border-radius: 24px;
-  padding: 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  box-shadow: 0 0 30px rgba(68, 129, 235, 0.2);
-}
-
 /* --- FORMULARIO --- */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-label {
-  display: grid;
-  gap: 0.5rem;
-  font-weight: 700;
-  color: #0f2147;
-}
-input,
-textarea {
-  width: 100%;
-  border: 2px solid #e2e8f0;
-  /* CORRECCIÓN: Bordes más redondeados */
-  border-radius: 12px;
-  padding: 12px 14px;
-  background: #f8fafc;
-  outline: none;
-  transition: all 0.2s ease-in-out;
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: 1rem;
-}
-input:focus,
-textarea:focus {
-  border-color: #4481eb; /* Color de acento de la marca */
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(68, 129, 235, 0.2);
-}
+
 
 /* El botón .btn ya no es necesario, porque usamos el componente PrimaryButton */
 

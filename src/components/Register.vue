@@ -10,7 +10,7 @@
       <div class="brand-text">VITALSYSTEMS</div>
     </header>
 
-    <main class="register-card">
+    <BaseCard class="register-card">
       <button class="back-button" aria-label="Volver" @click="goBack">
         &#x2190;
       </button>
@@ -22,69 +22,57 @@
 
       <form @submit.prevent="handleRegister" class="register-form">
         <div class="form-group-group">
-          <div class="form-group">
-            <label for="fullName">Nombre completo: <span class="required">*</span></label>
-            <input 
-              id="fullName" 
-              v-model="fullName" 
-              type="text" 
-              placeholder="Juan Pérez" 
-              required 
-            />
-          </div>
+          <BaseInput 
+            label="Nombre completo:" 
+            id="fullName" 
+            type="text" 
+            v-model="fullName" 
+            placeholder="Juan Pérez" 
+            required 
+          />
 
-          <div class="form-group">
-            <label for="password">Contraseña: <span class="required">*</span></label>
-            <input 
-              id="password" 
-              v-model="password" 
-              type="password" 
-              placeholder="••••••••" 
-              required 
-              minlength="6"
-            />
-          </div>
+          <BaseInput 
+            label="Contraseña:" 
+            id="password" 
+            type="password" 
+            v-model="password" 
+            placeholder="••••••••" 
+            required 
+            minlength="6"
+          />
 
-          <div class="form-group">
-            <label for="email">Correo electrónico: <span class="required">*</span></label>
-            <input 
-              id="email" 
-              v-model="email" 
-              type="email" 
-              placeholder="tucorreo@gmail.com" 
-              required 
-            />
-          </div>
+          <BaseInput 
+            label="Correo electrónico:" 
+            id="email" 
+            type="email" 
+            v-model="email" 
+            placeholder="tucorreo@gmail.com" 
+            required 
+          />
         </div>
 
         <div class="form-group-group">
-          <div class="form-group">
-            <label for="phone">Número de celular: <span class="required">*</span></label>
-            <input 
-              id="phone" 
-              v-model="phone" 
-              type="tel" 
-              placeholder="(+591) 70000000" 
-              required 
-            />
-          </div>
+          <BaseInput 
+            label="Número de celular:" 
+            id="phone" 
+            type="tel" 
+            v-model="phone" 
+            placeholder="(+591) 70000000" 
+            required 
+          />
 
-          <div class="form-group">
-            <label for="dob">Fecha de nacimiento: <span class="required">*</span></label>
-            <input 
-              id="dob" 
-              v-model="dob" 
-              type="date" 
-              required 
-            />
-          </div>
+          <BaseInput 
+            label="Fecha de nacimiento:" 
+            id="dob" 
+            type="date" 
+            v-model="dob" 
+            required 
+          />
         </div>
 
-        <button type="submit" class="submit-button" :disabled="isLoading">
-          {{ isLoading ? 'Registrando...' : 'Registrarse' }}
-        </button>
+        <PrimaryButton type="submit" name="Registrarse" :disabled="isLoading" />
       </form>
-    </main>
+    </BaseCard>
   </div>
 </template>
 
@@ -94,6 +82,9 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
 import Swal from 'sweetalert2'; // Importamos SweetAlert2
+import PrimaryButton from './PrimaryButton.vue';
+import BaseCard from './BaseCard.vue';
+import BaseInput from './BaseInput.vue';
 
 // Variables reactivas
 const fullName = ref('');
@@ -193,174 +184,162 @@ const goBack = () => {
 </script>
 
 <style scoped>
-/* General styles for the container and header */
 .register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  font-family: Arial, sans-serif;
-  padding: 10vh 20px 20px 20px;
+  justify-content: center;
   min-height: 100vh;
-  background-color: white;
+  padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1rem);
+  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+  font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
 }
 
 .register-header {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: clamp(0.75rem, 3vw, 1.25rem);
   background-color: white;
-  padding: 10px 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
+  padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: clamp(1rem, 4vw, 2rem);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .brand-mark {
-  height: 70px;
+  height: clamp(40px, 8vw, 60px);
   width: auto;
 }
 
 .brand-text {
-  font-weight: 600;
-  letter-spacing: 1px;
-  font-size: clamp(24px, 2.8vw, 34px);
-  background: linear-gradient(90deg, #37c8ee, #8e7ff2);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 5vw, 2rem);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+  color: #1f2b6c; /* Fallback color */
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
-/* Card Styles */
+/* Fallback para navegadores que no soportan background-clip */
+@supports not (-webkit-background-clip: text) {
+  .brand-text {
+    background: none;
+    color: #1f2b6c !important;
+    -webkit-text-fill-color: initial;
+  }
+}
+
 .register-card {
   position: relative;
-  background: linear-gradient(180deg, #A7C7E7, #7FA5C1);
-  padding: 80px 40px 40px;
-  border-radius: 25px;
-  width: 800px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-  color: #0d2a4c;
-  gap: 20px; 
+  background: #ffffff;
+  padding: clamp(2rem, 6vw, 3.5rem) clamp(1rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  color: #333;
+  box-sizing: border-box;
 }
 
 .back-button {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  background-color: rgba(255, 255, 255, 0.3);
+  top: 1rem;
+  left: 1rem;
+  background: #f1f1f1;
   border: none;
   border-radius: 50%;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   font-size: 1.5rem;
-  color: white;
+  color: #555;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+  display: grid;
+  place-items: center;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .back-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+  background: #e0e0e0;
+  color: #000;
 }
 
 .title {
   text-align: center;
-  font-size: 2.4rem;
-  font-weight: bold;
-  margin: 10px 0;
-  color: #011a3e;
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: clamp(0.75rem, 3vw, 1rem);
+  color: #1f2b6c;
+  line-height: 1.2;
 }
 
 .subtitle {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 1rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  line-height: 1.4;
 }
 
 .subtitle a {
-  color: #011a3e;
-  font-weight: bold;
-  text-decoration: underline;
+  color: var(--blue-primary);
+  font-weight: 600;
+  text-decoration: none;
 }
 
-/* Form Group (Columns) */
-.form-group-group {
-  display: flex;
-  gap: 30px;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.form-group {
+.register-form {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Esto asegura que todos los inputs se alineen de manera consistente */
-}
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #fff;
-}
-
-.form-group .required {
-  color: #ffdddd;
-}
-
-.form-group input {
-
-  padding: 15px 20px;
-  border: none;
-  border-radius: 15px;
-  background: #fff;
-  box-sizing: border-box;
-  font-size: 1.1rem;
-}
-.form-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 20px;
-  width: 100%; /* Asegura que las columnas tengan el mismo ancho */
-}
-
-.submit-button {
+  gap: clamp(1rem, 4vw, 1.5rem);
   width: 100%;
-  padding: 18px;
-  margin-top: 15px;
-  background: #0d2a4c;
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.submit-button:hover:not(:disabled) {
-  background: #1a4a8a;
+.form-group-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  width: 100%;
 }
 
-.submit-button:disabled {
-  background: #6c7b87;
-  cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+/* Layout responsive para pantallas medianas */
+@media (min-width: 768px) {
   .form-group-group {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+  
+  .form-group-group:first-child .form-group {
+    grid-column: span 1;
+  }
+  
+  .form-group-group:first-child .form-group:first-child {
+    grid-column: 1 / -1; /* Nombre completo ocupa todo el ancho */
+  }
+}
+
+@media (max-width: 768px) {
+  .register-card {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-header {
     flex-direction: column;
-    gap: 0;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .brand-text {
+    font-size: 1.5rem;
   }
   
   .register-card {
-    padding: 60px 25px 25px;
+    margin: 0;
+    border-radius: 1rem;
   }
 }
 </style>

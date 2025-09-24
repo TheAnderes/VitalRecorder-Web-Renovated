@@ -1,13 +1,16 @@
 <template>
-  <article class="product-forwho-card">
+  <BaseCard class="for-who-card">
       <div class="product-forwho-title">{{ title }}</div>
       <img v-if="icon" :src="icon" alt="" class="product-forwho-icon-mask"/>
-  </article>
+  </BaseCard>
 </template>
 
 <script>
+import BaseCard from './BaseCard.vue';
+
 export default {
   name: "ForWhoCard",
+  components: { BaseCard },
   props: {
     title: { type: String, required: true },
     icon: { type: String, required: true }, // aquí va la dirección del SVG-- tambien puedes eliminar el icon y solo poner el texto se acomodara solo al medio
@@ -16,16 +19,13 @@ export default {
 </script>
 
 <style scoped>
-/* Usa tus estilos existentes de la card. Solo añadimos la “caja” del icono */
-.product-forwho-card {
+.for-who-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  background: #ffffff;
-  border-radius: 16px;
   text-align:center;
-  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4);
+  box-shadow: 7px 7px 7px rgba(68, 129, 235, 0.4); /* Override BaseCard's shadow */
   width: 210px;
   height: 170px;
 }
@@ -47,12 +47,12 @@ export default {
 }
 /* ===== MOBILE ONLY (≤768px) ===== */
 @media (max-width: 768px) {
-  .product-forwho-card {
+  .for-who-card {
     width: 100%;            /* ocupa todo el ancho del contenedor */
     max-width: 300px;       /* límite para que no crezca demasiado */
     height: auto;           /* se adapta al contenido */
     padding: 16px;
-    border-radius: 14px;
+    border-radius: 14px; /* Override BaseCard's border-radius */
   }
 
   .product-forwho-icon-mask {
@@ -70,10 +70,10 @@ export default {
 
 /* ===== EXTRA PEQUEÑO (≤480px) ===== */
 @media (max-width: 480px) {
-  .product-forwho-card {
+  .for-who-card {
     max-width: 100%;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 12px; /* Override BaseCard's border-radius */
   }
 
   .product-forwho-icon-mask {

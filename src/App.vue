@@ -16,7 +16,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 </script>
 
 <style>
-html, body, #app { height: 100%; margin: 0; }
+html, body, #app { 
+  height: 100%; 
+  margin: 0;
+  overflow-x: hidden; /* Evita el desbordamiento horizontal */
+}
 
 body {
   margin: 0;
@@ -26,21 +30,19 @@ body {
 .min-h-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;  /* Asegura que el contenedor ocupe toda la pantalla */
+  min-height: 100vh;  /* Usa min-height en lugar de height */
 }
 
 main {
-  flex-grow: 1;  /* Asegura que el contenido ocupe todo el espacio disponible */
+  flex-grow: 1;
 }
 
 footer {
-  margin-top: auto;  /* Mantiene el footer al final */
+  margin-top: auto;
 }
 
 :root {
   --tipografia: "Poppins", sans-serif;
-
-  /* === ESCALAS === */
   --black:900;
   --extrabold:800;
   --bold:700;

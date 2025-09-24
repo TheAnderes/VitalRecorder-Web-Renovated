@@ -1,6 +1,5 @@
-<!-- TestimonialCard.vue -->
 <template>
-  <article class="product-testimonial-card">
+  <BaseCard class="testimonial-card">
     <!-- Encabezado: nombre + estrellas huecas -->
     <header class="product-testimonial-header">
       <span class="product-testimonial-name">{{ name }}</span>
@@ -45,12 +44,15 @@
 
       <p class="product-quote">“{{ quote }}”</p>
     </div>
-  </article>
+  </BaseCard>
 </template>
 
 <script>
+import BaseCard from './BaseCard.vue';
+
 export default {
   name: "TestimonialCard",
+  components: { BaseCard },
   props: {
     name:   { type: String, required: true },
     quote:  { type: String, required: true },
@@ -68,123 +70,80 @@ export default {
 </script>
 
 <style scoped>
-.product-testimonial-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 1.25rem;
-  box-shadow: 6px 8px 12px rgba(68, 129, 235, 0.8);
+.testimonial-card {
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  width: 400px;
-  height:210px;
-  box-sizing: border-box;
-  border-radius: 30px;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  min-height: 200px;
+  justify-content: space-between;
 }
 
 .product-testimonial-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 25px;
+  justify-content: space-between;
 }
 
 .product-testimonial-name {
-  font-family: var(--tipografia);
-  font-weight: var(--semibold);
-  color: #0f2147;
-  font-size: 22px;
+  font-weight: 600;
+  color: #1f2b6c;
+  font-size: 1.25rem;
 }
 
 .rating-stars {
   display: flex;
   gap: 0.25rem;
-  align-items: center;
 }
+
 .star {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 }
 
 .product-testimonial-body {
   display: flex;
   align-items: center;
-  justify-content: center ;
-  gap: 20px;
+  gap: 1rem;
 }
 
 .product-avatar-img {
-  width: 130px;
-  height: 130px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   object-fit: cover;
-
 }
 
 .product-avatar-icon {
-  font-size: 2.6rem;
-  background: linear-gradient(90deg, #00f2fe, #4481eb);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-size: 3rem;
+  color: var(--blue-primary);
 }
 
 .product-quote {
-  font-size: 16px;
-  font-family: var(--tipografia);
-  font-weight: var(--regular);
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
   margin: 0;
-  color: #5b6575;
-  line-height: 1.35;
-  width: 180px;
-  text-align: center;
 }
-/* Mobile only (≤768px) */
-@media (max-width: 768px) {
-  .product-testimonial-card {
-    width: 90vw;
-    height: auto;
-    padding: 14px;
-    border-radius: 18px;
-    box-shadow: 4px 6px 10px rgba(68,129,235,0.35);
-  }
 
-  .product-testimonial-header {
-    justify-content: space-between;
-    gap: 12px;
+@media (max-width: 768px) {
+  .testimonial-card {
+    min-height: auto;
   }
 
   .product-testimonial-name {
-    font-size: clamp(1rem, 4.6vw, 1.1rem);
+    font-size: 1.1rem;
   }
 
-  .rating-stars .star {
-    width: 22px;
-    height: 22px;
-  }
-
-  .product-testimonial-body {
-    gap: 12px;
-  }
-
-  .product-avatar-img {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
+  .star {
+    width: 20px;
+    height: 20px;
   }
 
   .product-quote {
-    width: 100%;
-    font-size: .95rem;
-    text-align: left;
-    line-height: 1.35;
-  }
-}
-
-/* Muy pequeño (≤380px) */
-@media (max-width: 380px) {
-  .rating-stars .star {
-    width: 18px;
-    height: 18px;
+    font-size: 0.9rem;
   }
 }
 </style>
