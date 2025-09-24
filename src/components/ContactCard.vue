@@ -96,7 +96,7 @@ function submit() {
           <BaseInput
             label="Mensaje"
             id="contact-message"
-type="textarea"
+            type="textarea"
             v-model="message"
             placeholder="Escribe tu mensaje..."
             required
@@ -118,61 +118,149 @@ type="textarea"
 <style scoped>
 /* --- ESTILOS GENERALES Y DE PÁGINA --- */
 .contact-view {
-  font-family: "Poppins", "Inter", sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: #0f2147;
-  background: linear-gradient(180deg, #a7c7e7, #7fa5c1);
-  padding: 0.5rem 0; /* Asegura que ocupe la pantalla */
+  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+  min-height: 100vh;
+  padding: clamp(1rem, 4vw, 2rem) 0;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .contact-container {
-  max-width: 1300px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 clamp(1rem, 4vw, 2rem);
 }
 
 /* --- ESTILOS DE TEXTO Y TÍTULOS --- */
 .section-title {
-  /* CORRECCIÓN: Usamos el estilo de título del proyecto */
-  font-family: var(--tipografia);
-  font-size: 2.8rem;
-  font-weight: 900;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 800;
   text-align: center;
-  color: #0f2147;
-  margin: 0;
+  color: #1f2b6c;
+  margin: 0 0 clamp(0.75rem, 3vw, 1.25rem);
+  background: linear-gradient(135deg, #1f2b6c, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
+
+/* Fallback para navegadores que no soportan background-clip */
+@supports not (-webkit-background-clip: text) {
+  .section-title {
+    background: none;
+    color: #1f2b6c !important;
+    -webkit-text-fill-color: initial;
+  }
+}
+
 .subtitle {
-  max-width: 650px;
-  margin: 0 auto ;
+  max-width: 700px;
+  margin: 0 auto clamp(2rem, 5vw, 3rem);
   text-align: center;
-  color: #475569;
-  font-size: 1.1rem;
+  color: #64748b;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  line-height: 1.6;
+}
+
+/* --- CARD PRINCIPAL --- */
+.contact-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  background: white;
+  border-radius: 1.5rem;
+  padding: clamp(2rem, 5vw, 3rem);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* --- FORMULARIO --- */
-
-
-/* El botón .btn ya no es necesario, porque usamos el componente PrimaryButton */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  width: 100%;
+}
 
 /* --- MAPA --- */
 .map-media {
   position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   overflow: hidden;
-  border-radius: 16px; /* Bordes redondeados */
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .map {
-  width: 90%;
-  height: 90%; /* Ocupa toda la altura de la tarjeta */
-  min-height: 300px; /* Altura mínima para que no desaparezca */
-  border: 2px solid #e2e8f0;
-  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   overflow: hidden;
 }
+
 /* Asegura que los controles del mapa sean visibles */
 :deep(.leaflet-container) {
   z-index: 1;
+  border-radius: 1rem;
+}
+
+:deep(.leaflet-control-zoom) {
+  margin: 10px;
+}
+
+:deep(.leaflet-control-zoom a) {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+:deep(.leaflet-control-zoom a:hover) {
+  background: white;
+  border-color: #2dd4bf;
+  color: #2dd4bf;
 }
 
 /* --- RESPONSIVE --- */
+
+/* ===== TABLET (769px - 1023px) ===== */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .contact-view {
+    padding: clamp(1.5rem, 3vw, 2rem) 0;
+  }
+  
+  .contact-container {
+    max-width: 95%;
+  }
+  
+  .contact-card {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem;
+  }
+  
+  .map-media {
+    min-height: 350px;
+  }
+  
+  .map {
+    min-height: 350px;
+  }
+}
+
 /* ===== MOBILE ONLY (≤768px) ===== */
 @media (max-width: 768px) {
   .contact-container {

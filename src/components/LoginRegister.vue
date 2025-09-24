@@ -337,25 +337,27 @@ const handleRegister = async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   min-height: 100vh;
-  padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1rem);
+  padding: clamp(0.5rem, 2vw, 1rem);
   background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .auth-header {
   display: flex;
   align-items: center;
-  gap: clamp(0.75rem, 3vw, 1.25rem);
+  gap: clamp(0.5rem, 2vw, 1rem);
   background-color: white;
-  padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem);
   border-radius: 1rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  margin-bottom: clamp(1rem, 4vw, 2rem);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  margin-bottom: clamp(0.75rem, 3vw, 1.25rem);
   max-width: 100%;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .brand-mark {
@@ -397,25 +399,25 @@ const handleRegister = async () => {
 
 .auth-main {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   justify-content: center;
   align-items: flex-start;
 }
 
 .auth-panel {
   flex: 1;
-  max-width: 500px;
+  max-width: 650px;
 }
 
 .auth-card {
   position: relative;
   background: #ffffff;
-  padding: clamp(2rem, 6vw, 3.5rem) clamp(1rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
-  border-radius: 1.5rem;
+  padding: clamp(1.25rem, 4vw, 2rem) clamp(1rem, 4vw, 1.75rem) clamp(1rem, 4vw, 1.75rem);
+  border-radius: 1.25rem;
   width: 100%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   color: #333;
   box-sizing: border-box;
 }
@@ -444,18 +446,18 @@ const handleRegister = async () => {
 
 .title {
   text-align: center;
-  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
   font-weight: 700;
-  margin-bottom: clamp(0.75rem, 3vw, 1rem);
+  margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
   color: #1f2b6c;
   line-height: 1.2;
 }
 
 .subtitle {
   text-align: center;
-  margin-bottom: clamp(1.5rem, 4vw, 2rem);
-  font-size: clamp(0.9rem, 3vw, 1rem);
-  line-height: 1.4;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  line-height: 1.3;
 }
 
 .subtitle a {
@@ -561,16 +563,16 @@ const handleRegister = async () => {
 /* Desktop view - lado a lado */
 @media (min-width: 1024px) {
   .auth-main {
-    gap: 3rem;
+    gap: 4rem;
   }
   
   .auth-panel {
-    max-width: 450px;
+    max-width: 650px;
   }
 
   .register-form .form-group-group {
     grid-template-columns: 1fr 1fr;
-    gap: clamp(1rem, 3vw, 2rem);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
   }
   
   .register-form .form-group-group:first-child .form-group:first-child {
@@ -583,7 +585,13 @@ const handleRegister = async () => {
   .auth-main {
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
+    width: 95%;
+  }
+  
+  .auth-panel {
+    max-width: 90%;
+    width: 100%;
   }
   
   .auth-panel:not(.active) {
@@ -593,6 +601,8 @@ const handleRegister = async () => {
   .mobile-tabs {
     display: flex;
     order: -1;
+    width: 100%;
+    max-width: 500px;
   }
 
   .register-form .form-group-group {

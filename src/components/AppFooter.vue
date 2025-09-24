@@ -8,6 +8,17 @@
         <div class="brand-text">VITALSYSTEMS</div>
       </div>
 
+      <!-- Navegación -->
+      <nav class="navigation" aria-label="Navegación del sitio">
+        <h3 class="nav-title">Navegación</h3>
+        <ul class="nav-links">
+          <li><router-link to="/">Inicio</router-link></li>
+          <li><router-link to="/about-us">Sobre Nosotros</router-link></li>
+          <li><router-link to="/product">Producto</router-link></li>
+          <li><router-link to="/contact-us">Contáctanos</router-link></li>
+        </ul>
+      </nav>
+
       <!-- Redes -->
 <ul class="social" aria-label="Redes sociales">
   <li>
@@ -157,7 +168,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.2fr;
+  grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
   gap: clamp(24px, 4vw, 64px);
   align-items: start;
   justify-items: center;
@@ -187,6 +198,75 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* --- NAVEGACIÓN --- */
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.nav-title {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fallback para navegadores que no soportan background-clip */
+@supports not (-webkit-background-clip: text) {
+  .nav-title {
+    background: none;
+    color: #fff !important;
+    -webkit-text-fill-color: initial;
+  }
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-links li {
+  width: 100%;
+}
+
+.nav-links a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateX(4px);
+  text-decoration: none;
+}
+
+.nav-links a.router-link-active {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.2), rgba(96, 165, 250, 0.2));
+  color: #2dd4bf;
+  border: 1px solid rgba(45, 212, 191, 0.3);
 }
 
 .social,
@@ -261,7 +341,7 @@ a:hover .ico {
     text-align: center;
   }
 
-  .brand, .social, .contact {
+  .brand, .navigation, .social, .contact {
     justify-self: center;
   }
 

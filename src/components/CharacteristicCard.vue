@@ -38,9 +38,9 @@ export default {
   margin-bottom: .5rem;
 }
 .product-feature-title {
-  font-size: 18spx;
+  font-size: 18px;
   font-family: var(--tipografia);
-  font-weight:semibold;
+  font-weight: semibold;
   margin: .15rem 0 .25rem;
   color: #1f2b6c;
 }
@@ -90,4 +90,4 @@ export default {
     height: 64px;
   }
 }
-
+</style>

@@ -1,5 +1,13 @@
 <template>
-  <button :type="type" :disabled="disabled" class="product-btn boton-primary">
+  <!-- If root prop exists, render as router-link -->
+  <router-link v-if="root" :to="`/${root}`" class="product-btn boton-primary">
+    <div class="btn-content">
+      <img :src="icon" v-if="icon" class="icon-button"> 
+      <span v-if="name">{{ name }}</span> 
+    </div>
+  </router-link>
+  <!-- Otherwise render as button -->
+  <button v-else :type="type" :disabled="disabled" class="product-btn boton-primary" @click="$emit('click')">
     <div class="btn-content">
       <img :src="icon" v-if="icon" class="icon-button"> 
       <span v-if="name">{{ name }}</span> 
@@ -10,9 +18,11 @@
 <script>
 export default {
   name: "PrimaryButton",
+  emits: ['click'],
   props: {
     name: { type: String, required: false },
     icon: { type: String, required: false },
+    root: { type: String, required: false }, // New prop for routing
     type: { type: String, default: "button" }, // 'button' or 'submit'
     disabled: { type: Boolean, default: false },
   },
