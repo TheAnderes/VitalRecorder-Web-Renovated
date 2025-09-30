@@ -1,0 +1,415 @@
+<template>
+  <AdminLayout>
+    <!-- Welcome Section -->
+    <div class="dashboard-welcome">
+      <div class="welcome-card">
+        <h2>¡Bienvenido al Panel de Administración!</h2>
+        <p>Gestiona usuarios, visualiza estadísticas y configura VitalSystems.</p>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon users">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.totalUsers }}</h3>
+          <p>Total de Usuarios</p>
+          <span class="stat-change positive">
+            +{{ stats.regularUsers }} usuarios normales
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon admins">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.totalAdmins }}</h3>
+          <p>Administradores</p>
+          <span class="stat-change neutral">
+            {{ stats.totalSuperAdmins }} super admins
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon active">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3>24/7</h3>
+          <p>Sistema Activo</p>
+          <span class="stat-change positive">
+            ✓ Funcionando correctamente
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon growth">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3>{{ growthPercentage }}%</h3>
+          <p>Crecimiento</p>
+          <span class="stat-change positive">
+            +15% este mes
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Acciones Rápidas</h3>
+      <div class="actions-grid">
+        <router-link to="/admin/users" class="action-card">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <h4>Gestionar Usuarios</h4>
+            <p>Ver, editar y administrar usuarios</p>
+          </div>
+        </router-link>
+
+        <router-link to="/admin/analytics" class="action-card">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <h4>Ver Analíticas</h4>
+            <p>Estadísticas y reportes detallados</p>
+          </div>
+        </router-link>
+
+        <router-link to="/admin/settings" class="action-card">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <h4>Configuración</h4>
+            <p>Ajustes del sistema y aplicación</p>
+          </div>
+        </router-link>
+
+        <router-link to="/admin/user-roles" class="action-card" v-if="canEditUserRoles">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <h4>Gestionar Roles</h4>
+            <p>Administrar roles de usuario</p>
+          </div>
+        </router-link>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+      <h3>Actividad Reciente</h3>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="activity-content">
+            <p><strong>Nuevo usuario registrado</strong></p>
+            <span class="activity-time">Hace 2 horas</span>
+          </div>
+        </div>
+        
+        <div class="activity-item">
+          <div class="activity-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="activity-content">
+            <p><strong>Configuración actualizada</strong></p>
+            <span class="activity-time">Hace 5 horas</span>
+          </div>
+        </div>
+        
+        <div class="activity-item">
+          <div class="activity-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="activity-content">
+            <p><strong>Rol de usuario modificado</strong></p>
+            <span class="activity-time">Hace 1 día</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </AdminLayout>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useAdmin } from '@/composables/useAdmin'
+import { useAdminStore } from '@/stores/admin'
+import AdminLayout from '@/components/admin/AdminLayout.vue'
+
+const { canEditUserRoles } = useAdmin()
+const adminStore = useAdminStore()
+
+const stats = computed(() => adminStore.stats)
+const loading = computed(() => adminStore.loading)
+
+const growthPercentage = computed(() => {
+  const total = stats.value.totalUsers
+  return total > 0 ? Math.round((stats.value.regularUsers / total) * 100) : 0
+})
+
+onMounted(async () => {
+  await adminStore.fetchStats()
+})
+</script>
+
+<style scoped>
+.dashboard-welcome {
+  margin-bottom: 2rem;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.welcome-card h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.875rem;
+  font-weight: 600;
+}
+
+.welcome-card p {
+  margin: 0;
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.stat-icon.users { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon.admins { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-icon.active { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-icon.growth { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.stat-content h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.stat-content p {
+  margin: 0 0 0.5rem 0;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stat-change {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.stat-change.positive { 
+  background: #dcfce7; 
+  color: #166534; 
+}
+
+.stat-change.neutral { 
+  background: #f3f4f6; 
+  color: #4b5563; 
+}
+
+.quick-actions {
+  margin-bottom: 3rem;
+}
+
+.quick-actions h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.action-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.action-content p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.recent-activity h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.activity-list {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  background: #f3f4f6;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.activity-content p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+.activity-time {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .welcome-card {
+    padding: 1.5rem;
+  }
+  
+  .welcome-card h2 {
+    font-size: 1.5rem;
+  }
+}
+</style>

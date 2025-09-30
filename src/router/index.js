@@ -1,35 +1,96 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
+import { useAdmin } from '@/composables/useAdmin'
+import { clientRoutes } from './clientRoutes'
+import { adminRoutes } from './adminRoutes'
 
+// Combinar todas las rutas
 const routes = [
-  { path: '/contact-us', name: 'contact', component: () => import('@/views/ContactView.vue') },
-  // Rutas unificadas de autenticación
-  { path: '/auth', name: 'auth', component: () => import('@/components/LoginRegister.vue') },
-  // Rutas de compatibilidad que redirigen al componente unificado
-  { path: '/login', redirect: '/auth' },
-  { path: '/register', redirect: '/auth' },
-  // Ruta para recuperar contraseña
-  { path: '/recuperar-contrasena', name: 'recuperar-contrasena', component: () => import('@/views/RecuperarContrasena.vue') },
-  // Rutas individuales para casos específicos (mantener por compatibilidad)
-  { path: '/login-only', name: 'login-only', component: () => import('@/components/Login.vue') },
-  { path: '/register-only', name: 'register-only', component: () => import('@/components/Register.vue') },
-  
-  { path: '/about-us', name: 'about-us', component: () => import('@/components/AboutUs.vue') },
-  { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
-  { path: '/product', name: 'product', component: () => import('@/views/ProductView.vue') },
-  { path: '/product1', name: 'product1', component: () => import('@/views/ProductViewVitalRecorder.vue') },
-  { path: '/product2', name: 'product2', component: () => import('@/views//ProductViewVitalConnect.vue') },
-  { path: '/vital-recorder', name: 'vital-recorder', component: () => import('@/views/VitalRecorder.vue') },
-  // Ruta del dashboard del usuario
-  { path: '/dashboard', name: 'dashboard', component: () => import('@/views/UserDashboard.vue') },
-
-];
+  ...clientRoutes,
+  ...adminRoutes,
+  // Ruta catch-all para 404
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue')
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior() {
-    return { top: 0 };
-  },
-});
+    return { top: 0 }
+  }
+})
 
-export default router;
+// Navigation guards
+router.beforeEach(async (to, from, next) => {
+  const { user, isLoading } = useAuth()
+  const { getUserRole, checkAdminPermissions } = useAdmin()
+  
+  // Esperar a que termine de cargar la autenticación
+  if (isLoading.value) {
+    // Esperar un poco más para que termine de cargar
+    await new Promise(resolve => {
+      const checkLoading = () => {
+        if (!isLoading.value) {
+          resolve()
+        } else {
+          setTimeout(checkLoading, 100)
+        }
+      }
+      checkLoading()
+    })
+  }
+
+  // Verificar si la ruta requiere autenticación
+  if (to.meta.requiresAuth && !user.value) {
+    next({ name: 'auth', query: { redirect: to.fullPath } })
+    return
+  }
+
+  // Verificar permisos de admin para rutas de administrador
+  if (to.meta.requiredRole && user.value) {
+    const userRole = await getUserRole(user.value.uid)
+    const requiredRoles = Array.isArray(to.meta.requiredRole) 
+      ? to.meta.requiredRole 
+      : [to.meta.requiredRole]
+    
+    // Para rutas de admin, verificar si el usuario tiene permisos
+    if (to.path.startsWith('/admin')) {
+      const hasAdminPermissions = await checkAdminPermissions()
+      if (!hasAdminPermissions) {
+        // Si es un usuario normal tratando de acceder a admin, redirigir al dashboard normal
+        next({ name: 'dashboard' })
+        return
+      }
+    }
+    
+    // Verificar rol específico
+    if (!requiredRoles.includes(userRole)) {
+      // Si no tiene el rol requerido, redirigir según su rol actual
+      if (userRole === 'admin' || userRole === 'super_admin') {
+        next({ name: 'admin-dashboard' })
+      } else {
+        next({ name: 'dashboard' })
+      }
+      return
+    }
+  }
+
+  // Redirigir usuarios autenticados desde páginas de auth
+  if (user.value && (to.name === 'auth' || to.name === 'login-only' || to.name === 'register-only')) {
+    const userRole = await getUserRole(user.value.uid)
+    if (userRole === 'admin' || userRole === 'super_admin') {
+      next({ name: 'admin-dashboard' })
+    } else {
+      next({ name: 'dashboard' })
+    }
+    return
+  }
+
+  next()
+})
+
+export default router

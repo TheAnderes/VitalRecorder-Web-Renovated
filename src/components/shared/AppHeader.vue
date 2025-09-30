@@ -124,7 +124,7 @@
 <script setup>
 import { ref, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth, signOut } from '../firebase'
+import { auth, signOut } from '@/firebase'
 import { useAuth } from '@/composables/useAuth'
 
 const { user, getUserName, getUserInitial } = useAuth()

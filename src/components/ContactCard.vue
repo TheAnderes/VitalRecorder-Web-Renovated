@@ -4,9 +4,9 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 // Importa el componente de botón que ya estamos usando en todo el sitio
-import PrimaryButton from "@/components/PrimaryButton.vue";
-import BaseCard from './BaseCard.vue';
-import BaseInput from './BaseInput.vue';
+import PrimaryButton from "@/components/shared/PrimaryButton.vue";
+import BaseCard from '@/components/shared/BaseCard.vue';
+import BaseInput from '@/components/shared/BaseInput.vue';
 
 // Configuración de los iconos del mapa de Leaflet
 import iconUrl from "leaflet/dist/images/marker-icon.png";

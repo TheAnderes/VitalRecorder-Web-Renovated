@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import ButtonPrimary from '@/components/PrimaryButton.vue'; // Importación del componente ButtonPrimary
+import ButtonPrimary from '@/components/shared/PrimaryButton.vue'; // Importación del componente ButtonPrimary
 
 export default {
   name: "IntroIconButtonCard",

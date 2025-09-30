@@ -1,19 +1,14 @@
 <script setup>
-import TestimonialCard from "@/components/TestimonialCard.vue";
-import IntroIconButtonCard from "@/components/IntroIconButtonCard.vue";
-import InformationProductCard from "@/components/InformationProductCard.vue";
+import TestimonialCard from "@/components/shared/TestimonialCard.vue";
+import IntroIconButtonCard from "@/components/shared/IntroIconButtonCard.vue";
+import InformationProductCard from "@/components/shared/InformationProductCard.vue";
+import SecondaryButton from "@/components/shared/SecondaryButton.vue";
+import PrimaryButton from "@/components/shared/PrimaryButton.vue";
 
 import IconWathVital from "@/components/icons/IconWathVitalRecorder.svg";
-
 import IconVitalConnect from "@/components/icons/IconVitalConnect.svg";
-
-import ButtonSecondary from "@/components/SecondaryButton.vue";
-import ButtonPrimary from "@/components/PrimaryButton.vue";
-
 import IconMale from "@/components/icons/IconMale.svg";
 import IconFemale from "@/components/icons/IconFemale.svg";
-import SecondaryButton from "@/components/SecondaryButton.vue";
-import PrimaryButton from "@/components/PrimaryButton.vue";
 import { onMounted, onUnmounted } from "vue";
 let observer = null;
 

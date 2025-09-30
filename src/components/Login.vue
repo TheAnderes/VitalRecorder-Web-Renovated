@@ -49,12 +49,13 @@
 <script setup>
 import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // Importa la configuración de Firebase
+import { auth } from "@/firebase"; // Importa la configuración de Firebase
 import { useRouter } from "vue-router"; // Importa Vue Router
+import { useAdmin } from '@/composables/useAdmin'
 import Swal from 'sweetalert2'; // Importar SweetAlert2
-import PrimaryButton from './PrimaryButton.vue';
-import BaseCard from './BaseCard.vue';
-import BaseInput from './BaseInput.vue';
+import PrimaryButton from './shared/PrimaryButton.vue';
+import BaseCard from './shared/BaseCard.vue'
+import BaseInput from './shared/BaseInput.vue'
 
 const email = ref("");
 const password = ref("");
@@ -67,18 +68,30 @@ const handleLogin = async () => {
     const user = userCredential.user;
     console.log("Usuario logueado exitosamente:", user);
 
+    // Verificar rol del usuario para redirigir correctamente
+    const { getUserRole } = useAdmin()
+    const userRole = await getUserRole(user.uid)
+    
+    let redirectPath = '/dashboard' // Por defecto usuario normal
+    let welcomeText = 'Bienvenido a tu dashboard de usuario.'
+    
+    if (userRole === 'admin' || userRole === 'super_admin') {
+      redirectPath = '/admin/dashboard'
+      welcomeText = 'Bienvenido al panel de administración.'
+    }
+
     // Alerta de éxito con SweetAlert2
     Swal.fire({
       icon: 'success',
       title: '¡Inicio de sesión exitoso!',
-      text: 'Bienvenido a tu página principal.',
+      text: welcomeText,
       timer: 2000, // La alerta se cierra automáticamente después de 2 segundos
       showConfirmButton: false
     });
 
-    // Redirige al usuario al Dashboard
+    // Redirige al usuario según su rol
     setTimeout(() => {
-      router.push("/dashboard"); // Redirige a la página del Dashboard del usuario
+      router.push(redirectPath);
     }, 2000);
 
   } catch (error) {

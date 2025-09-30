@@ -1,16 +1,13 @@
 <script setup>
-import CharacteristicCard from "@/components/CharacteristicCard.vue";
-import ForWhoCard from "@/components/ForWhoCard.vue";
-import HowCard from "@/components/HowCard.vue";
-import PointViewCard from "@/components/PointViewCard.vue";
-import TestimonialCard from "@/components/TestimonialCard.vue";
-import IntroIconButtonCard from "@/components/IntroIconButtonCard.vue";
+import CharacteristicCard from "@/components/shared/CharacteristicCard.vue";
+import ForWhoCard from "@/components/shared/ForWhoCard.vue";
+import HowCard from "@/components/shared/HowCard.vue";
+import PointViewCard from "@/components/shared/PointViewCard.vue";
+import TestimonialCard from "@/components/shared/TestimonialCard.vue";
+import IntroIconButtonCard from "@/components/shared/IntroIconButtonCard.vue";
 
 import IconWathVital from "@/components/icons/IconWathVitalRecorder.svg";
 import IconGooglePlay from "@/components/icons/IconGooglePlay.svg";
-
-import ButtonPrimary from "@/components/PrimaryButton.vue";
-import ButtonSecondary from "@/components/SecondaryButton.vue";
 
 import IconWath from "@/components/icons/IconWatch.svg";
 import IconSincron from "@/components/icons/IconSincron.svg";
@@ -37,7 +34,7 @@ import IconThing from "@/components/icons/IconThing.svg";
 
 import IconMale from "@/components/icons/IconMale.svg";
 import IconFemale from "@/components/icons/IconFemale.svg";
-import PrimaryButton from "@/components/PrimaryButton.vue";
+import PrimaryButton from "@/components/shared/PrimaryButton.vue";
 
 import { onMounted, onUnmounted } from "vue";
 

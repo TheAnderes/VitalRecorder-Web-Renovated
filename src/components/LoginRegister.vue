@@ -172,10 +172,11 @@ import { ref, onMounted } from 'vue'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useRouter, useRoute } from 'vue-router'
 import { auth } from '@/firebase.js'
+import { useAdmin } from '@/composables/useAdmin'
 import Swal from 'sweetalert2'
-import PrimaryButton from './PrimaryButton.vue'
-import BaseCard from './BaseCard.vue'
-import BaseInput from './BaseInput.vue'
+import PrimaryButton from './shared/PrimaryButton.vue'
+import BaseCard from './shared/BaseCard.vue'
+import BaseInput from './shared/BaseInput.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -241,16 +242,28 @@ const handleLogin = async () => {
     const user = userCredential.user
     console.log("Usuario logueado exitosamente:", user)
 
+    // Verificar rol del usuario para redirigir correctamente
+    const { getUserRole } = useAdmin()
+    const userRole = await getUserRole(user.uid)
+    
+    let redirectPath = '/dashboard' // Por defecto usuario normal
+    let welcomeText = 'Bienvenido a tu dashboard de usuario.'
+    
+    if (userRole === 'admin' || userRole === 'super_admin') {
+      redirectPath = '/admin/dashboard'
+      welcomeText = 'Bienvenido al panel de administración.'
+    }
+
     Swal.fire({
       icon: 'success',
       title: '¡Inicio de sesión exitoso!',
-      text: 'Bienvenido a tu página principal.',
+      text: welcomeText,
       timer: 2000,
       showConfirmButton: false
     })
 
     setTimeout(() => {
-      router.push("/vital-recorder")
+      router.push(redirectPath)
     }, 2000)
 
   } catch (error) {

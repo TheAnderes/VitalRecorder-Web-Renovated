@@ -82,7 +82,7 @@
             
             <div class="download-action">
               <img 
-                src="../components/icons/IconApp.svg" 
+                src="@/components/icons/IconApp.svg" 
                 alt="VitalRecorder App - Descargar en Google Play" 
                 class="app-logo-clickable"
                 @click="downloadApp" 
@@ -101,7 +101,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '@/firebase.js'
 import { onAuthStateChanged } from 'firebase/auth'
-import BaseCard from '../components/BaseCard.vue'
+import BaseCard from '@/components/shared/BaseCard.vue'
 import Swal from 'sweetalert2'
 
 const router = useRouter()

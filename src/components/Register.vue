@@ -83,9 +83,9 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
 import Swal from 'sweetalert2'; // Importamos SweetAlert2
-import PrimaryButton from './PrimaryButton.vue';
-import BaseCard from './BaseCard.vue';
-import BaseInput from './BaseInput.vue';
+import PrimaryButton from './shared/PrimaryButton.vue';
+import BaseCard from './shared/BaseCard.vue'
+import BaseInput from './shared/BaseInput.vue'
 
 // Variables reactivas
 const fullName = ref('');

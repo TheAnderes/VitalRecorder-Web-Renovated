@@ -50,6 +50,9 @@
 <script>
 import BaseCard from './BaseCard.vue';
 
+// Generar un ID único simple
+let componentId = 0;
+
 export default {
   name: "TestimonialCard",
   components: { BaseCard },
@@ -60,10 +63,15 @@ export default {
     count:  { type: Number, default: 4 },   // Nº de estrellas huecas a mostrar
     gradientId: { type: String, default: "" } // opcional para forzar id
   },
+  data() {
+    return {
+      uniqueId: ++componentId
+    }
+  },
   computed: {
     gradId() {
       // id único para el degradado (evita colisiones si hay varias cards)
-      return this.gradientId || `starGradient-${this._uid}`;
+      return this.gradientId || `starGradient-${this.uniqueId}`;
     }
   }
 };

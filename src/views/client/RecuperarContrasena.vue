@@ -55,9 +55,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-import PrimaryButton from '../components/PrimaryButton.vue'
-import BaseCard from '../components/BaseCard.vue'
-import BaseInput from '../components/BaseInput.vue'
+import PrimaryButton from '@/components/shared/PrimaryButton.vue'
+import BaseCard from '@/components/shared/BaseCard.vue'
+import BaseInput from '@/components/shared/BaseInput.vue'
 
 const router = useRouter()
 

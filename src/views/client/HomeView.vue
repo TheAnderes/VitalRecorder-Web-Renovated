@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, onUnmounted } from "vue";
 
-import PrimaryButton from "@/components/PrimaryButton.vue";
-import SecondaryButton from "@/components/SecondaryButton.vue";
-import TestimonialCard from "@/components/TestimonialCard.vue";
+import PrimaryButton from "@/components/shared/PrimaryButton.vue";
+import SecondaryButton from "@/components/shared/SecondaryButton.vue";
+import TestimonialCard from "@/components/shared/TestimonialCard.vue";
 
 import FamilyIllustration from "/white-Photoroom.png";
 import IconMale from "@/components/icons/IconMale.svg";

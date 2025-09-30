@@ -8,7 +8,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getAuth } from "firebase/auth";
-import { auth } from "../firebase"; // Importa la configuración de Firebase
+import { auth } from "@/firebase"; // Importa la configuración de Firebase
 
 const userName = ref(""); // Variable para almacenar el nombre del usuario
 
