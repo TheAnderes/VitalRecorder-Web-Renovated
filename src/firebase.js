@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore"; // Si usas Firestore
 
 // Configuración de Firebase
@@ -20,4 +20,14 @@ const app = initializeApp(firebaseConfig);
 // Exporta los servicios que necesitas
 export const auth = getAuth(app); // Autenticación
 export const db = getFirestore(app); // Firestore (si lo necesitas)
+
+// Configurar persistencia para mantener la sesión
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log('Persistencia de autenticación configurada correctamente');
+  })
+  .catch((error) => {
+    console.error('Error al configurar la persistencia:', error);
+  });
+
 export { signOut };

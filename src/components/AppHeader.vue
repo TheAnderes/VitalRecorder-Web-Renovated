@@ -27,7 +27,44 @@
       <div class="header-right">
         <!-- Auth: DERECHA en móvil -->
         <div class="auth-slot">
-          <button v-if="user" @click="handleLogout" class="btn">Cerrar Sesión</button>
+          <!-- Menú de usuario cuando está logueado -->
+          <div v-if="user" class="user-menu-container" @click.stop>
+            <button 
+              class="user-menu-trigger"
+              @click="toggleUserMenu"
+              :class="{ 'active': showUserMenu }"
+              aria-label="Menú de usuario"
+            >
+              <div class="user-avatar">
+                <span class="user-initial">{{ getUserInitial() }}</span>
+              </div>
+              <div class="user-info">
+                <span class="user-name">{{ getUserName() }}</span>
+                <span class="session-status">Sesión iniciada</span>
+              </div>
+              <svg class="dropdown-arrow" :class="{ 'rotated': showUserMenu }" width="12" height="12" viewBox="0 0 12 12">
+                <path fill="currentColor" d="M6 9L1.5 4.5h9L6 9z"/>
+              </svg>
+            </button>
+            
+            <div class="user-dropdown" :class="{ 'show': showUserMenu }">
+              <router-link to="/dashboard" class="user-dropdown-item" @click="closeUserMenu">
+                <svg class="item-icon" width="16" height="16" viewBox="0 0 16 16">
+                  <path fill="currentColor" d="M8 8a3 3 0 100-6 3 3 0 000 6zm2-3a2 2 0 11-4 0 2 2 0 014 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                </svg>
+                Ver mi perfil
+              </router-link>
+              <button class="user-dropdown-item logout-item" @click="handleLogout">
+                <svg class="item-icon" width="16" height="16" viewBox="0 0 16 16">
+                  <path fill="currentColor" d="M10 12.5a.5.5 0 01-.5.5h-8a.5.5 0 01-.5-.5v-9a.5.5 0 01.5-.5h8a.5.5 0 01.5.5v2a.5.5 0 001 0v-2A1.5 1.5 0 009.5 2h-8A1.5 1.5 0 000 3.5v9A1.5 1.5 0 001.5 14h8a1.5 1.5 0 001.5-1.5v-2a.5.5 0 00-1 0v2z"/>
+                  <path fill="currentColor" d="M15.854 8.354a.5.5 0 000-.708l-3-3a.5.5 0 00-.708.708L14.293 7.5H5.5a.5.5 0 000 1h8.793l-2.147 2.146a.5.5 0 00.708.708l3-3z"/>
+                </svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+          
+          <!-- Botón de iniciar sesión cuando no está logueado -->
           <router-link v-else to="/login" class="btn">Iniciar Sesión</router-link>
         </div>
 
@@ -85,20 +122,16 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { signOut } from '../firebase'
-import { auth } from '../firebase'
+import { auth, signOut } from '../firebase'
+import { useAuth } from '@/composables/useAuth'
 
-const user = ref(null)
+const { user, getUserName, getUserInitial } = useAuth()
 const isOpen = ref(false)
 const showProductsDropdown = ref(false)
 const showMobileProductsDropdown = ref(false)
-
-watch(() => auth.currentUser, (newUser) => (user.value = newUser))
-onMounted(() => {
-  if (auth.currentUser) user.value = auth.currentUser
-})
+const showUserMenu = ref(false)
 
 const lockScroll = () => document.documentElement.classList.add('no-scroll')
 const unlockScroll = () => document.documentElement.classList.remove('no-scroll')
@@ -126,14 +159,24 @@ const toggleMobileProductsDropdown = () => {
   showMobileProductsDropdown.value = !showMobileProductsDropdown.value
 }
 
+// Funciones del menú de usuario
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value
+}
+
+const closeUserMenu = () => {
+  showUserMenu.value = false
+}
+
 onBeforeUnmount(unlockScroll)
 
 const handleLogout = async () => {
   try {
     await signOut(auth)
-    user.value = null
     closeMenu()
-    window.location.href = '/login'
+    closeUserMenu() // Cerrar el menú de usuario
+    // Redirigir a la página de inicio en lugar de login
+    router.push('/') 
   } catch (error) {
     console.error('Error al cerrar sesión:', error.message)
   }
@@ -591,5 +634,168 @@ a.router-link-active {
   background: linear-gradient(90deg, #2dd4bf, #60a5fa);
   color: #fff;
   font-weight: 600;
+}
+
+/* === ESTILOS DEL MENÚ DE USUARIO === */
+.user-menu-container {
+  position: relative;
+}
+
+.user-menu-trigger {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  min-width: 220px;
+  backdrop-filter: blur(10px);
+}
+
+.user-menu-trigger:hover,
+.user-menu-trigger.active {
+  background: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.2);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(45, 212, 191, 0.3);
+}
+
+.user-initial {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.session-status {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  color: #cbd5e1;
+  flex-shrink: 0;
+}
+
+.dropdown-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(45, 212, 191, 0.1);
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.user-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(45, 212, 191, 0.1);
+  color: #2dd4bf;
+  transform: translateX(2px);
+}
+
+.user-dropdown-item.logout-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.item-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* Responsive para el menú de usuario */
+@media (max-width: 1023px) {
+  .user-menu-container {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-menu-trigger {
+    min-width: 180px;
+    padding: 6px 10px;
+  }
+  
+  .user-name {
+    font-size: 13px;
+  }
+  
+  .session-status {
+    font-size: 10px;
+  }
 }
 </style>

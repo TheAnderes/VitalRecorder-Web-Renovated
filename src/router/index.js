@@ -19,6 +19,8 @@ const routes = [
   { path: '/product1', name: 'product1', component: () => import('@/views/ProductViewVitalRecorder.vue') },
   { path: '/product2', name: 'product2', component: () => import('@/views//ProductViewVitalConnect.vue') },
   { path: '/vital-recorder', name: 'vital-recorder', component: () => import('@/views/VitalRecorder.vue') },
+  // Ruta del dashboard del usuario
+  { path: '/dashboard', name: 'dashboard', component: () => import('@/views/UserDashboard.vue') },
 
 ];
 

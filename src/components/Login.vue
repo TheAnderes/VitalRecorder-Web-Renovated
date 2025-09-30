@@ -76,9 +76,9 @@ const handleLogin = async () => {
       showConfirmButton: false
     });
 
-    // Redirige al usuario a la vista "VitalRecorder"
+    // Redirige al usuario al Dashboard
     setTimeout(() => {
-      router.push("/vital-recorder"); // Redirige a la página de Vital Recorder
+      router.push("/dashboard"); // Redirige a la página del Dashboard del usuario
     }, 2000);
 
   } catch (error) {

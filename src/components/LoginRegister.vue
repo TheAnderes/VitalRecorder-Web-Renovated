@@ -307,9 +307,26 @@ const handleRegister = async () => {
 
     Swal.fire({
       title: '¡Registro exitoso!',
-      text: 'Bienvenido a VITALSYSTEMS. Ahora puedes iniciar sesión.',
+      text: 'Bienvenido a VitalSystems. Ahora puedes iniciar sesión.',
       icon: 'success',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Continuar',
+      background: 'rgba(255, 255, 255, 0.98)',
+      color: '#333',
+      confirmButtonColor: '#2dd4bf',
+      backdrop: 'rgba(224, 242, 241, 0.8)',
+      showClass: {
+        popup: 'animate__animated animate__fadeInUp animate__faster'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutDown animate__faster'
+      },
+      customClass: {
+        popup: 'vital-systems-popup',
+        title: 'vital-systems-title',
+        htmlContainer: 'vital-systems-content',
+        confirmButton: 'vital-systems-button',
+        icon: 'vital-systems-icon'
+      }
     }).then(() => {
       // Cambiar al panel de login después del registro exitoso
       switchToLogin()
@@ -807,5 +824,95 @@ const handleRegister = async () => {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
   }
+}
+
+/* Estilos personalizados para SweetAlert2 - VitalSystems */
+:deep(.vital-systems-popup) {
+  border-radius: 1.5rem !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 
+              0 8px 25px rgba(45, 212, 191, 0.15) !important;
+  border: 1px solid rgba(45, 212, 191, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.vital-systems-title) {
+  color: #1f2b6c !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(31, 43, 108, 0.1) !important;
+  margin-bottom: 1rem !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.vital-systems-content) {
+  color: #374151 !important;
+  font-size: 1.1rem !important;
+  line-height: 1.6 !important;
+  font-weight: 500 !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.vital-systems-button) {
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.875rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.vital-systems-button:hover) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4) !important;
+  background: linear-gradient(135deg, #26d0ce, #5ba3f5) !important;
+}
+
+:deep(.vital-systems-button:focus) {
+  outline: none !important;
+  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3), 
+              0 0 0 3px rgba(45, 212, 191, 0.2) !important;
+}
+
+:deep(.vital-systems-icon) {
+  border-color: #2dd4bf !important;
+}
+
+:deep(.vital-systems-icon .swal2-success-line-tip),
+:deep(.vital-systems-icon .swal2-success-line-long) {
+  background-color: #2dd4bf !important;
+}
+
+:deep(.vital-systems-icon .swal2-success-ring) {
+  border-color: #2dd4bf !important;
+}
+
+/* Estilos globales para sobrescribir todas las fuentes de SweetAlert2 */
+:deep(.swal2-popup) {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.swal2-title) {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.swal2-html-container) {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.swal2-confirm) {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.swal2-cancel) {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:deep(.swal2-deny) {
+  font-family: 'Poppins', sans-serif !important;
 }
 </style>
