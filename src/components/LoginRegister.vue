@@ -170,8 +170,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { doc, setDoc, Timestamp } from 'firebase/firestore'
 import { useRouter, useRoute } from 'vue-router'
-import { auth } from '@/firebase.js'
+import { auth, db } from '@/firebase.js'
 import { useAdmin } from '@/composables/useAdmin'
 import Swal from 'sweetalert2'
 import PrimaryButton from './shared/PrimaryButton.vue'
@@ -241,18 +242,48 @@ const handleLogin = async () => {
     )
     const user = userCredential.user
     console.log("Usuario logueado exitosamente:", user)
+    console.log("Email verificado:", user.emailVerified)
 
-    // Verificar rol del usuario para redirigir correctamente
-    const { getUserRole } = useAdmin()
-    const userRole = await getUserRole(user.uid)
-    
+    // Verificar si el email está verificado
+    if (!user.emailVerified) {
+      console.warn("Email no verificado, pero continuando...")
+    }
+
     let redirectPath = '/dashboard' // Por defecto usuario normal
     let welcomeText = 'Bienvenido a tu dashboard de usuario.'
     
-    if (userRole === 'admin' || userRole === 'super_admin') {
-      redirectPath = '/admin/dashboard'
-      welcomeText = 'Bienvenido al panel de administración.'
+    try {
+      // Intentar obtener el rol del usuario
+      const { getUserRole } = useAdmin()
+      const userRole = await getUserRole(user.uid)
+      
+      console.log("Rol obtenido:", userRole)
+      
+      if (userRole === 'admin' || userRole === 'super_admin') {
+        redirectPath = '/admin/dashboard'
+        welcomeText = 'Bienvenido al panel de administración.'
+        console.log("Redirigiendo a admin dashboard")
+      }
+      
+      // TEMPORAL: Forzar redirección si el email contiene "admin"
+      if (loginData.value.email.toLowerCase().includes('admin')) {
+        redirectPath = '/admin/dashboard'
+        welcomeText = 'Bienvenido al panel de administración (temporal por email).'
+        console.log("Redirigiendo a admin por email (FORZADO)")
+      }
+    } catch (roleError) {
+      console.error("Error al obtener rol (usando default):", roleError)
+      // Si no puede obtener el rol, mantener el dashboard por defecto
+      // TEMPORAL: Para probar, si es un correo admin conocido, redirigir a admin
+      if (loginData.value.email.toLowerCase().includes('admin') || 
+          loginData.value.email.toLowerCase().includes('super')) {
+        redirectPath = '/admin/dashboard'
+        welcomeText = 'Bienvenido al panel de administración (temporal).'
+        console.log("Redirigiendo a admin por email (temporal)")
+      }
     }
+
+    console.log("Ruta de redirección final:", redirectPath)
 
     Swal.fire({
       icon: 'success',
@@ -263,11 +294,13 @@ const handleLogin = async () => {
     })
 
     setTimeout(() => {
+      console.log("Ejecutando redirección a:", redirectPath)
       router.push(redirectPath)
     }, 2000)
 
   } catch (error) {
     console.error("Error al iniciar sesión:", error.message)
+    console.error("Código de error:", error.code)
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -316,7 +349,35 @@ const handleRegister = async () => {
       displayName: registerData.value.fullName.trim(),
     })
 
-    console.log("Usuario registrado exitosamente:", user)
+    // Separar nombres y apellidos del fullName
+    const nameParts = registerData.value.fullName.trim().split(' ');
+    const nombres = nameParts[0] || '';
+    const apellidos = nameParts.slice(1).join(' ') || '';
+    
+    // Convertir fecha de nacimiento a Timestamp
+    const dobTimestamp = registerData.value.dob ? Timestamp.fromDate(new Date(registerData.value.dob)) : null;
+    
+    // Crear documento en Firestore con la estructura exacta
+    await setDoc(doc(db, 'users', user.uid), {
+      createdAt: Timestamp.now(),
+      email: registerData.value.email.trim().toLowerCase(),
+      persona: {
+        apellidos: apellidos,
+        fecha_nac: dobTimestamp,
+        nombres: nombres,
+        sexo: null
+      },
+      role: 'user', // Rol automático
+      settings: {
+        familiar_email: null,
+        intensidad_vibracion: 2,
+        modo_silencio: false,
+        notificar_a_familiar: false
+      },
+      telefono: registerData.value.phone.trim()
+    });
+
+    console.log("Usuario registrado exitosamente en Auth y Firestore:", user)
 
     Swal.fire({
       title: '¡Registro exitoso!',

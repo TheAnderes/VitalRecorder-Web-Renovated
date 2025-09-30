@@ -1,18 +1,27 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <AppHeader />
-    <main class="flex-1">
+    <!-- Solo mostrar header y footer en rutas que NO sean de admin -->
+    <AppHeader v-if="!isAdminRoute" />
+    <main class="flex-1" :class="{ 'admin-main': isAdminRoute }">
       <RouterView />
     </main>
-    <AppFooter />
+    <AppFooter v-if="!isAdminRoute" />
   </div>
 </template>
 
 <script setup>
-import { RouterView } from 'vue-router'
+import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 import AppHeader from './components/shared/AppHeader.vue';
 import AppFooter from './components/shared/AppFooter.vue';
 import 'bootstrap-icons/font/bootstrap-icons.css'
+
+const route = useRoute()
+
+// Detectar si estamos en una ruta de admin
+const isAdminRoute = computed(() => {
+  return route.path.startsWith('/admin')
+})
 </script>
 
 <style>
@@ -52,5 +61,25 @@ footer {
   --light:300;
   --extralight:200;
   --thin:100;
+}
+
+/* Configuración global de fuente */
+* {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Estilos específicos para rutas de admin */
+main.admin-main {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  flex-direction: row;
+}
+
+/* Asegurar que las páginas de admin ocupen todo el espacio */
+.admin-main .admin-layout {
+  width: 100%;
+  min-height: 100vh;
 }
 </style>

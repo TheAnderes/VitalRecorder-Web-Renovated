@@ -80,8 +80,9 @@
 <script setup>
 import { ref } from 'vue';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
-import { auth } from '@/firebase.js'; // Importamos la instancia de auth ya inicializada
+import { auth, db } from '@/firebase.js'; // Importamos la instancia de auth y db
 import Swal from 'sweetalert2'; // Importamos SweetAlert2
 import PrimaryButton from './shared/PrimaryButton.vue';
 import BaseCard from './shared/BaseCard.vue'
@@ -127,7 +128,35 @@ const handleRegister = async () => {
       displayName: fullName.value.trim(),
     });
 
-    console.log("Usuario registrado exitosamente:", user);
+    // Separar nombres y apellidos del fullName
+    const nameParts = fullName.value.trim().split(' ');
+    const nombres = nameParts[0] || '';
+    const apellidos = nameParts.slice(1).join(' ') || '';
+    
+    // Convertir fecha de nacimiento a Timestamp
+    const dobTimestamp = dob.value ? Timestamp.fromDate(new Date(dob.value)) : null;
+    
+    // Crear documento en Firestore con la estructura exacta
+    await setDoc(doc(db, 'users', user.uid), {
+      createdAt: Timestamp.now(),
+      email: email.value.trim().toLowerCase(),
+      persona: {
+        apellidos: apellidos,
+        fecha_nac: dobTimestamp,
+        nombres: nombres,
+        sexo: null
+      },
+      role: 'user', // Rol automático
+      settings: {
+        familiar_email: null,
+        intensidad_vibracion: 2,
+        modo_silencio: false,
+        notificar_a_familiar: false
+      },
+      telefono: phone.value.trim()
+    });
+
+    console.log("Usuario registrado exitosamente en Auth y Firestore:", user);
 
     // Mostrar alerta de éxito con SweetAlert2
     Swal.fire({

@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Función para verificar si el usuario está autenticado
+    function isSignedIn() { 
+      return request.auth != null; 
+    }
+
+    // Función para verificar que el usuario es el propietario (SIN verificación de correo)
+    function isOwner(uid) { 
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Función para verificar si el usuario es administrador
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+
+    // Reglas para el acceso a la colección "users"
+    match /users/{userId} {
+      // Permite leer y escribir solo si el usuario es el propietario
+      allow read, write: if isOwner(userId);
+      
+      // Permite a los administradores leer cualquier documento de usuario
+      allow read: if isAdmin();
+      
+      // Subcolecciones dentro de "users" también están restringidas por propietario
+      match /{sub=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Colección de configuración global (si la necesitas)
+    match /config/{configId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Para futuras colecciones como datos médicos
+    match /medical_data/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read: if isAdmin();
+    }
+  }
+}

@@ -67,18 +67,41 @@ const handleLogin = async () => {
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
     const user = userCredential.user;
     console.log("Usuario logueado exitosamente:", user);
+    console.log("Email verificado:", user.emailVerified);
 
-    // Verificar rol del usuario para redirigir correctamente
-    const { getUserRole } = useAdmin()
-    const userRole = await getUserRole(user.uid)
-    
+    // Verificar si el email está verificado
+    if (!user.emailVerified) {
+      console.warn("Email no verificado, pero continuando...");
+    }
+
     let redirectPath = '/dashboard' // Por defecto usuario normal
     let welcomeText = 'Bienvenido a tu dashboard de usuario.'
     
-    if (userRole === 'admin' || userRole === 'super_admin') {
-      redirectPath = '/admin/dashboard'
-      welcomeText = 'Bienvenido al panel de administración.'
+    try {
+      // Verificar rol del usuario para redirigir correctamente
+      const { getUserRole } = useAdmin()
+      const userRole = await getUserRole(user.uid)
+      
+      console.log("Rol obtenido:", userRole);
+      
+      if (userRole === 'admin' || userRole === 'super_admin') {
+        redirectPath = '/admin/dashboard'
+        welcomeText = 'Bienvenido al panel de administración.'
+        console.log("Redirigiendo a admin dashboard");
+      }
+    } catch (roleError) {
+      console.error("Error al obtener rol (usando default):", roleError);
+      // Si no puede obtener el rol, mantener el dashboard por defecto
+      // TEMPORAL: Para probar, si es un correo admin conocido, redirigir a admin
+      if (email.value.toLowerCase().includes('admin') || 
+          email.value.toLowerCase().includes('super')) {
+        redirectPath = '/admin/dashboard'
+        welcomeText = 'Bienvenido al panel de administración (temporal).'
+        console.log("Redirigiendo a admin por email (temporal)");
+      }
     }
+
+    console.log("Ruta de redirección final:", redirectPath);
 
     // Alerta de éxito con SweetAlert2
     Swal.fire({
@@ -91,11 +114,13 @@ const handleLogin = async () => {
 
     // Redirige al usuario según su rol
     setTimeout(() => {
+      console.log("Ejecutando redirección a:", redirectPath);
       router.push(redirectPath);
     }, 2000);
 
   } catch (error) {
     console.error("Error al iniciar sesión:", error.message);
+    console.error("Código de error:", error.code);
 
     // Alerta de error
     Swal.fire({
