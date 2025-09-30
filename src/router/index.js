@@ -7,6 +7,8 @@ const routes = [
   // Rutas de compatibilidad que redirigen al componente unificado
   { path: '/login', redirect: '/auth' },
   { path: '/register', redirect: '/auth' },
+  // Ruta para recuperar contraseña
+  { path: '/recuperar-contrasena', name: 'recuperar-contrasena', component: () => import('@/views/RecuperarContrasena.vue') },
   // Rutas individuales para casos específicos (mantener por compatibilidad)
   { path: '/login-only', name: 'login-only', component: () => import('@/components/Login.vue') },
   { path: '/register-only', name: 'register-only', component: () => import('@/components/Register.vue') },

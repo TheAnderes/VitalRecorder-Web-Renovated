@@ -1,21 +1,30 @@
 <template>
   <div class="auth-container">
-    <!-- Header común -->
-    <header class="auth-header">
-      <img 
-        class="brand-mark" 
-        src="/Logo.png" 
-        alt="VITALSYSTEMS Logo Icon" 
-        onerror="this.style.display='none'"
-        @click="goHome"
-      />
-      <div class="brand-text" @click="goHome">VITALSYSTEMS</div>
-    </header>
-
     <!-- Contenedor principal -->
     <div class="auth-main">
-      <!-- Panel de Login -->
-      <div class="auth-panel login-panel" :class="{ 'active': activePanel === 'login' }">
+      <!-- Contenedor de formularios con toggle -->
+      <div class="forms-container">
+        <!-- Desktop Toggle Buttons -->
+        <div class="desktop-toggle">
+          <div class="toggle-buttons" :class="{ 'register-active': activePanel === 'register' }">
+            <button 
+              class="toggle-btn" 
+              :class="{ 'active': activePanel === 'login' }"
+              @click="switchToLogin"
+            >
+              Iniciar Sesión
+            </button>
+            <button 
+              class="toggle-btn" 
+              :class="{ 'active': activePanel === 'register' }"
+              @click="switchToRegister"
+            >
+              Registro
+            </button>
+          </div>
+        </div>
+        <!-- Panel de Login -->
+        <div class="auth-panel login-panel" :class="{ 'active': activePanel === 'login' }">
         <BaseCard class="auth-card">
           <button class="back-button" aria-label="Volver" @click="goBack">
             &#x2190;
@@ -119,6 +128,22 @@
             <PrimaryButton type="submit" name="Registrarse" :disabled="registerLoading" />
           </form>
         </BaseCard>
+        </div>
+      </div>
+
+      <!-- Sección informativa -->
+      <div class="info-section">
+        <h2 class="info-title">
+          {{ activePanel === 'login' ? '¡Bienvenido de nuevo!' : '¡Únete a nosotros!' }}
+        </h2>
+        <div class="info-description-box">
+          <p class="info-description">
+            {{ activePanel === 'login' 
+              ? 'Accede a tu cuenta para continuar monitoreando tu salud de manera inteligente y personalizada.' 
+              : 'Crea tu cuenta y comienza a disfrutar de todas las funciones de monitoreo de salud que tenemos para ti.' 
+            }}
+          </p>
+        </div>
       </div>
     </div>
 
@@ -129,14 +154,14 @@
         :class="{ 'active': activePanel === 'login' }"
         @click="switchToLogin"
       >
-        Iniciar Sesión
+        Iniciar - VitalSystems
       </button>
       <button 
         class="tab-button" 
         :class="{ 'active': activePanel === 'register' }"
         @click="switchToRegister"
       >
-        Registrarse
+        Registro - VitalSystems
       </button>
     </div>
   </div>
@@ -340,61 +365,170 @@ const handleRegister = async () => {
   justify-content: center;
   min-height: 100vh;
   padding: clamp(0.5rem, 2vw, 1rem);
-  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+  background-image: url('@/components/icons/ImageProductVitarRecorner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-.auth-header {
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(224, 242, 241, 0.75);
+  backdrop-filter: blur(1px);
+  z-index: 1;
+}
+
+/* Estilos para el toggle de escritorio */
+.desktop-toggle {
+  display: none;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-buttons {
   display: flex;
-  align-items: center;
-  gap: clamp(0.5rem, 2vw, 1rem);
-  background-color: white;
-  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem);
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-  margin-bottom: clamp(0.75rem, 3vw, 1.25rem);
-  max-width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 }
 
-.brand-mark {
-  height: clamp(40px, 8vw, 60px);
-  width: auto;
+.toggle-buttons::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+  border-radius: 12px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+  z-index: 1;
+}
+
+.toggle-buttons.register-active::before {
+  transform: translateX(calc(100% + 4px));
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
+.toggle-btn {
+  position: relative;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.brand-mark:hover {
-  transform: scale(1.05);
-}
-
-.brand-text {
-  font-weight: 500;
-  letter-spacing: .2px;
-  font-size: clamp(18px, 5vw, 28px);
-  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  z-index: 2;
   white-space: nowrap;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  text-align: center;
 }
 
-.brand-text:hover {
-  transform: scale(1.02);
+.toggle-btn:hover {
+  color: #475569;
+  background: rgba(100, 116, 139, 0.1);
 }
 
-/* Fallback para navegadores que no soportan background-clip */
-@supports not (-webkit-background-clip: text) {
-  .brand-text {
-    background: none;
-    color: #1f2b6c !important;
-    -webkit-text-fill-color: initial;
-  }
+.toggle-btn.active {
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+.toggle-btn.active:hover {
+  color: white;
+  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
+}
+
+/* Contenedor de formularios */
+.forms-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 750px;
+  width: 100%;
+}
+
+/* Sección de información */
+.info-section {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: 350px;
+  height: 100%;
+  min-height: 500px;
+  position: relative;
+  z-index: 2;
+  padding: 0.5rem 1rem 2rem 1rem;
+  gap: 1.5rem;
+}
+
+.info-title {
+  font-size: 4.2rem;
+  font-weight: 900;
+  color: #0f2147;
+  text-align: center;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3), 
+               0 2px 4px rgba(15, 33, 71, 0.2),
+               0 0 15px rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.5px;
+}
+
+.info-description-box {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 
+              0 4px 15px rgba(31, 43, 108, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-description-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22),
+              0 6px 20px rgba(31, 43, 108, 0.15);
+}
+
+.info-description {
+  font-size: 1.15rem;
+  color: #374151;
+  line-height: 1.75;
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 .auth-main {
@@ -404,22 +538,27 @@ const handleRegister = async () => {
   max-width: 1400px;
   justify-content: center;
   align-items: flex-start;
+  position: relative;
+  z-index: 2;
 }
 
 .auth-panel {
   flex: 1;
   max-width: 650px;
+  width: 100%;
 }
 
 .auth-card {
   position: relative;
-  background: #ffffff;
-  padding: clamp(1.25rem, 4vw, 2rem) clamp(1rem, 4vw, 1.75rem) clamp(1rem, 4vw, 1.75rem);
+  background: rgba(255, 255, 255, 0.98);
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2rem);
   border-radius: 1.25rem;
   width: 100%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
   color: #333;
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .back-button {
@@ -480,7 +619,7 @@ const handleRegister = async () => {
 .register-form .form-group-group {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 3vw, 1.5rem);
+  gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
 }
 
@@ -505,6 +644,7 @@ const handleRegister = async () => {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
+  z-index: 10;
 }
 
 .mobile-tabs::before {
@@ -539,8 +679,9 @@ const handleRegister = async () => {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Poppins', sans-serif;
   font-size: 0.95rem;
-  z-index: 2;
+  z-index: 12;
   white-space: nowrap;
+  pointer-events: auto;
 }
 
 .tab-button:hover {
@@ -560,14 +701,38 @@ const handleRegister = async () => {
   transform: translateY(0);
 }
 
-/* Desktop view - lado a lado */
+/* Desktop view - layout con toggle, formulario e info */
 @media (min-width: 1024px) {
   .auth-main {
-    gap: 4rem;
+    gap: 3rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Mostrar toggle de escritorio */
+  .desktop-toggle {
+    display: flex;
+  }
+  
+  /* Mostrar sección de información */
+  .info-section {
+    display: flex;
+  }
+  
+  /* Ajustar contenedor de formularios */
+  .forms-container {
+    max-width: 700px;
+    flex-direction: column;
+  }
+  
+  /* Ocultar paneles no activos en desktop también */
+  .auth-panel:not(.active) {
+    display: none;
   }
   
   .auth-panel {
-    max-width: 650px;
+    max-width: 100%;
+    width: 100%;
   }
 
   .register-form .form-group-group {
@@ -629,16 +794,6 @@ const handleRegister = async () => {
   .mobile-tabs {
     display: flex;
     order: -1;
-  }
-  
-  .auth-header {
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem;
-  }
-
-  .brand-text {
-    font-size: 1.5rem;
   }
   
   .auth-card {
