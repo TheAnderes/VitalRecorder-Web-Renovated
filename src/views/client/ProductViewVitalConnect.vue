@@ -68,22 +68,24 @@ onUnmounted(() => {
   <div class="product-view">
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
-      <h1 class="product-hero-title">Vital Connect</h1>
-      <div class="product-container product-intro-grid">
-        <div class="product-intro-text">
-          <h2 class="product-intro-heading">
-            Siempre conectado con<br />quienes cuidan de ti.
-          </h2>
-          <p class="product-intro-lead">
-            Recibe recordatorios y realiza un seguimiento de tus tareas
-            importantes de forma sencilla. Administra tus recordatorios,
-            confirma tareas y comparte el estado con tu familia desde tu
-            teléfono.
-          </p>
-          <div class="product-intro-actions">
-            <PrimaryButton root="contact-us" name="Contactanos" />
+      <div class="product-view-content-wrapper">
+        <h1 class="product-hero-title">Vital Connect</h1>
+        <div class="product-container product-intro-grid">
+          <div class="product-intro-text">
+            <h2 class="product-intro-heading">
+              Siempre conectado con<br />quienes cuidan de ti.
+            </h2>
+            <p class="product-intro-lead">
+              Recibe recordatorios y realiza un seguimiento de tus tareas
+              importantes de forma sencilla. Administra tus recordatorios,
+              confirma tareas y comparte el estado con tu familia desde tu
+              teléfono.
+            </p>
+            <div class="product-intro-actions">
+              <PrimaryButton root="contact-us" name="Contactanos" />
 
-            <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
+              <!--Puedes añadir al BottonPrimary una propiedad icon para los iconos y eliminar el name-->
+            </div>
           </div>
         </div>
       </div>
@@ -249,6 +251,13 @@ export default {
   background: #ffffff;
 }
 
+.product-view-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0 0 180px;
+}
+
 .product-container {
   max-width: 1100px;
   margin: 0 auto;
@@ -265,8 +274,8 @@ export default {
   margin: 0;
   text-decoration: underline 4px #ffffff;
   text-underline-offset: 20px;
-  margin: 0;
-  margin-left: 70px;
+  margin-left: 0;
+  text-align: left;
 }
 
 .product-intro {
@@ -280,14 +289,14 @@ export default {
   background-image: url("@/components/icons/vitalconect.jpg");
   background-size: 100% 120%;
   background-repeat: no-repeat;
+  align-items: flex-start;
 }
 
 .product-intro-grid {
   display: flex;
-
   border-radius: 16px;
-  margin: 0;
-  margin-left: 70px;
+  margin: 16px 0 0 0;
+  justify-content: flex-start;
 }
 
 .product-intro-heading {
@@ -308,7 +317,6 @@ export default {
   line-height: 1.6;
   color: #414143;
   margin: 0 0 1.5rem;
-  text-align: center;
   font-family: var(--tipografia);
   width: 600px;
 }
@@ -570,6 +578,9 @@ export default {
     gap: 18px;
     background-size: cover;       /* en lugar de 100% 120% */
     background-position: center;
+  }
+  .product-view-content-wrapper {
+    margin: 40px 0 0 20px;
   }
   .product-hero-title {
     font-size: clamp(2rem, 9vw, 3rem);

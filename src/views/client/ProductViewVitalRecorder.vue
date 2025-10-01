@@ -288,6 +288,10 @@ export default {
 
 .product-view-content-wrapper {
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0 0 180px;
 }
 
 .product-container {
@@ -305,8 +309,9 @@ export default {
   text-decoration: underline 4px #ffffff;
   text-underline-offset: 9px;
   margin: 0;
-  margin-left: 70px;
+  margin-left: 0;
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  text-align: left;
 }
 
 .product-intro {
@@ -320,6 +325,7 @@ export default {
   gap: 30px;
   background-size: 100% 120%;
   background-repeat: no-repeat;
+  align-items: flex-start;
 }
 .product-view-vital-recorder-image {
   position: absolute;
@@ -335,10 +341,9 @@ export default {
 }
 .product-intro-grid {
   display: flex;
-
   border-radius: 16px;
-  margin: 0;
-  margin-left: 70px;
+  margin: 16px 0 0 0;
+  justify-content: flex-start;
 }
 .product-intro-heading {
   font-size: 40px;
@@ -357,7 +362,6 @@ export default {
   line-height: 1.6;
   color: #f2f6ff;
   margin: 0 0 1.5rem;
-  text-align: center;
   font-family: var(--tipografia);
   width: 600px;
 }
@@ -570,7 +574,10 @@ export default {
   .product-view-vital-recorder-image {
     filter: brightness(0.78) blur(1.5px);
   }
-  .product-view-content-wrapper { padding: 0 6px; }
+  .product-view-content-wrapper { 
+    padding: 0 6px;
+    margin: 40px 0 0 20px;
+  }
   .product-hero-title {
     font-size: clamp(2rem, 9vw, 3rem);
     margin-left: 0;

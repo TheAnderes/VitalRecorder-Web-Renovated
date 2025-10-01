@@ -35,7 +35,7 @@ export default {
   font-family: 'Poppins', sans-serif;
   font-size: clamp(14px, 4vw, 18px);
   font-weight: 600;
-  padding: 12px 24px;
+  padding: 12px 32px;
   justify-content: center;
   align-items: center;
   border-radius: 12px;
@@ -43,8 +43,8 @@ export default {
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   border: 2px solid transparent;
   min-height: 48px;
-  width: 100%;
-  max-width: 100%;
+  width: auto;
+  max-width: 250px;
   box-sizing: border-box;
   cursor: pointer;
 }
