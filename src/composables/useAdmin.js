@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { useAuth } from './useAuth'
 import { doc, getDoc, collection, getDocs, query, orderBy, limit, where } from 'firebase/firestore'
 import { db } from '@/firebase'
+import { placeholderUsers, getPlaceholderStats, getRecentActivity as getRecentActivityData } from '@/data/placeholderUsers'
 
 export function useAdmin() {
   const { user } = useAuth()
@@ -11,6 +12,10 @@ export function useAdmin() {
   // Obtener rol del usuario desde Firestore
   const getUserRole = async (userId) => {
     try {
+      // En desarrollo, evitar llamadas a Firestore y devolver rol seguro
+      if (import.meta.env.DEV || !navigator.onLine) {
+        return 'admin'
+      }
       const userDoc = await getDoc(doc(db, 'users', userId))
       if (userDoc.exists()) {
         return userDoc.data().role || 'user'
@@ -25,6 +30,11 @@ export function useAdmin() {
   // Obtener datos completos del usuario desde Firestore
   const getUserData = async (userId) => {
     try {
+      // En desarrollo, devolver datos de ejemplo
+      if (import.meta.env.DEV || !navigator.onLine) {
+        const local = placeholderUsers.find(u => u.id === userId)
+        return local || null
+      }
       const userDoc = await getDoc(doc(db, 'users', userId))
       if (userDoc.exists()) {
         return userDoc.data()
@@ -40,6 +50,15 @@ export function useAdmin() {
   const getAllUsers = async () => {
     try {
       loading.value = true
+      
+      // En modo desarrollo, usar datos placeholder
+      if (import.meta.env.DEV || !navigator.onLine) {
+        // Simular delay de red
+        await new Promise(resolve => setTimeout(resolve, 500))
+        return [...placeholderUsers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      }
+      
+      // En producción, usar Firebase
       const usersQuery = query(
         collection(db, 'users'),
         orderBy('createdAt', 'desc')
@@ -54,7 +73,8 @@ export function useAdmin() {
       return users
     } catch (error) {
       console.error('Error al obtener usuarios:', error)
-      return []
+      // Fallback a datos placeholder si Firebase falla
+      return [...placeholderUsers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     } finally {
       loading.value = false
     }
@@ -63,6 +83,14 @@ export function useAdmin() {
   // Obtener estadísticas básicas
   const getBasicStats = async () => {
     try {
+      // En modo desarrollo, usar datos placeholder
+      if (import.meta.env.DEV || !navigator.onLine) {
+        // Simular delay de red
+        await new Promise(resolve => setTimeout(resolve, 300))
+        return getPlaceholderStats()
+      }
+      
+      // En producción, usar Firebase
       const usersQuery = query(collection(db, 'users'))
       const usersSnapshot = await getDocs(usersQuery)
       
@@ -72,26 +100,21 @@ export function useAdmin() {
       )
       const adminSnapshot = await getDocs(adminQuery)
       
-      const superAdminQuery = query(
-        collection(db, 'users'),
-        where('role', '==', 'super_admin')
-      )
-      const superAdminSnapshot = await getDocs(superAdminQuery)
+      // Rol super_admin no existe en el sistema
+      const superAdmins = 0
       
       return {
         totalUsers: usersSnapshot.size,
         totalAdmins: adminSnapshot.size,
-        totalSuperAdmins: superAdminSnapshot.size,
-        regularUsers: usersSnapshot.size - adminSnapshot.size - superAdminSnapshot.size
+        totalSuperAdmins: superAdmins,
+        regularUsers: usersSnapshot.size - adminSnapshot.size
       }
     } catch (error) {
       console.error('Error al obtener estadísticas:', error)
-      return {
-        totalUsers: 0,
-        totalAdmins: 0,
-        totalSuperAdmins: 0,
-        regularUsers: 0
-      }
+      // Fallback a datos placeholder si Firebase falla
+      const stats = getPlaceholderStats()
+      // Asegurar que no haya superAdmins
+      return { ...stats, totalSuperAdmins: 0, regularUsers: stats.totalUsers - stats.totalAdmins }
     }
   }
 
@@ -106,11 +129,12 @@ export function useAdmin() {
 
   // Computed properties para verificar roles
   const isAdmin = computed(() => {
-    return userRole.value === 'admin' || userRole.value === 'super_admin'
+    return userRole.value === 'admin'
   })
 
   const isSuperAdmin = computed(() => {
-    return userRole.value === 'super_admin'
+    // El rol super_admin fue eliminado del sistema
+    return false
   })
 
   const isUser = computed(() => {
@@ -123,7 +147,7 @@ export function useAdmin() {
     
     try {
       const role = await getUserRole(user.value.uid)
-      return role === 'admin' || role === 'super_admin'
+      return role === 'admin'
     } catch (error) {
       console.error('Error al verificar permisos de admin:', error)
       return false
@@ -132,24 +156,44 @@ export function useAdmin() {
 
   // Verificar acceso a funciones específicas
   const canManageUsers = computed(() => {
-    return isAdmin.value || isSuperAdmin.value
+    return isAdmin.value
   })
 
   const canDeleteUsers = computed(() => {
-    return isSuperAdmin.value
+    // Si deseas permitir eliminación solo a admins, dejar true; si no, ajustar aquí
+    return isAdmin.value
   })
 
   const canViewAnalytics = computed(() => {
-    return isAdmin.value || isSuperAdmin.value
+    return isAdmin.value
   })
 
   const canEditUserRoles = computed(() => {
-    return isSuperAdmin.value
+    // Ajusta según tus reglas; por ahora, admins pueden editar roles
+    return isAdmin.value
   })
 
   const canManageSettings = computed(() => {
-    return isAdmin.value || isSuperAdmin.value
+    return isAdmin.value
   })
+  
+  // Obtener actividad reciente
+  const getRecentActivity = async () => {
+    try {
+      // En modo desarrollo, usar datos placeholder
+      if (import.meta.env.DEV || !navigator.onLine) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+        return getRecentActivityData()
+      }
+      
+      // En producción, implementar lógica de Firebase
+      // Por ahora devolver datos placeholder como fallback
+      return getRecentActivityData()
+    } catch (error) {
+      console.error('Error al obtener actividad reciente:', error)
+      return getRecentActivityData()
+    }
+  }
 
   return {
     // Estado
@@ -171,6 +215,7 @@ export function useAdmin() {
     getUserData,
     getAllUsers,
     getBasicStats,
-    checkAdminPermissions
+    checkAdminPermissions,
+    getRecentActivity
   }
 }

@@ -35,7 +35,6 @@
             <option value="all">Todos los roles</option>
             <option value="user">Usuarios</option>
             <option value="admin">Administradores</option>
-            <option value="super_admin">Super Admins</option>
           </select>
           
           <select v-model="sortBy" @change="updateSort" class="sort-select">
@@ -90,63 +89,60 @@
       <!-- Users Table -->
       <div v-else class="users-table">
         <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Información de Contacto</th>
-                <th>Rol</th>
-                <th>Fecha de Registro</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="user in filteredUsers" :key="user.id" class="user-row">
-                <td class="user-info">
-                  <div class="user-avatar">
-                    {{ getUserInitial(user) }}
+          <div class="data-grid">
+            <div class="grid-header">
+              <div class="cell user">Usuario</div>
+              <div class="cell contact">Información de Contacto</div>
+              <div class="cell role center">Rol</div>
+              <div class="cell date center">Fecha de Registro</div>
+              <div class="cell status center">Estado</div>
+              <div class="cell actions center">Acciones</div>
+            </div>
+            <div class="grid-body">
+              <div class="grid-row" v-for="user in filteredUsers" :key="user.id">
+                <div class="cell user">
+                  <div class="user-info">
+                    <div class="user-avatar">
+                      {{ getUserInitial(user) }}
+                    </div>
+                    <div class="user-details">
+                      <span class="user-name">{{ getUserFullName(user) }}</span>
+                      <span class="user-id">ID: {{ user.id.substring(0, 8) }}...</span>
+                    </div>
                   </div>
-                  <div class="user-details">
-                    <span class="user-name">{{ getUserFullName(user) }}</span>
-                    <span class="user-id">ID: {{ user.id.substring(0, 8) }}...</span>
+                </div>
+                <div class="cell contact">
+                  <div class="contact-info">
+                    <div class="contact-item">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                      <span>{{ user.email }}</span>
+                    </div>
+                    <div class="contact-item" v-if="user.telefono">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" fill="none"/>
+                      </svg>
+                      <span>{{ user.telefono }}</span>
+                    </div>
                   </div>
-                </td>
-                
-                <td class="contact-info">
-                  <div class="contact-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" fill="none"/>
-                      <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                    <span>{{ user.email }}</span>
-                  </div>
-                  <div class="contact-item" v-if="user.telefono">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
-                    <span>{{ user.telefono }}</span>
-                  </div>
-                </td>
-                
-                <td class="role-info">
+                </div>
+                <div class="cell role center">
                   <span class="role-badge" :class="user.role">
                     {{ getRoleDisplayName(user.role) }}
                   </span>
-                </td>
-                
-                <td class="date-info">
+                </div>
+                <div class="cell date center">
                   {{ formatDate(user.createdAt) }}
-                </td>
-                
-                <td class="status-info">
-                  <span class="status-badge active">
+                </div>
+                <div class="cell status center">
+                  <span class="status-badge" :class="user.isActive ? 'active' : 'inactive'">
                     <span class="status-dot"></span>
-                    Activo
+                    {{ user.isActive ? 'Activo' : 'Inactivo' }}
                   </span>
-                </td>
-                
-                <td class="actions-info">
+                </div>
+                <div class="cell actions center">
                   <div class="action-buttons">
                     <button @click="viewUser(user)" class="action-btn view" title="Ver detalles">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -167,11 +163,11 @@
                       </svg>
                     </button>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Empty State -->
           <div v-if="filteredUsers.length === 0" class="empty-state">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
@@ -184,6 +180,86 @@
       </div>
     </div>
   </AdminLayout>
+    
+    <!-- Modals for actions -->
+    <div v-if="showViewModal" class="modal-backdrop" @click.self="closeModals">
+      <div class="modal user-details-modal">
+        <div class="modal-header">
+          <h3>Detalles del Usuario</h3>
+          <button class="modal-close" @click="closeModals">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="user-summary" v-if="selectedUser">
+            <div class="avatar-large">{{ getUserInitial(selectedUser) }}</div>
+            <div class="info">
+              <div class="row"><span class="label">Nombre:</span><span class="value">{{ getUserFullName(selectedUser) }}</span></div>
+              <div class="row"><span class="label">Email:</span><span class="value">{{ selectedUser.email }}</span></div>
+              <div class="row" v-if="selectedUser.telefono"><span class="label">Teléfono:</span><span class="value">{{ selectedUser.telefono }}</span></div>
+              <div class="row"><span class="label">Rol:</span><span class="value">{{ getRoleDisplayName(selectedUser.role) }}</span></div>
+              <div class="row"><span class="label">Estado:</span><span class="value">{{ selectedUser.isActive ? 'Activo' : 'Inactivo' }}</span></div>
+              <div class="row"><span class="label">Registrado:</span><span class="value">{{ formatDate(selectedUser.createdAt) }}</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" @click="closeModals">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showEditModal" class="modal-backdrop" @click.self="closeModals">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Editar Usuario</h3>
+          <button class="modal-close" @click="closeModals">×</button>
+        </div>
+        <div class="modal-body" v-if="editForm">
+          <div class="form-row">
+            <label>Nombre</label>
+            <input type="text" v-model="editForm.nombres" placeholder="Nombres" />
+          </div>
+          <div class="form-row">
+            <label>Apellidos</label>
+            <input type="text" v-model="editForm.apellidos" placeholder="Apellidos" />
+          </div>
+          <div class="form-row">
+            <label>Email</label>
+            <input type="email" v-model="editForm.email" placeholder="correo@ejemplo.com" />
+          </div>
+          <div class="form-row">
+            <label>Rol</label>
+            <select v-model="editForm.role">
+              <option value="user">Usuario</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-row switch">
+            <label>Activo</label>
+            <input type="checkbox" v-model="editForm.isActive" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" @click="closeModals">Cancelar</button>
+          <button class="btn primary" @click="saveUserEdits">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showDeleteModal" class="modal-backdrop" @click.self="closeModals">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Eliminar Usuario</h3>
+          <button class="modal-close" @click="closeModals">×</button>
+        </div>
+        <div class="modal-body">
+          <p>¿Seguro que deseas eliminar al usuario <strong>{{ getUserFullName(selectedUser) }}</strong> ({{ selectedUser?.email }})? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn ghost" @click="closeModals">Cancelar</button>
+          <button class="btn danger" @click="confirmDeleteUser">Eliminar</button>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -201,11 +277,19 @@ const roleFilter = ref('all')
 const sortBy = ref('createdAt')
 const sortOrder = ref('desc')
 
-// Computed properties
-const loading = computed(() => adminStore.loading)
-const error = computed(() => adminStore.error)
-const stats = computed(() => adminStore.stats)
-const filteredUsers = computed(() => adminStore.filteredUsers)
+// Refs from store (avoid double-wrapping with computed)
+const loading = adminStore.loading
+const error = adminStore.error
+const stats = adminStore.stats
+const filteredUsers = adminStore.filteredUsers
+
+// Local state for modals
+const selectedUser = ref(null)
+const showViewModal = ref(false)
+const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+
+const editForm = ref(null)
 
 // Methods
 const refreshData = async () => {
@@ -229,6 +313,74 @@ const toggleSortOrder = () => {
   adminStore.updateFilters({ sortOrder: sortOrder.value })
 }
 
+// Action handlers
+const viewUser = (user) => {
+  selectedUser.value = user
+  showViewModal.value = true
+}
+
+const editUser = (user) => {
+  selectedUser.value = user
+  editForm.value = {
+    nombres: user.persona?.nombres || '',
+    apellidos: user.persona?.apellidos || '',
+    email: user.email || '',
+    role: user.role || 'user',
+    isActive: !!user.isActive
+  }
+  showEditModal.value = true
+}
+
+const saveUserEdits = async () => {
+  if (!selectedUser.value || !editForm.value) return
+  try {
+    // Attempt to call store update if available
+    if (typeof adminStore.updateUser === 'function') {
+      await adminStore.updateUser(selectedUser.value.id, {
+        persona: { nombres: editForm.value.nombres, apellidos: editForm.value.apellidos },
+        email: editForm.value.email,
+        role: editForm.value.role,
+        isActive: editForm.value.isActive
+      })
+    } else {
+      console.warn('updateUser no está implementado en adminStore; se simula la edición local.')
+    }
+  } catch (e) {
+    console.error('Error guardando usuario:', e)
+  } finally {
+    closeModals()
+    refreshData()
+  }
+}
+
+const deleteUser = (user) => {
+  selectedUser.value = user
+  showDeleteModal.value = true
+}
+
+const confirmDeleteUser = async () => {
+  if (!selectedUser.value) return
+  try {
+    if (typeof adminStore.deleteUser === 'function') {
+      await adminStore.deleteUser(selectedUser.value.id)
+    } else {
+      console.warn('deleteUser no está implementado en adminStore; se simula la eliminación local.')
+    }
+  } catch (e) {
+    console.error('Error eliminando usuario:', e)
+  } finally {
+    closeModals()
+    refreshData()
+  }
+}
+
+const closeModals = () => {
+  showViewModal.value = false
+  showEditModal.value = false
+  showDeleteModal.value = false
+  editForm.value = null
+}
+
 const getUserInitial = (user) => {
   if (user.persona?.nombres) {
     return user.persona.nombres.charAt(0).toUpperCase()
@@ -248,8 +400,7 @@ const getUserFullName = (user) => {
 const getRoleDisplayName = (role) => {
   const roleNames = {
     'user': 'Usuario',
-    'admin': 'Administrador',
-    'super_admin': 'Super Admin'
+    'admin': 'Administrador'
   }
   return roleNames[role] || role
 }
@@ -271,20 +422,6 @@ const formatDate = (timestamp) => {
   })
 }
 
-const viewUser = (user) => {
-  // Implementar modal de vista de usuario
-  console.log('Ver usuario:', user)
-}
-
-const editUser = (user) => {
-  // Implementar modal de edición de usuario
-  console.log('Editar usuario:', user)
-}
-
-const deleteUser = (user) => {
-  // Implementar confirmación y eliminación de usuario
-  console.log('Eliminar usuario:', user)
-}
 
 onMounted(async () => {
   await refreshData()
@@ -345,15 +482,17 @@ onMounted(async () => {
 }
 
 .filter-row {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) repeat(3, minmax(140px, max-content));
+  gap: 0.75rem 1rem;
   align-items: center;
 }
 
 .search-box {
   position: relative;
-  flex: 1;
-  max-width: 400px;
+  flex: 1 1 320px;
+  min-width: 260px;
+  max-width: 600px;
 }
 
 .search-box svg {
@@ -379,6 +518,8 @@ onMounted(async () => {
   font-size: 0.875rem;
   background: white;
   cursor: pointer;
+  flex: 0 0 auto;
+  min-width: 160px;
 }
 
 .sort-btn {
@@ -390,6 +531,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
 }
 
 .sort-btn:hover {
@@ -466,28 +608,49 @@ onMounted(async () => {
   overflow-x: auto;
 }
 
-table {
+.data-grid {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 980px;
+  --grid-cols: minmax(280px, 1.2fr) minmax(280px, 1fr) 120px 150px 120px 120px;
 }
 
-th {
+.grid-header,
+.grid-row {
+  display: grid;
+  grid-template-columns: var(--grid-cols);
+}
+
+.grid-header {
   background: #f9fafb;
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.875rem;
   border-bottom: 1px solid #e5e7eb;
+  color: #374151;
 }
 
-td {
+.grid-header .cell {
+  font-weight: 600;
+  font-size: 0.875rem;
   padding: 1rem;
-  border-bottom: 1px solid #f3f4f6;
 }
 
-.user-row:hover {
+.grid-body {
+  width: 100%;
+}
+
+.grid-row {
+  border-bottom: 1px solid #f3f4f6;
+  align-items: center;
+}
+
+.grid-row .cell {
+  padding: 1rem;
+}
+
+.grid-row:hover {
   background: #f9fafb;
+}
+
+.cell.center {
+  text-align: center;
 }
 
 .user-info {
@@ -512,6 +675,14 @@ td {
 .user-details {
   display: flex;
   flex-direction: column;
+  min-width: 0; /* allow truncation */
+}
+
+.user-name,
+.user-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-name {
@@ -528,6 +699,15 @@ td {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
+}
+
+.contact-item span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .contact-item {
@@ -544,6 +724,7 @@ td {
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: capitalize;
+  display: inline-block;
 }
 
 .role-badge.user {
@@ -556,10 +737,6 @@ td {
   color: #c2410c;
 }
 
-.role-badge.super_admin {
-  background: #fce7f3;
-  color: #be185d;
-}
 
 .status-badge {
   display: flex;
@@ -576,6 +753,11 @@ td {
   color: #166534;
 }
 
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
 .status-dot {
   width: 6px;
   height: 6px;
@@ -583,9 +765,17 @@ td {
   border-radius: 50%;
 }
 
+/* Ensure role, status and actions columns are centered */
+.role-info,
+.status-info,
+.actions-info {
+  text-align: center;
+}
+
 .action-buttons {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .action-btn {
@@ -644,32 +834,551 @@ td {
 }
 
 @media (max-width: 768px) {
-  .filter-row {
-    flex-direction: column;
-    align-items: stretch;
+  .users-management {
+    padding: 0;
+    margin: 0;
   }
-  
-  .search-box {
-    max-width: none;
-  }
-  
-  .stats-bar {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
+
+  /* Reset all spacing to start from zero */
   .page-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    gap: 0.75rem;
+    margin: 0 0 1rem 0;
+    padding: 0 0 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
   }
-  
-  .table-container {
+
+  .page-header .header-content {
+    margin: 0;
+    padding: 0;
+  }
+
+  .page-header .header-content h2 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.5rem;
+  }
+
+  .page-header .header-content p {
+    margin: 0;
     font-size: 0.875rem;
   }
   
-  th, td {
-    padding: 0.75rem 0.5rem;
+  .page-header .refresh-btn {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 0.75rem;
+  }
+
+  /* Filters section - zero spacing */
+  .filters-section {
+    margin: 0 0 1rem 0;
+    padding: 0;
+  }
+  
+  .filter-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+  }
+
+  .search-box {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .role-filter, .sort-select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  
+  .sort-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+    margin: 0;
+  }
+  
+  /* Stats bar - zero spacing */
+  .stats-bar {
+    flex-direction: row;
+    gap: 0.5rem;
+    text-align: center;
+    padding: 0.75rem;
+    margin: 0 0 1rem 0;
+    border-radius: 0.375rem;
+  }
+  
+  /* Table container - zero spacing */
+  .users-table {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .table-container {
+    margin: 0;
+    padding: 0;
+    overflow-x: visible;
+  }
+  
+  /* Hide desktop table structure */
+  .data-grid {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .grid-header {
+    display: none;
+  }
+  
+  /* Mobile card design - zero base spacing */
+  .grid-row {
+    display: block;
+    background: white;
+    border-radius: 0.5rem;
+    margin: 0 0 0.75rem 0;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+  }
+  
+  .grid-row:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+  }
+  
+  /* User header section - optimized for mobile */
+  .grid-row .cell.user {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 0.875rem;
+    border-bottom: 1px solid #e2e8f0;
+    margin: 0;
+  }
+  
+  .grid-row .cell.user .user-info {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.875rem;
+  }
+  
+  .grid-row .cell.user .user-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+  }
+  
+  .grid-row .cell.user .user-details {
+    flex: 1;
+  }
+  
+  .grid-row .cell.user .user-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.125rem 0;
+    line-height: 1.25;
+  }
+  
+  .grid-row .cell.user .user-id {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  /* Other cells - tight spacing */
+  .grid-row .cell:not(.user) {
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid #f1f5f9;
+    margin: 0;
+  }
+  
+  .grid-row .cell:last-child {
+    border-bottom: none;
+    padding-bottom: 0.875rem;
+  }
+  
+  .grid-row .cell::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin: 0 0 0.375rem 0;
+  }
+  
+  .cell.user::before { content: none; }
+  .cell.contact::before { content: "Información de Contacto"; }
+  .cell.role::before { content: "Rol"; }
+  .cell.date::before { content: "Fecha de Registro"; }
+  .cell.status::before { content: "Estado"; }
+  .cell.actions::before { content: "Acciones"; }
+  
+  /* Contact info styling - compact */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.825rem;
+    padding: 0.375rem 0.5rem;
+    background: #f8fafc;
+    border-radius: 0.25rem;
+    margin: 0;
+  }
+  
+  .contact-item svg {
+    color: #64748b;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+  
+  /* Role and status badges - compact */
+  .role-badge, .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  /* Action buttons - compact layout */
+  .action-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .action-btn {
+    width: auto;
+    height: auto;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+  }
+  
+  .action-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  /* Date formatting - compact */
+  .cell.date {
+    font-size: 0.8rem;
+    color: #374151;
+    margin: 0;
+  }
+
+  /* Loading and error states - adjust for mobile */
+  .loading-state, .error-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin: 0;
+    color: #6b7280;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-bar {
+    flex-direction: column;
+  }
+  
+  .stat-item {
+    text-align: center;
+    padding: 0.75rem;
+  }
+  
+  .grid-row {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+}
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modal {
+  width: 100%;
+  max-width: 560px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 1rem 1.25rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.btn {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.btn.danger {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+.btn.ghost {
+  background: #fff;
+}
+
+.user-summary {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.avatar-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  font-weight: 700;
+}
+
+.user-summary .info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.375rem;
+}
+
+.user-summary .row .label {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.user-summary .row .value {
+  color: #111827;
+  font-weight: 500;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-row.switch {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-row label {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.form-row input,
+.form-row select {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Margins and spacing adjustments for User Details modal */
+.user-details-modal .modal-header {
+  padding: 1.5rem 2rem;
+  margin: 0;
+}
+
+.user-details-modal .modal-body {
+  padding: 2rem;
+  margin: 0;
+}
+
+.user-details-modal .user-summary {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin: 0 0 1rem 0;
+}
+
+.user-details-modal .avatar-large {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.user-details-modal .user-summary .info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  flex: 1;
+}
+
+.user-details-modal .user-summary .row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+.user-details-modal .user-summary .row:last-child {
+  margin-bottom: 0;
+}
+
+.user-details-modal .user-summary .row .label {
+  min-width: 120px;
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.user-details-modal .user-summary .row .value {
+  margin: 0;
+  color: #111827;
+  font-weight: 500;
+  word-break: break-word;
+  flex: 1;
+}
+
+.user-details-modal .modal-footer {
+  padding: 1.5rem 2rem;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .modal {
+    max-width: 96vw;
+    margin: 1rem;
+  }
+  
+  .user-details-modal .modal-header {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .user-details-modal .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .user-details-modal .modal-footer {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .user-details-modal .user-summary {
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 0 1rem 0;
+  }
+  
+  .user-details-modal .user-summary .row .label {
+    min-width: 100px;
+  }
+  
+  .user-details-modal .user-summary .row {
+    margin: 0 0 0.75rem 0;
   }
 }
 </style>

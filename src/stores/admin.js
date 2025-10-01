@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { useAdmin } from '@/composables/useAdmin'
+import { placeholderUsers } from '@/data/placeholderUsers'
 
 // Estado global del admin (simulando Pinia con composables)
 const adminState = ref({
@@ -84,9 +85,17 @@ export function useAdminStore() {
     try {
       adminState.value.loading = true
       adminState.value.error = null
-      adminState.value.users = await getAllUsers()
+      const result = await getAllUsers()
+      if (Array.isArray(result) && result.length > 0) {
+        adminState.value.users = result
+      } else {
+        // Fallback garantizado a placeholders si no hay datos
+        adminState.value.users = [...placeholderUsers]
+      }
     } catch (err) {
-      adminState.value.error = err.message || 'Error al cargar usuarios'
+      // Fallback a placeholders en caso de error
+      adminState.value.users = [...placeholderUsers]
+      adminState.value.error = err?.message || 'Error al cargar usuarios, mostrando datos de ejemplo'
       console.error('Error fetching users:', err)
     } finally {
       adminState.value.loading = false

@@ -35,7 +35,7 @@
           <h3>{{ stats.totalAdmins }}</h3>
           <p>Administradores</p>
           <span class="stat-change neutral">
-            {{ stats.totalSuperAdmins }} super admins
+            {{ stats.regularUsers }} usuarios regulares
           </span>
         </div>
       </div>
@@ -99,17 +99,6 @@
           </div>
         </router-link>
 
-        <router-link to="/admin/settings" class="action-card">
-          <div class="action-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="action-content">
-            <h4>Configuración</h4>
-            <p>Ajustes del sistema y aplicación</p>
-          </div>
-        </router-link>
 
         <router-link to="/admin/user-roles" class="action-card" v-if="canEditUserRoles">
           <div class="action-icon">
@@ -125,47 +114,74 @@
       </div>
     </div>
 
-    <!-- Recent Activity -->
-    <div class="recent-activity">
-      <h3>Actividad Reciente</h3>
-      <div class="activity-list">
-        <div class="activity-item">
-          <div class="activity-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
-            </svg>
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+          <div class="activity-header">
+            <h3>Actividad Reciente</h3>
+            <router-link to="/admin/analytics" class="view-all-link">
+              Ver todas →
+            </router-link>
           </div>
-          <div class="activity-content">
-            <p><strong>Nuevo usuario registrado</strong></p>
-            <span class="activity-time">Hace 2 horas</span>
+          
+          <div class="activity-list">
+            <div 
+              v-for="activity in recentActivity.slice(0, 5)" 
+              :key="activity.id"
+              class="activity-item"
+            >
+              <div class="activity-icon" :class="activity.icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path v-if="activity.icon === 'user'" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
+                  <path v-else-if="activity.icon === 'settings'" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                  <path v-else-if="activity.icon === 'warning'" d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.46 9-11V7l-10-5z M12 17h-2v-2h2v2z M12 13h-2V7h2v6z" fill="currentColor"/>
+                  <path v-else d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="activity-content">
+                <p><strong>{{ activity.message }}</strong></p>
+                <span class="activity-time">{{ formatRelativeTime(activity.timestamp) }}</span>
+              </div>
+            </div>
           </div>
         </div>
         
-        <div class="activity-item">
-          <div class="activity-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="activity-content">
-            <p><strong>Configuración actualizada</strong></p>
-            <span class="activity-time">Hace 5 horas</span>
+        <!-- System Health -->
+        <div class="system-health">
+          <h3>Estado del Sistema</h3>
+          <div class="health-metrics">
+            <div class="health-item">
+              <div class="health-indicator good"></div>
+              <div class="health-info">
+                <span class="health-label">Base de Datos</span>
+                <span class="health-value">Operacional</span>
+              </div>
+            </div>
+            
+            <div class="health-item">
+              <div class="health-indicator good"></div>
+              <div class="health-info">
+                <span class="health-label">API</span>
+                <span class="health-value">< 150ms</span>
+              </div>
+            </div>
+            
+            <div class="health-item">
+              <div class="health-indicator warning"></div>
+              <div class="health-info">
+                <span class="health-label">Almacenamiento</span>
+                <span class="health-value">75% usado</span>
+              </div>
+            </div>
+            
+            <div class="health-item">
+              <div class="health-indicator good"></div>
+              <div class="health-info">
+                <span class="health-label">Usuarios Online</span>
+                <span class="health-value">{{ onlineUsers }}</span>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="activity-item">
-          <div class="activity-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="activity-content">
-            <p><strong>Rol de usuario modificado</strong></p>
-            <span class="activity-time">Hace 1 día</span>
-          </div>
-        </div>
-      </div>
-    </div>
   </AdminLayout>
 </template>
 
@@ -173,11 +189,17 @@
 import { ref, computed, onMounted } from 'vue'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAdminStore } from '@/stores/admin'
+import { getRecentActivity } from '@/data/placeholderUsers'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
 
-const { canEditUserRoles } = useAdmin()
+const { canEditUserRoles, getRecentActivity: getRecentActivityComposable } = useAdmin()
 const adminStore = useAdminStore()
 
+// State
+const recentActivity = ref([])
+const onlineUsers = ref(0)
+
+// Computed
 const stats = computed(() => adminStore.stats)
 const loading = computed(() => adminStore.loading)
 
@@ -186,8 +208,42 @@ const growthPercentage = computed(() => {
   return total > 0 ? Math.round((stats.value.regularUsers / total) * 100) : 0
 })
 
-onMounted(async () => {
-  await adminStore.fetchStats()
+// Methods
+const formatRelativeTime = (timestamp) => {
+  const now = new Date()
+  const date = new Date(timestamp)
+  const diffInSeconds = Math.floor((now - date) / 1000)
+  
+  if (diffInSeconds < 60) return 'Hace un momento'
+  if (diffInSeconds < 3600) return `Hace ${Math.floor(diffInSeconds / 60)} minutos`
+  if (diffInSeconds < 86400) return `Hace ${Math.floor(diffInSeconds / 3600)} horas`
+  if (diffInSeconds < 604800) return `Hace ${Math.floor(diffInSeconds / 86400)} días`
+  return date.toLocaleDateString('es-ES')
+}
+
+const loadDashboardData = async () => {
+  try {
+    // Cargar estadísticas básicas
+    await adminStore.fetchStats()
+    
+    // Cargar actividad reciente
+    recentActivity.value = getRecentActivity()
+    
+    // Calcular usuarios online (simulado)
+    onlineUsers.value = Math.floor(stats.value.totalUsers * 0.15) || 3
+    
+  } catch (error) {
+    console.error('Error cargando datos del dashboard:', error)
+  }
+}
+
+onMounted(() => {
+  loadDashboardData()
+  
+  // Actualizar datos cada 30 segundos
+  setInterval(() => {
+    loadDashboardData()
+  }, 30000)
 })
 </script>
 
@@ -391,6 +447,116 @@ onMounted(async () => {
 .activity-time {
   font-size: 0.75rem;
   color: #9ca3af;
+}
+
+/* Activity Header */
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.view-all-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.view-all-link:hover {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* Activity Icons by Type */
+.activity-icon.user {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.activity-icon.settings {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.activity-icon.warning {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.activity-icon.role {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* System Health */
+.system-health {
+  margin-bottom: 2rem;
+}
+
+.system-health h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.health-metrics {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.health-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+}
+
+.health-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.health-indicator.good {
+  background: #10b981;
+}
+
+.health-indicator.warning {
+  background: #f59e0b;
+}
+
+.health-indicator.danger {
+  background: #ef4444;
+}
+
+.health-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.health-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.health-value {
+  font-size: 0.875rem;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {

@@ -43,23 +43,5 @@ export const adminRoutes = [
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     }
-  },
-  {
-    path: '/admin/settings',
-    name: 'admin-settings',
-    component: () => import('@/views/admin/Settings.vue'),
-    meta: { 
-      requiresAuth: true,
-      requiredRole: ['admin', 'super_admin']
-    }
-  },
-  {
-    path: '/admin/user-roles',
-    name: 'admin-user-roles',
-    component: () => import('@/views/admin/UserRoles.vue'),
-    meta: { 
-      requiresAuth: true,
-      requiredRole: ['super_admin']
-    }
   }
 ]

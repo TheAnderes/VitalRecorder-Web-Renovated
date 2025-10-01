@@ -10,7 +10,7 @@
 
       <!-- Navegación -->
       <nav class="navigation" aria-label="Navegación del sitio">
-        <h3 class="nav-title">Navegación</h3>
+        
         <ul class="nav-links">
           <li><router-link to="/">Inicio</router-link></li>
           <li><router-link to="/about-us">Sobre Nosotros</router-link></li>

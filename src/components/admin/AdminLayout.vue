@@ -1,5 +1,12 @@
 <template>
   <div class="admin-layout">
+    <!-- Mobile Overlay -->
+    <div 
+      v-if="!sidebarCollapsed" 
+      class="mobile-overlay"
+      @click="toggleSidebar"
+    ></div>
+    
     <!-- Sidebar -->
     <AdminSidebar 
       :is-collapsed="sidebarCollapsed"
@@ -37,7 +44,7 @@ import AdminHeader from './AdminHeader.vue'
 const router = useRouter()
 const { user } = useAuth()
 
-const sidebarCollapsed = ref(false)
+const sidebarCollapsed = ref(true) // Start collapsed on mobile
 
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
@@ -83,6 +90,17 @@ const handleLogout = async () => {
   margin: 0 auto;
 }
 
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  display: none;
+}
+
 @media (max-width: 768px) {
   .admin-main {
     margin-left: 0;
@@ -94,6 +112,20 @@ const handleLogout = async () => {
   
   .admin-content {
     padding: 1rem;
+  }
+  
+  .mobile-overlay {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-content {
+    padding: 0.75rem;
+  }
+  
+  .content-container {
+    max-width: none;
   }
 }
 </style>

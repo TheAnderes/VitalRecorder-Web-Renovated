@@ -92,7 +92,6 @@ const pageTitle = computed(() => {
     'admin-dashboard': 'Dashboard',
     'admin-users': 'Gestión de Usuarios',
     'admin-analytics': 'Analíticas',
-    'admin-settings': 'Configuración',
     'admin-user-roles': 'Gestión de Roles'
   }
   return routeNames[route.name] || 'Panel de Administración'
@@ -291,6 +290,7 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .admin-header {
     padding: 0 1rem;
+    height: 60px;
   }
   
   .page-title h1 {
@@ -299,6 +299,55 @@ onUnmounted(() => {
   
   .user-info {
     display: none;
+  }
+  
+  .sidebar-toggle {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  .user-menu {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .avatar-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+  
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header {
+    padding: 0 0.75rem;
+    height: 56px;
+  }
+  
+  .page-title h1 {
+    font-size: 1.125rem;
+  }
+  
+  .header-left {
+    gap: 0.75rem;
+  }
+  
+  .sidebar-toggle {
+    padding: 0.4rem;
+  }
+  
+  .avatar-circle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .dropdown-menu {
+    width: 160px;
   }
 }
 </style>
