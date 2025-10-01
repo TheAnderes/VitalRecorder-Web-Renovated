@@ -130,23 +130,8 @@ const getUserInitial = computed(() => {
 
 // Funciones
 const downloadApp = () => {
-  // Simulamos la descarga por ahora - en el futuro apuntará a Google Play
-  Swal.fire({
-    title: '¡Próximamente!',
-    text: 'La aplicación VitalRecorder estará disponible pronto en Google Play Store.',
-    icon: 'info',
-    confirmButtonText: 'Entendido',
-    background: 'rgba(255, 255, 255, 0.98)',
-    color: '#333',
-    confirmButtonColor: '#2dd4bf',
-    backdrop: 'rgba(224, 242, 241, 0.8)',
-    customClass: {
-      popup: 'vital-systems-popup',
-      title: 'vital-systems-title',
-      htmlContainer: 'vital-systems-content',
-      confirmButton: 'vital-systems-button'
-    }
-  })
+  // Redireccionar al archivo APK en Google Drive
+  window.open('https://drive.google.com/file/d/1X1kfyRmOlHzWPFpjSQW-10kk2j1tcBnl/view', '_blank')
 }
 
 // Lifecycle
