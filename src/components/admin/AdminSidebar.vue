@@ -42,7 +42,7 @@
                 <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
               </svg>
             </div>
-            <span class="nav-text" v-show="!isCollapsed">Usuarios</span>
+            <span class="nav-text" v-show="!isCollapsed">Gestión de Usuarios</span>
           </router-link>
         </li>
 
@@ -72,7 +72,7 @@
                 <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
               </svg>
             </div>
-            <span class="nav-text" v-show="!isCollapsed">Analíticas</span>
+            <span class="nav-text" v-show="!isCollapsed">Analíticas y Reportes</span>
           </router-link>
         </li>
 

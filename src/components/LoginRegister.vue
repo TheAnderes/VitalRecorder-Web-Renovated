@@ -6,17 +6,20 @@
       <div class="forms-container">
         <!-- Desktop Toggle Buttons -->
         <div class="desktop-toggle">
-          <div class="toggle-buttons" :class="{ 'register-active': activePanel === 'register' }">
-            <button 
-              class="toggle-btn" 
-              :class="{ 'active': activePanel === 'login' }"
+          <div
+            class="toggle-buttons"
+            :class="{ 'register-active': activePanel === 'register' }"
+          >
+            <button
+              class="toggle-btn"
+              :class="{ active: activePanel === 'login' }"
               @click="switchToLogin"
             >
               Iniciar Sesión
             </button>
-            <button 
-              class="toggle-btn" 
-              :class="{ 'active': activePanel === 'register' }"
+            <button
+              class="toggle-btn"
+              :class="{ active: activePanel === 'register' }"
               @click="switchToRegister"
             >
               Registro
@@ -24,123 +27,149 @@
           </div>
         </div>
         <!-- Panel de Login -->
-        <div class="auth-panel login-panel" :class="{ 'active': activePanel === 'login' }">
-        <BaseCard class="auth-card">
-          <button class="back-button" aria-label="Volver" @click="goBack">
-            &#x2190;
-          </button>
+        <div
+          class="auth-panel login-panel"
+          :class="{ active: activePanel === 'login' }"
+        >
+          <BaseCard class="auth-card">
+            <button class="back-button" aria-label="Volver" @click="goBack">
+              &#x2190;
+            </button>
 
-          <h1 class="title">Iniciar Sesión</h1>
-          <p class="subtitle">
-            ¿Es tu primera vez? 
-            <a href="#" @click.prevent="switchToRegister">Regístrate aquí</a>
-          </p>
+            <h1 class="title">Iniciar Sesión</h1>
+            <p class="subtitle">
+              ¿Es tu primera vez?
+              <a href="#" @click.prevent="switchToRegister">Regístrate aquí</a>
+            </p>
 
-          <form @submit.prevent="handleLogin" class="auth-form">
-            <BaseInput
-              label="Correo electrónico:"
-              id="login-email"
-              type="email"
-              v-model="loginData.email"
-              placeholder="tucorreo@gmail.com"
-              required
-            />
-
-            <BaseInput
-              label="Contraseña:"
-              id="login-password"
-              type="password"
-              v-model="loginData.password"
-              placeholder="Contraseña"
-              required
-            />
-
-            <a href="/recuperar-contrasena" class="forgot-password">¿Olvidaste tu contraseña?</a>
-
-            <PrimaryButton type="submit" name="Iniciar Sesión" :disabled="loginLoading" />
-          </form>
-        </BaseCard>
-      </div>
-
-      <!-- Panel de Register -->
-      <div class="auth-panel register-panel" :class="{ 'active': activePanel === 'register' }">
-        <BaseCard class="auth-card">
-          <button class="back-button" aria-label="Volver" @click="goBack">
-            &#x2190;
-          </button>
-
-          <h1 class="title">Registrarse</h1>
-          <p class="subtitle">
-            ¿Ya tienes cuenta? 
-            <a href="#" @click.prevent="switchToLogin">Inicia sesión aquí</a>
-          </p>
-
-          <form @submit.prevent="handleRegister" class="auth-form register-form">
-            <div class="form-group-group">
-              <BaseInput 
-                label="Nombre completo:" 
-                id="register-fullName" 
-                type="text" 
-                v-model="registerData.fullName" 
-                placeholder="Juan Pérez" 
-                required 
+            <form @submit.prevent="handleLogin" class="auth-form">
+              <BaseInput
+                label="Correo electrónico:"
+                id="login-email"
+                type="email"
+                v-model="loginData.email"
+                placeholder="tucorreo@gmail.com"
+                required
               />
 
-              <BaseInput 
-                label="Contraseña:" 
-                id="register-password" 
-                type="password" 
-                v-model="registerData.password" 
-                placeholder="••••••••" 
-                required 
-                minlength="6"
+              <BaseInput
+                label="Contraseña:"
+                id="login-password"
+                type="password"
+                v-model="loginData.password"
+                placeholder="Contraseña"
+                required
               />
 
-              <BaseInput 
-                label="Correo electrónico:" 
-                id="register-email" 
-                type="email" 
-                v-model="registerData.email" 
-                placeholder="tucorreo@gmail.com" 
-                required 
-              />
-            </div>
+              <a href="/recuperar-contrasena" class="forgot-password"
+                >¿Olvidaste tu contraseña?</a
+              >
+              <div class="spacer">
+                <PrimaryButton
+                  type="submit"
+                  name="Iniciar Sesión"
+                  :disabled="loginLoading"
+                />
+              </div>
+            </form>
+          </BaseCard>
+        </div>
 
-            <div class="form-group-group">
-              <BaseInput 
-                label="Número de celular:" 
-                id="register-phone" 
-                type="tel" 
-                v-model="registerData.phone" 
-                placeholder="(+591) 70000000" 
-                required 
-              />
+        <!-- Panel de Register -->
+        <div
+          class="auth-panel register-panel"
+          :class="{ active: activePanel === 'register' }"
+        >
+          <BaseCard class="auth-card">
+            <button class="back-button" aria-label="Volver" @click="goBack">
+              &#x2190;
+            </button>
 
-              <BaseInput 
-                label="Fecha de nacimiento:" 
-                id="register-dob" 
-                type="date" 
-                v-model="registerData.dob" 
-                required 
-              />
-            </div>
+            <h1 class="title">Registrarse</h1>
+            <p class="subtitle">
+              ¿Ya tienes cuenta?
+              <a href="#" @click.prevent="switchToLogin">Inicia sesión aquí</a>
+            </p>
 
-            <PrimaryButton type="submit" name="Registrarse" :disabled="registerLoading" />
-          </form>
-        </BaseCard>
+            <form
+              @submit.prevent="handleRegister"
+              class="auth-form register-form"
+            >
+              <div class="form-group-group">
+                <BaseInput
+                  label="Nombre completo:"
+                  id="register-fullName"
+                  type="text"
+                  v-model="registerData.fullName"
+                  placeholder="Juan Pérez"
+                  required
+                />
+
+                <BaseInput
+                  label="Contraseña:"
+                  id="register-password"
+                  type="password"
+                  v-model="registerData.password"
+                  placeholder="••••••••"
+                  required
+                  minlength="6"
+                />
+
+                <BaseInput
+                  label="Correo electrónico:"
+                  id="register-email"
+                  type="email"
+                  v-model="registerData.email"
+                  placeholder="tucorreo@gmail.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group-group">
+                <BaseInput
+                  label="Número de celular:"
+                  id="register-phone"
+                  type="tel"
+                  v-model="registerData.phone"
+                  placeholder="(+591) 70000000"
+                  required
+                />
+
+                <BaseInput
+                  label="Fecha de nacimiento:"
+                  id="register-dob"
+                  type="date"
+                  v-model="registerData.dob"
+                  required
+                />
+              </div>
+              <div class="spacer">
+                <PrimaryButton
+                  type="submit"
+                  name="Registrarse"
+                  :disabled="registerLoading"
+                />
+              </div>
+            </form>
+          </BaseCard>
         </div>
       </div>
 
       <!-- Sección informativa -->
       <div class="info-section">
         <h2 class="info-title">
-          {{ activePanel === 'login' ? '¡Bienvenido de nuevo!' : '¡Únete a nosotros!' }}
+          {{
+            activePanel === "login"
+              ? "¡Bienvenido de nuevo!"
+              : "¡Únete a nosotros!"
+          }}
         </h2>
         <div class="info-description-box">
           <p class="info-description">
-            {{ activePanel === 'login' 
-              ? 'Accede a tu cuenta para continuar monitoreando tu salud de manera inteligente y personalizada.' 
-              : 'Crea tu cuenta y comienza a disfrutar de todas las funciones de monitoreo de salud que tenemos para ti.' 
+            {{
+              activePanel === "login"
+                ? "Accede a tu cuenta para continuar monitoreando tu salud de manera inteligente y personalizada."
+                : "Crea tu cuenta y comienza a disfrutar de todas las funciones de monitoreo de salud que tenemos para ti."
             }}
           </p>
         </div>
@@ -148,17 +177,20 @@
     </div>
 
     <!-- Indicadores para móvil -->
-    <div class="mobile-tabs" :class="{ 'register-active': activePanel === 'register' }">
-      <button 
-        class="tab-button" 
-        :class="{ 'active': activePanel === 'login' }"
+    <div
+      class="mobile-tabs"
+      :class="{ 'register-active': activePanel === 'register' }"
+    >
+      <button
+        class="tab-button"
+        :class="{ active: activePanel === 'login' }"
         @click="switchToLogin"
       >
         Iniciar - VitalSystems
       </button>
-      <button 
-        class="tab-button" 
-        :class="{ 'active': activePanel === 'register' }"
+      <button
+        class="tab-button"
+        :class="{ active: activePanel === 'register' }"
         @click="switchToRegister"
       >
         Registro - VitalSystems
@@ -168,284 +200,297 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { doc, setDoc, Timestamp } from 'firebase/firestore'
-import { useRouter, useRoute } from 'vue-router'
-import { auth, db } from '@/firebase.js'
-import { useAdmin } from '@/composables/useAdmin'
-import Swal from 'sweetalert2'
-import PrimaryButton from './shared/PrimaryButton.vue'
-import BaseCard from './shared/BaseCard.vue'
-import BaseInput from './shared/BaseInput.vue'
+import { ref, onMounted } from "vue";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { useRouter, useRoute } from "vue-router";
+import { auth, db } from "@/firebase.js";
+import { useAdmin } from "@/composables/useAdmin";
+import Swal from "sweetalert2";
+import PrimaryButton from "./shared/PrimaryButton.vue";
+import BaseCard from "./shared/BaseCard.vue";
+import BaseInput from "./shared/BaseInput.vue";
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 // Estado activo
-const activePanel = ref('login')
+const activePanel = ref("login");
 
 // Detectar modo inicial desde la URL o query params
 onMounted(() => {
   // Si viene desde /register o tiene query ?mode=register
-  if (route.query.mode === 'register' || 
-      route.path.includes('register') || 
-      route.name === 'register') {
-    activePanel.value = 'register'
+  if (
+    route.query.mode === "register" ||
+    route.path.includes("register") ||
+    route.name === "register"
+  ) {
+    activePanel.value = "register";
   }
-})
+});
 
 // Datos de login
 const loginData = ref({
-  email: '',
-  password: ''
-})
+  email: "",
+  password: "",
+});
 
 // Datos de registro
 const registerData = ref({
-  fullName: '',
-  email: '',
-  password: '',
-  phone: '',
-  dob: ''
-})
+  fullName: "",
+  email: "",
+  password: "",
+  phone: "",
+  dob: "",
+});
 
 // Estados de carga
-const loginLoading = ref(false)
-const registerLoading = ref(false)
+const loginLoading = ref(false);
+const registerLoading = ref(false);
 
 // Funciones de navegación
 const switchToLogin = () => {
-  activePanel.value = 'login'
-}
+  activePanel.value = "login";
+};
 
 const switchToRegister = () => {
-  activePanel.value = 'register'
-}
+  activePanel.value = "register";
+};
 
 const goBack = () => {
-  window.history.back()
-}
+  window.history.back();
+};
 
 const goHome = () => {
-  router.push('/')
-}
+  router.push("/");
+};
 
 // Función de login
 const handleLogin = async () => {
-  loginLoading.value = true
+  loginLoading.value = true;
   try {
     const userCredential = await signInWithEmailAndPassword(
-      auth, 
-      loginData.value.email, 
+      auth,
+      loginData.value.email,
       loginData.value.password
-    )
-    const user = userCredential.user
-    console.log("Usuario logueado exitosamente:", user)
-    console.log("Email verificado:", user.emailVerified)
+    );
+    const user = userCredential.user;
+    console.log("Usuario logueado exitosamente:", user);
+    console.log("Email verificado:", user.emailVerified);
 
     // Verificar si el email está verificado
     if (!user.emailVerified) {
-      console.warn("Email no verificado, pero continuando...")
+      console.warn("Email no verificado, pero continuando...");
     }
 
-    let redirectPath = '/dashboard' // Por defecto usuario normal
-    let welcomeText = 'Bienvenido a tu dashboard de usuario.'
-    
+    let redirectPath = "/dashboard"; // Por defecto usuario normal
+    let welcomeText = "Bienvenido a tu dashboard de usuario.";
+
     try {
       // Intentar obtener el rol del usuario
-      const { getUserRole } = useAdmin()
-      const userRole = await getUserRole(user.uid)
-      
-      console.log("Rol obtenido:", userRole)
-      
-      if (userRole === 'admin' || userRole === 'super_admin') {
-        redirectPath = '/admin/dashboard'
-        welcomeText = 'Bienvenido al panel de administración.'
-        console.log("Redirigiendo a admin dashboard")
+      const { getUserRole } = useAdmin();
+      const userRole = await getUserRole(user.uid);
+
+      console.log("Rol obtenido:", userRole);
+
+      if (userRole === "admin" || userRole === "super_admin") {
+        redirectPath = "/admin/dashboard";
+        welcomeText = "Bienvenido al panel de administración.";
+        console.log("Redirigiendo a admin dashboard");
       }
-      
+
       // TEMPORAL: Forzar redirección si el email contiene "admin"
-      if (loginData.value.email.toLowerCase().includes('admin')) {
-        redirectPath = '/admin/dashboard'
-        welcomeText = 'Bienvenido al panel de administración (temporal por email).'
-        console.log("Redirigiendo a admin por email (FORZADO)")
+      if (loginData.value.email.toLowerCase().includes("admin")) {
+        redirectPath = "/admin/dashboard";
+        welcomeText =
+          "Bienvenido al panel de administración (temporal por email).";
+        console.log("Redirigiendo a admin por email (FORZADO)");
       }
     } catch (roleError) {
-      console.error("Error al obtener rol (usando default):", roleError)
+      console.error("Error al obtener rol (usando default):", roleError);
       // Si no puede obtener el rol, mantener el dashboard por defecto
       // TEMPORAL: Para probar, si es un correo admin conocido, redirigir a admin
-      if (loginData.value.email.toLowerCase().includes('admin') || 
-          loginData.value.email.toLowerCase().includes('super')) {
-        redirectPath = '/admin/dashboard'
-        welcomeText = 'Bienvenido al panel de administración (temporal).'
-        console.log("Redirigiendo a admin por email (temporal)")
+      if (
+        loginData.value.email.toLowerCase().includes("admin") ||
+        loginData.value.email.toLowerCase().includes("super")
+      ) {
+        redirectPath = "/admin/dashboard";
+        welcomeText = "Bienvenido al panel de administración (temporal).";
+        console.log("Redirigiendo a admin por email (temporal)");
       }
     }
 
-    console.log("Ruta de redirección final:", redirectPath)
+    console.log("Ruta de redirección final:", redirectPath);
 
     Swal.fire({
-      icon: 'success',
-      title: '¡Inicio de sesión exitoso!',
+      icon: "success",
+      title: "¡Inicio de sesión exitoso!",
       text: welcomeText,
       timer: 2000,
-      showConfirmButton: false
-    })
+      showConfirmButton: false,
+    });
 
     setTimeout(() => {
-      console.log("Ejecutando redirección a:", redirectPath)
-      router.push(redirectPath)
-    }, 2000)
-
+      console.log("Ejecutando redirección a:", redirectPath);
+      router.push(redirectPath);
+    }, 2000);
   } catch (error) {
-    console.error("Error al iniciar sesión:", error.message)
-    console.error("Código de error:", error.code)
+    console.error("Error al iniciar sesión:", error.message);
+    console.error("Código de error:", error.code);
     Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Error al iniciar sesión: ' + error.message,
+      icon: "error",
+      title: "Error",
+      text: "Error al iniciar sesión: " + error.message,
       timer: 3000,
-      showConfirmButton: true
-    })
+      showConfirmButton: true,
+    });
   } finally {
-    loginLoading.value = false
+    loginLoading.value = false;
   }
-}
+};
 
 // Función de registro
 const handleRegister = async () => {
   // Validación básica
-  if (!registerData.value.fullName.trim() || !registerData.value.email.trim() || !registerData.value.password.trim()) {
+  if (
+    !registerData.value.fullName.trim() ||
+    !registerData.value.email.trim() ||
+    !registerData.value.password.trim()
+  ) {
     Swal.fire({
-      icon: 'warning',
-      title: 'Campos requeridos',
-      text: 'Por favor, completa todos los campos requeridos.'
-    })
-    return
+      icon: "warning",
+      title: "Campos requeridos",
+      text: "Por favor, completa todos los campos requeridos.",
+    });
+    return;
   }
 
   if (registerData.value.password.length < 6) {
     Swal.fire({
-      icon: 'warning',
-      title: 'Contraseña débil',
-      text: 'La contraseña debe tener al menos 6 caracteres.'
-    })
-    return
+      icon: "warning",
+      title: "Contraseña débil",
+      text: "La contraseña debe tener al menos 6 caracteres.",
+    });
+    return;
   }
 
-  registerLoading.value = true
+  registerLoading.value = true;
 
   try {
     const userCredential = await createUserWithEmailAndPassword(
-      auth, 
-      registerData.value.email.trim(), 
+      auth,
+      registerData.value.email.trim(),
       registerData.value.password
-    )
-    
-    const user = userCredential.user
-    
+    );
+
+    const user = userCredential.user;
+
     await updateProfile(user, {
       displayName: registerData.value.fullName.trim(),
-    })
+    });
 
     // Separar nombres y apellidos del fullName
-    const nameParts = registerData.value.fullName.trim().split(' ');
-    const nombres = nameParts[0] || '';
-    const apellidos = nameParts.slice(1).join(' ') || '';
-    
+    const nameParts = registerData.value.fullName.trim().split(" ");
+    const nombres = nameParts[0] || "";
+    const apellidos = nameParts.slice(1).join(" ") || "";
+
     // Convertir fecha de nacimiento a Timestamp
-    const dobTimestamp = registerData.value.dob ? Timestamp.fromDate(new Date(registerData.value.dob)) : null;
-    
+    const dobTimestamp = registerData.value.dob
+      ? Timestamp.fromDate(new Date(registerData.value.dob))
+      : null;
+
     // Crear documento en Firestore con la estructura exacta
-    await setDoc(doc(db, 'users', user.uid), {
+    await setDoc(doc(db, "users", user.uid), {
       createdAt: Timestamp.now(),
       email: registerData.value.email.trim().toLowerCase(),
       persona: {
         apellidos: apellidos,
         fecha_nac: dobTimestamp,
         nombres: nombres,
-        sexo: null
+        sexo: null,
       },
-      role: 'user', // Rol automático
+      role: "user", // Rol automático
       settings: {
         familiar_email: null,
         intensidad_vibracion: 2,
         modo_silencio: false,
-        notificar_a_familiar: false
+        notificar_a_familiar: false,
       },
-      telefono: registerData.value.phone.trim()
+      telefono: registerData.value.phone.trim(),
     });
 
-    console.log("Usuario registrado exitosamente en Auth y Firestore:", user)
+    console.log("Usuario registrado exitosamente en Auth y Firestore:", user);
 
     Swal.fire({
-      title: '¡Registro exitoso!',
-      text: 'Bienvenido a VitalSystems. Ahora puedes iniciar sesión.',
-      icon: 'success',
-      confirmButtonText: 'Continuar',
-      background: 'rgba(255, 255, 255, 0.98)',
-      color: '#333',
-      confirmButtonColor: '#2dd4bf',
-      backdrop: 'rgba(224, 242, 241, 0.8)',
+      title: "¡Registro exitoso!",
+      text: "Bienvenido a VitalSystems. Ahora puedes iniciar sesión.",
+      icon: "success",
+      confirmButtonText: "Continuar",
+      background: "rgba(255, 255, 255, 0.98)",
+      color: "#333",
+      confirmButtonColor: "#2dd4bf",
+      backdrop: "rgba(224, 242, 241, 0.8)",
       showClass: {
-        popup: 'animate__animated animate__fadeInUp animate__faster'
+        popup: "animate__animated animate__fadeInUp animate__faster",
       },
       hideClass: {
-        popup: 'animate__animated animate__fadeOutDown animate__faster'
+        popup: "animate__animated animate__fadeOutDown animate__faster",
       },
       customClass: {
-        popup: 'vital-systems-popup',
-        title: 'vital-systems-title',
-        htmlContainer: 'vital-systems-content',
-        confirmButton: 'vital-systems-button',
-        icon: 'vital-systems-icon'
-      }
+        popup: "vital-systems-popup",
+        title: "vital-systems-title",
+        htmlContainer: "vital-systems-content",
+        confirmButton: "vital-systems-button",
+        icon: "vital-systems-icon",
+      },
     }).then(() => {
       // Cambiar al panel de login después del registro exitoso
-      switchToLogin()
+      switchToLogin();
       // Limpiar el formulario de registro
       registerData.value = {
-        fullName: '',
-        email: '',
-        password: '',
-        phone: '',
-        dob: ''
-      }
-    })
-
+        fullName: "",
+        email: "",
+        password: "",
+        phone: "",
+        dob: "",
+      };
+    });
   } catch (error) {
-    console.error("Error al registrarse:", error)
-    
-    let errorMessage = "Error al registrarse. "
-    
+    console.error("Error al registrarse:", error);
+
+    let errorMessage = "Error al registrarse. ";
+
     switch (error.code) {
-      case 'auth/email-already-in-use':
-        errorMessage += "Este correo electrónico ya está registrado."
-        break
-      case 'auth/invalid-email':
-        errorMessage += "El correo electrónico no es válido."
-        break
-      case 'auth/operation-not-allowed':
-        errorMessage += "El registro con email/contraseña no está habilitado."
-        break
-      case 'auth/weak-password':
-        errorMessage += "La contraseña es muy débil."
-        break
+      case "auth/email-already-in-use":
+        errorMessage += "Este correo electrónico ya está registrado.";
+        break;
+      case "auth/invalid-email":
+        errorMessage += "El correo electrónico no es válido.";
+        break;
+      case "auth/operation-not-allowed":
+        errorMessage += "El registro con email/contraseña no está habilitado.";
+        break;
+      case "auth/weak-password":
+        errorMessage += "La contraseña es muy débil.";
+        break;
       default:
-        errorMessage += error.message
+        errorMessage += error.message;
     }
 
     Swal.fire({
-      title: 'Error',
+      title: "Error",
       text: errorMessage,
-      icon: 'error',
-      confirmButtonText: 'Aceptar'
-    })
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    });
   } finally {
-    registerLoading.value = false
+    registerLoading.value = false;
   }
-}
+};
 </script>
 
 <style scoped>
@@ -456,18 +501,18 @@ const handleRegister = async () => {
   justify-content: center;
   min-height: 100vh;
   padding: clamp(0.5rem, 2vw, 1rem);
-  background-image: url('@/components/icons/ImageProductVitarRecorner.jpg');
+  background-image: url("@/components/icons/ImageProductVitarRecorner.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 .auth-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -498,8 +543,14 @@ const handleRegister = async () => {
   overflow: hidden;
 }
 
+.spacer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .toggle-buttons::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 4px;
   left: 4px;
@@ -528,7 +579,7 @@ const handleRegister = async () => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.95rem;
   z-index: 2;
   white-space: nowrap;
@@ -585,9 +636,8 @@ const handleRegister = async () => {
   text-align: center;
   margin: 0;
   line-height: 1.1;
-  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3), 
-               0 2px 4px rgba(15, 33, 71, 0.2),
-               0 0 15px rgba(255, 255, 255, 0.8);
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(15, 33, 71, 0.2),
+    0 0 15px rgba(255, 255, 255, 0.8);
   letter-spacing: -0.5px;
 }
 
@@ -595,8 +645,7 @@ const handleRegister = async () => {
   background: rgba(255, 255, 255, 0.98);
   padding: 2.5rem;
   border-radius: 24px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 
-              0 4px 15px rgba(31, 43, 108, 0.1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 0 4px 15px rgba(31, 43, 108, 0.1);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   width: 100%;
@@ -609,7 +658,7 @@ const handleRegister = async () => {
 .info-description-box:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22),
-              0 6px 20px rgba(31, 43, 108, 0.15);
+    0 6px 20px rgba(31, 43, 108, 0.15);
 }
 
 .info-description {
@@ -739,7 +788,7 @@ const handleRegister = async () => {
 }
 
 .mobile-tabs::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 4px;
   left: 4px;
@@ -768,7 +817,7 @@ const handleRegister = async () => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.95rem;
   z-index: 12;
   white-space: nowrap;
@@ -799,28 +848,28 @@ const handleRegister = async () => {
     align-items: center;
     justify-content: space-between;
   }
-  
+
   /* Mostrar toggle de escritorio */
   .desktop-toggle {
     display: flex;
   }
-  
+
   /* Mostrar sección de información */
   .info-section {
     display: flex;
   }
-  
+
   /* Ajustar contenedor de formularios */
   .forms-container {
     max-width: 700px;
     flex-direction: column;
   }
-  
+
   /* Ocultar paneles no activos en desktop también */
   .auth-panel:not(.active) {
     display: none;
   }
-  
+
   .auth-panel {
     max-width: 100%;
     width: 100%;
@@ -830,7 +879,7 @@ const handleRegister = async () => {
     grid-template-columns: 1fr 1fr;
     gap: clamp(1.25rem, 3vw, 2.5rem);
   }
-  
+
   .register-form .form-group-group:first-child .form-group:first-child {
     grid-column: 1 / -1; /* Nombre completo ocupa todo el ancho */
   }
@@ -844,16 +893,16 @@ const handleRegister = async () => {
     gap: 1.5rem;
     width: 95%;
   }
-  
+
   .auth-panel {
     max-width: 90%;
     width: 100%;
   }
-  
+
   .auth-panel:not(.active) {
     display: none;
   }
-  
+
   .mobile-tabs {
     display: flex;
     order: -1;
@@ -865,7 +914,7 @@ const handleRegister = async () => {
     grid-template-columns: 1fr 1fr;
     gap: clamp(1rem, 3vw, 1.5rem);
   }
-  
+
   .register-form .form-group-group:first-child .form-group:first-child {
     grid-column: 1 / -1;
   }
@@ -877,16 +926,16 @@ const handleRegister = async () => {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .auth-panel:not(.active) {
     display: none;
   }
-  
+
   .mobile-tabs {
     display: flex;
     order: -1;
   }
-  
+
   .auth-card {
     margin: 0;
     border-radius: 1rem;
@@ -903,11 +952,11 @@ const handleRegister = async () => {
 /* Estilos personalizados para SweetAlert2 - VitalSystems */
 :deep(.vital-systems-popup) {
   border-radius: 1.5rem !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 
-              0 8px 25px rgba(45, 212, 191, 0.15) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2),
+    0 8px 25px rgba(45, 212, 191, 0.15) !important;
   border: 1px solid rgba(45, 212, 191, 0.2) !important;
   backdrop-filter: blur(15px) !important;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.vital-systems-title) {
@@ -916,7 +965,7 @@ const handleRegister = async () => {
   font-weight: 700 !important;
   text-shadow: 0 2px 4px rgba(31, 43, 108, 0.1) !important;
   margin-bottom: 1rem !important;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.vital-systems-content) {
@@ -924,7 +973,7 @@ const handleRegister = async () => {
   font-size: 1.1rem !important;
   line-height: 1.6 !important;
   font-weight: 500 !important;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.vital-systems-button) {
@@ -937,7 +986,7 @@ const handleRegister = async () => {
   text-transform: none !important;
   box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.vital-systems-button:hover) {
@@ -948,8 +997,8 @@ const handleRegister = async () => {
 
 :deep(.vital-systems-button:focus) {
   outline: none !important;
-  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3), 
-              0 0 0 3px rgba(45, 212, 191, 0.2) !important;
+  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3),
+    0 0 0 3px rgba(45, 212, 191, 0.2) !important;
 }
 
 :deep(.vital-systems-icon) {
@@ -967,26 +1016,26 @@ const handleRegister = async () => {
 
 /* Estilos globales para sobrescribir todas las fuentes de SweetAlert2 */
 :deep(.swal2-popup) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.swal2-title) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.swal2-html-container) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.swal2-confirm) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.swal2-cancel) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 :deep(.swal2-deny) {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 </style>
