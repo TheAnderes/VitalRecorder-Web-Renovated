@@ -35,6 +35,15 @@ export const adminRoutes = [
       requiredRole: ['admin', 'super_admin']
     }
   },
+   {
+    path: '/admin/patient',
+    name: 'admin-patient',
+    component: () => import('@/views/admin/PatientManagement.vue'),
+    meta: { 
+      requiresAuth: true,
+      requiredRole: ['admin', 'super_admin']
+    }
+  },
   {
     path: '/admin/analytics',
     name: 'admin-analytics',

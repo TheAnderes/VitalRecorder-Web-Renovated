@@ -1,0 +1,234 @@
+[
+  {
+    "id": "patient_001",
+    "createdAt": "2024-09-02T21:14:49.000Z",
+    "dni": "73215123",
+    "email": "josue.guevara@example.test",
+    "persona": {
+      "nombres": "Josue Daniel",
+      "apellidos": "Guevara",
+      "fecha_nac": "2003-12-15T00:00:00.000Z",
+      "sexo": "masculino"
+    },
+    "medicalInfo": {
+      "bloodGroup": "A+",
+      "allergies": ["Penicilina"],
+      "chronicConditions": []
+    },
+    "lastVisit": "2024-09-20T10:00:00.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [
+      { "name": "María Guevara", "relation": "Madre", "phone": "78822910" }
+    ],
+    "telefono": "78822909",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": true, "dataShare": false }
+  },
+  {
+    "id": "patient_002",
+    "createdAt": "2024-08-15T10:30:22.000Z",
+    "dni": "72567890",
+    "email": "maria.lopez@example.test",
+    "persona": {
+      "nombres": "María Elena",
+      "apellidos": "López García",
+      "fecha_nac": "1995-03-22T00:00:00.000Z",
+      "sexo": "femenino"
+    },
+    "medicalInfo": {
+      "bloodGroup": "O-",
+      "allergies": [],
+      "chronicConditions": ["Hipertensión"]
+    },
+    "lastVisit": "2024-09-25T08:30:00.000Z",
+    "medicalStatus": "En tratamiento",
+    "emergencyContacts": [
+      { "name": "Carlos López", "relation": "Esposo", "phone": "71234568" }
+    ],
+    "telefono": "71234567",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [ { "name": "Sofía Ramos", "relation": "Cuidadora", "phone": "700111222", "email": "sofia.ramos@example.test" } ],
+    "documents": [ { "name": "Consentimiento firm.pdf", "url": "" } ],
+    "consents": { "informedConsent": true, "dataShare": true }
+  },
+  {
+    "id": "patient_003",
+    "createdAt": "2024-09-20T14:45:33.000Z",
+    "dni": "70123456",
+    "email": "carlos.mendoza@example.test",
+    "persona": {
+      "nombres": "Carlos Eduardo",
+      "apellidos": "Mendoza Vásquez",
+      "fecha_nac": "1988-07-10T00:00:00.000Z",
+      "sexo": "masculino"
+    },
+    "medicalInfo": { "bloodGroup": "B+", "allergies": [], "chronicConditions": [] },
+    "lastVisit": "2024-09-20T14:45:33.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [],
+    "telefono": "75567890",
+    "role": "admin",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": false, "dataShare": false }
+  },
+  {
+    "id": "patient_004",
+    "createdAt": "2024-07-08T09:15:11.000Z",
+    "dni": "72455678",
+    "email": "ana.rodriguez@example.test",
+    "persona": {
+      "nombres": "Ana Patricia",
+      "apellidos": "Rodríguez Morales",
+      "fecha_nac": "1992-11-08T00:00:00.000Z",
+      "sexo": "femenino"
+    },
+    "medicalInfo": { "bloodGroup": "AB-", "allergies": ["Lácteos"], "chronicConditions": [] },
+    "lastVisit": "2024-09-01T11:00:00.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [ { "name": "Pedro Rodríguez", "relation": "Padre", "phone": "72345679" } ],
+    "telefono": "72345678",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": true, "dataShare": false }
+  },
+  {
+    "id": "patient_005",
+    "createdAt": "2024-06-25T16:22:44.000Z",
+    "dni": "71023456",
+    "email": "luis.ramirez@example.test",
+    "persona": {
+      "nombres": "Luis Fernando",
+      "apellidos": "Ramírez Silva",
+      "fecha_nac": "1985-04-15T00:00:00.000Z",
+      "sexo": "masculino"
+    },
+    "medicalInfo": { "bloodGroup": "O+", "allergies": [], "chronicConditions": ["Diabetes Tipo 2"] },
+    "lastVisit": "2024-09-18T09:30:00.000Z",
+    "medicalStatus": "Crítico",
+    "emergencyContacts": [ { "name": "Marta Silva", "relation": "Hermana", "phone": "76789013" } ],
+    "telefono": "76789012",
+    "role": "admin",
+    "isActive": true,
+    "caregivers": [ { "name": "Juan Pérez", "relation": "Cuidado", "phone": "700222333", "email": "juan.perez@example.test" } ],
+    "documents": [ { "name": "Informe_medico.pdf", "url": "" } ],
+    "consents": { "informedConsent": true, "dataShare": true }
+  },
+  {
+    "id": "patient_006",
+    "createdAt": "2024-09-12T08:30:15.000Z",
+    "dni": "73056789",
+    "email": "pedro.martinez@example.test",
+    "persona": {
+      "nombres": "Pedro Antonio",
+      "apellidos": "Martínez Quispe",
+      "fecha_nac": "1990-09-30T00:00:00.000Z",
+      "sexo": "masculino"
+    },
+    "medicalInfo": { "bloodGroup": "A-", "allergies": [], "chronicConditions": [] },
+    "lastVisit": "2024-09-12T08:30:15.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [],
+    "telefono": "73456789",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": false, "dataShare": false }
+  },
+  {
+    "id": "patient_007",
+    "createdAt": "2024-08-28T11:45:22.000Z",
+    "dni": "72934567",
+    "email": "sofia.gonzalez@example.test",
+    "persona": {
+      "nombres": "Sofía Isabel",
+      "apellidos": "González Herrera",
+      "fecha_nac": "1987-01-20T00:00:00.000Z",
+      "sexo": "femenino"
+    },
+    "medicalInfo": { "bloodGroup": "B-", "allergies": [], "chronicConditions": [] },
+    "lastVisit": "2024-08-15T10:00:00.000Z",
+    "medicalStatus": "Inactivo",
+    "emergencyContacts": [ { "name": "Juan González", "relation": "Esposo", "phone": "74567891" } ],
+    "telefono": "74567890",
+    "role": "user",
+    "isActive": false,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": false, "dataShare": false }
+  },
+  {
+    "id": "patient_008",
+    "createdAt": "2024-09-25T13:20:33.000Z",
+    "dni": "77890123",
+    "email": "jessica.torres@example.test",
+    "persona": {
+      "nombres": "Jessica Andrea",
+      "apellidos": "Torres Delgado",
+      "fecha_nac": "1991-06-12T00:00:00.000Z",
+    "sexo": "femenino"
+  },
+    "medicalInfo": { "bloodGroup": "AB+", "allergies": [], "chronicConditions": [] },
+    "lastVisit": "2024-09-25T13:20:33.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [],
+    "telefono": "77890123",
+    "role": "admin",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": true, "dataShare": false }
+  },
+  {
+    "id": "patient_009",
+    "createdAt": "2024-09-10T07:12:55.000Z",
+    "dni": "78901234",
+    "email": "roberto.silva@example.test",
+    "persona": {
+      "nombres": "Roberto Carlos",
+      "apellidos": "Silva Chambilla",
+      "fecha_nac": "1994-12-05T00:00:00.000Z",
+      "sexo": "masculino"
+    },
+    "medicalInfo": { "bloodGroup": "O+", "allergies": ["Aspirina"], "chronicConditions": [] },
+    "lastVisit": "2024-09-10T07:12:55.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [ { "name": "María Silva", "relation": "Madre", "phone": "78901235" } ],
+    "telefono": "78901234",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": true, "dataShare": false }
+  },
+  {
+    "id": "patient_010",
+    "createdAt": "2024-07-30T15:33:21.000Z",
+    "dni": "79012345",
+    "email": "elena.vargas@example.test",
+    "persona": {
+      "nombres": "Elena Victoria",
+      "apellidos": "Vargas Peña",
+      "fecha_nac": "1989-08-18T00:00:00.000Z",
+      "sexo": "femenino"
+    },
+    "medicalInfo": { "bloodGroup": "A+", "allergies": [], "chronicConditions": [] },
+    "lastVisit": "2024-08-01T09:00:00.000Z",
+    "medicalStatus": "Activo",
+    "emergencyContacts": [],
+    "telefono": "79012345",
+    "role": "user",
+    "isActive": true,
+    "caregivers": [],
+    "documents": [],
+    "consents": { "informedConsent": false, "dataShare": false }
+  }
+]

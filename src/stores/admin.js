@@ -52,6 +52,17 @@ export function useAdminStore() {
         user.telefono?.includes(search)
       )
     }
+
+    // Filtro por DNI
+    if (adminState.value.filters.dni) {
+      const dniQuery = adminState.value.filters.dni.toString()
+      filtered = filtered.filter(u => u.dni && u.dni.includes(dniQuery))
+    }
+
+    // Filtro por estado médico
+    if (adminState.value.filters.medicalStatus && adminState.value.filters.medicalStatus !== 'all') {
+      filtered = filtered.filter(u => (u.medicalStatus || 'Activo') === adminState.value.filters.medicalStatus)
+    }
     
     // Ordenar
     filtered.sort((a, b) => {
@@ -126,6 +137,31 @@ export function useAdminStore() {
   const clearSelectedUser = () => {
     adminState.value.selectedUser = null
   }
+
+  // CRUD local (used for UI and placeholder data)
+  const addUser = async (userData) => {
+    const id = `user_${String(Math.floor(Math.random() * 100000)).padStart(3, '0')}`
+    const now = new Date()
+    const newUser = {
+      id,
+      createdAt: now,
+      ...userData
+    }
+    adminState.value.users = [newUser, ...adminState.value.users]
+    // Recalculate stats
+    await fetchStats()
+    return newUser
+  }
+
+  const updateUser = async (userId, updates) => {
+    adminState.value.users = adminState.value.users.map(u => u.id === userId ? { ...u, ...updates } : u)
+    await fetchStats()
+  }
+
+  const deleteUser = async (userId) => {
+    adminState.value.users = adminState.value.users.filter(u => u.id !== userId)
+    await fetchStats()
+  }
   
   const updateFilters = (newFilters) => {
     adminState.value.filters = { ...adminState.value.filters, ...newFilters }
@@ -161,5 +197,10 @@ export function useAdminStore() {
     updateFilters,
     clearError,
     refreshData
+    ,
+    // CRUD helpers
+    addUser,
+    updateUser,
+    deleteUser
   }
 }

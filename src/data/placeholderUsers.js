@@ -3,6 +3,7 @@ export const placeholderUsers = [
   {
     id: "user_001",
     createdAt: new Date('2024-09-02T21:14:49Z'),
+    dni: '73215123',
     email: "dani151203gh@gmail.com",
     persona: {
       apellidos: "Guevara",
@@ -10,6 +11,16 @@ export const placeholderUsers = [
       nombres: "Josue Daniel",
       sexo: "masculino"
     },
+    medicalInfo: {
+      bloodGroup: 'A+',
+      allergies: ['Penicilina'],
+      chronicConditions: []
+    },
+    lastVisit: new Date('2024-09-20T10:00:00Z'),
+    medicalStatus: 'Activo',
+    emergencyContacts: [
+      { name: 'María Guevara', phone: '78822910', relation: 'Madre' }
+    ],
     role: "user",
     settings: {
       familiar_email: null,
@@ -23,6 +34,7 @@ export const placeholderUsers = [
   {
     id: "user_002",
     createdAt: new Date('2024-08-15T10:30:22Z'),
+    dni: '72567890',
     email: "maria.lopez@gmail.com",
     persona: {
       apellidos: "López García",
@@ -30,6 +42,16 @@ export const placeholderUsers = [
       nombres: "María Elena",
       sexo: "femenino"
     },
+    medicalInfo: {
+      bloodGroup: 'O-',
+      allergies: [],
+      chronicConditions: ['Hipertensión']
+    },
+    lastVisit: new Date('2024-09-25T08:30:00Z'),
+    medicalStatus: 'En tratamiento',
+    emergencyContacts: [
+      { name: 'Carlos López', phone: '71234568', relation: 'Esposo' }
+    ],
     role: "user",
     settings: {
       familiar_email: "carlos.lopez@gmail.com",
@@ -43,6 +65,7 @@ export const placeholderUsers = [
   {
     id: "user_003",
     createdAt: new Date('2024-09-20T14:45:33Z'),
+    dni: '70123456',
     email: "carlos.admin@vitalsystems.com",
     persona: {
       apellidos: "Mendoza Vásquez",
@@ -50,6 +73,14 @@ export const placeholderUsers = [
       nombres: "Carlos Eduardo",
       sexo: "masculino"
     },
+    medicalInfo: {
+      bloodGroup: 'B+',
+      allergies: [],
+      chronicConditions: []
+    },
+    lastVisit: new Date('2024-09-20T14:45:33Z'),
+    medicalStatus: 'Activo',
+    emergencyContacts: [],
     role: "admin",
     settings: {
       familiar_email: null,

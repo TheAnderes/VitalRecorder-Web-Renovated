@@ -46,6 +46,21 @@
           </router-link>
         </li>
 
+<li class="nav-item">
+          <router-link 
+            to="/admin/patient" 
+            class="nav-link"
+            :class="{ active: $route.name === 'admin-patient' }"
+          >
+            <div class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="nav-text" v-show="!isCollapsed">Usuarios</span>
+          </router-link>
+        </li>
+
         <li class="nav-item">
           <router-link 
             to="/admin/analytics" 
