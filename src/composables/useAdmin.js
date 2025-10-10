@@ -32,6 +32,24 @@ export function useAdmin() {
     try {
       // En desarrollo, devolver datos de ejemplo
       if (import.meta.env.DEV || !navigator.onLine) {
+        // Primero intentar leer desde localStorage (persistencia en DEV)
+        try {
+          const raw = localStorage.getItem('vr_users')
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            const found = parsed.find(u => u.id === userId)
+            if (found) {
+              // Reconstruir fechas
+              return {
+                ...found,
+                createdAt: found.createdAt ? new Date(found.createdAt) : undefined,
+                lastVisit: found.lastVisit ? new Date(found.lastVisit) : undefined
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('No se pudo leer vr_users desde localStorage en getUserData:', err)
+        }
         const local = placeholderUsers.find(u => u.id === userId)
         return local || null
       }
@@ -53,6 +71,26 @@ export function useAdmin() {
       
       // En modo desarrollo, usar datos placeholder
       if (import.meta.env.DEV || !navigator.onLine) {
+        // Primero revisar si hay usuarios guardados en localStorage (persistencia en DEV)
+        try {
+          const raw = localStorage.getItem('vr_users')
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            // Reconstruir fechas si vienen como strings
+            const users = parsed.map(u => ({
+              ...u,
+              createdAt: u.createdAt ? new Date(u.createdAt) : undefined,
+              lastVisit: u.lastVisit ? new Date(u.lastVisit) : undefined,
+              persona: { ...(u.persona || {}) }
+            }))
+            // Simular delay
+            await new Promise(resolve => setTimeout(resolve, 200))
+            return users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          }
+        } catch (err) {
+          console.warn('No se pudo leer vr_users desde localStorage:', err)
+        }
+
         // Simular delay de red
         await new Promise(resolve => setTimeout(resolve, 500))
         return [...placeholderUsers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

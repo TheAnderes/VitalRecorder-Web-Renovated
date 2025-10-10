@@ -99,13 +99,17 @@ export function useAdminStore() {
       const result = await getAllUsers()
       if (Array.isArray(result) && result.length > 0) {
         adminState.value.users = result
+        // Persistir en localStorage en modo DEV para mantener cambios entre recargas
+        try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
       } else {
         // Fallback garantizado a placeholders si no hay datos
         adminState.value.users = [...placeholderUsers]
+        try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
       }
     } catch (err) {
       // Fallback a placeholders en caso de error
       adminState.value.users = [...placeholderUsers]
+      try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
       adminState.value.error = err?.message || 'Error al cargar usuarios, mostrando datos de ejemplo'
       console.error('Error fetching users:', err)
     } finally {
@@ -115,7 +119,24 @@ export function useAdminStore() {
   
   const fetchStats = async () => {
     try {
-      adminState.value.stats = await getBasicStats()
+      // In DEV or offline mode we should compute stats from the current local users
+      if (import.meta.env.DEV || !navigator.onLine) {
+        const users = adminState.value.users || []
+        const totalUsers = users.length
+        const totalAdmins = users.filter(u => u.role === 'admin').length
+        const criticalPatients = users.filter(u => (u.medicalStatus || (u.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
+        const activeUsers = users.filter(u => u.isActive).length
+        adminState.value.stats = {
+          totalUsers,
+          totalAdmins,
+          totalSuperAdmins: 0,
+          regularUsers: totalUsers - totalAdmins,
+          activeUsers,
+          criticalPatients
+        }
+      } else {
+        adminState.value.stats = await getBasicStats()
+      }
     } catch (err) {
       console.error('Error fetching stats:', err)
     }
@@ -148,6 +169,8 @@ export function useAdminStore() {
       ...userData
     }
     adminState.value.users = [newUser, ...adminState.value.users]
+    // Persistir cambios en DEV/local
+    try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
     // Recalculate stats
     await fetchStats()
     return newUser
@@ -155,11 +178,13 @@ export function useAdminStore() {
 
   const updateUser = async (userId, updates) => {
     adminState.value.users = adminState.value.users.map(u => u.id === userId ? { ...u, ...updates } : u)
+    try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
     await fetchStats()
   }
 
   const deleteUser = async (userId) => {
     adminState.value.users = adminState.value.users.filter(u => u.id !== userId)
+    try { if (import.meta.env.DEV || !navigator.onLine) localStorage.setItem('vr_users', JSON.stringify(adminState.value.users)) } catch(e) {}
     await fetchStats()
   }
   

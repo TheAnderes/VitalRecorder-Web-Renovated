@@ -35,14 +35,54 @@ export const adminRoutes = [
       requiredRole: ['admin', 'super_admin']
     }
   },
-   {
+  {
     path: '/admin/patient',
     name: 'admin-patient',
     component: () => import('@/views/admin/PatientManagement.vue'),
     meta: { 
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'admin-patient-list',
+        component: () => import('@/views/admin/PatientList.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      // Submódulos para gestión de pacientes
+      {
+        path: 'registro',
+        name: 'admin-patient-registro',
+        component: () => import('@/views/admin/PatientRegistro.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      {
+        path: 'perfil',
+        name: 'admin-patient-perfil',
+        component: () => import('@/views/admin/PatientPerfil.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      {
+        path: 'editar',
+        name: 'admin-patient-edit',
+        component: () => import('@/views/admin/PatientEdit.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      {
+        path: 'busqueda',
+        name: 'admin-patient-busqueda',
+        component: () => import('@/views/admin/PatientBusqueda.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      {
+        path: 'reportes',
+        name: 'admin-patient-reportes',
+        component: () => import('@/views/admin/PatientReportes.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      
+    ]
   },
   {
     path: '/admin/analytics',

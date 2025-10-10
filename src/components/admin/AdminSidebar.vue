@@ -46,19 +46,47 @@
           </router-link>
         </li>
 
-<li class="nav-item">
-          <router-link 
-            to="/admin/patient" 
-            class="nav-link"
-            :class="{ active: $route.name === 'admin-patient' }"
-          >
-            <div class="nav-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z" fill="currentColor"/>
+        <li class="nav-item patient-item">
+          <div class="nav-link patient-link" :class="{ active: route.path.startsWith('/admin/patient') }">
+            <router-link 
+              to="/admin/patient" 
+              class="main-link"
+              :class="{ 'link-active': $route.name === 'admin-patient' }"
+            >
+              <div class="nav-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z" fill="currentColor"/>
+                </svg>
+              </div>
+              <span class="nav-text" v-show="!isCollapsed">Registro y Administración de Pacientes</span>
+            </router-link>
+
+            <!-- submenu toggle -->
+            <button
+              class="submenu-toggle"
+              v-show="!isCollapsed"
+              @click.stop.prevent="togglePatientSubmenu"
+              :aria-expanded="patientSubmenuOpen"
+              title="Mostrar submódulos"
+            >
+              <svg :class="{ open: patientSubmenuOpen }" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-            </div>
-            <span class="nav-text" v-show="!isCollapsed">Usuarios</span>
-          </router-link>
+            </button>
+          </div>
+
+          <!-- Submenu: submódulos específicos -->
+          <ul class="submenu" v-show="patientSubmenuOpen && !isCollapsed">
+            <li class="submenu-item" v-for="mod in patientSubmodules" :key="mod.id">
+              <router-link
+                :to="`/admin/patient/${mod.id}`"
+                class="nav-link sub-link"
+                :class="{ active: route.path === `/admin/patient/${mod.id}` }">
+                <span class="sub-dot" aria-hidden></span>
+                <span class="nav-text">{{ mod.name }}</span>
+              </router-link>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">
@@ -89,7 +117,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
 
@@ -102,6 +130,20 @@ const props = defineProps({
 
 const route = useRoute()
 const { userRole, canEditUserRoles } = useAdmin()
+
+// submenu state for patient item
+const patientSubmenuOpen = ref(true)
+
+function togglePatientSubmenu() {
+  patientSubmenuOpen.value = !patientSubmenuOpen.value
+}
+
+// lista de submódulos para la sección de pacientes
+const patientSubmodules = [
+  { id: 'registro', name: 'Registro de Pacientes' },
+  { id: 'perfil', name: 'Perfil del Paciente' },
+
+]
 
 defineEmits(['toggle'])
 </script>
@@ -222,6 +264,71 @@ defineEmits(['toggle'])
   font-size: 0.75rem;
   font-weight: 600;
   text-align: center;
+}
+
+/* Patient submenu styles */
+.patient-item .patient-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.submenu-toggle {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submenu-toggle svg {
+  transition: transform 0.2s ease;
+}
+
+.submenu-toggle svg.open {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 3.25rem;
+  transition: max-height 0.2s ease;
+}
+
+.submenu-item {
+  margin: 0.25rem 0;
+}
+
+.sub-link {
+  padding: 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.sub-link:hover {
+  background: rgba(255,255,255,0.03);
+  color: white;
+}
+
+.sub-dot {
+  width: 8px;
+  height: 8px;
+  background: #60a5fa;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sub-link.active {
+  background: rgba(37,99,235,0.12);
+  color: white;
 }
 
 /* Mobile adjustments */
