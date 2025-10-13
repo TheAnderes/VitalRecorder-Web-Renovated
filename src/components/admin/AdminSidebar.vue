@@ -46,11 +46,11 @@
           </router-link>
         </li>
 
-        <li class="nav-item patient-item">
-          <div class="nav-link patient-link" :class="{ active: route.path.startsWith('/admin/patient') }">
+        <li class="nav-item ">
+          
             <router-link 
               to="/admin/patient" 
-              class="main-link"
+              class="nav-link"
               :class="{ 'link-active': $route.name === 'admin-patient' }"
             >
               <div class="nav-icon">
@@ -59,10 +59,7 @@
                 </svg>
               </div>
               <span class="nav-text" v-show="!isCollapsed">Registro y Administración de Pacientes</span>
-            </router-link>
-
-            <!-- submenu toggle -->
-            <button
+                          <button
               class="submenu-toggle"
               v-show="!isCollapsed"
               @click.stop.prevent="togglePatientSubmenu"
@@ -73,7 +70,11 @@
                 <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-          </div>
+            </router-link>
+
+            <!-- submenu toggle -->
+
+          
 
           <!-- Submenu: submódulos específicos -->
           <ul class="submenu" v-show="patientSubmenuOpen && !isCollapsed">
@@ -267,19 +268,14 @@ defineEmits(['toggle'])
 }
 
 /* Patient submenu styles */
-.patient-item .patient-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
+
 
 .submenu-toggle {
   background: transparent;
   border: none;
   color: #cbd5e1;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +292,7 @@ defineEmits(['toggle'])
 .submenu {
   list-style: none;
   margin: 0;
-  padding: 0 0 0 3.25rem;
+  padding: 0 0 0 2rem;
   transition: max-height 0.2s ease;
 }
 
