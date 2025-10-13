@@ -51,7 +51,8 @@
             <router-link 
               to="/admin/patient" 
               class="nav-link"
-              :class="{ 'link-active': $route.name === 'admin-patient' }"
+              
+              :class="{ active: $route.path.startsWith('/admin/patient') }"
             >
               <div class="nav-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -71,10 +72,6 @@
               </svg>
             </button>
             </router-link>
-
-            <!-- submenu toggle -->
-
-          
 
           <!-- Submenu: submódulos específicos -->
           <ul class="submenu" v-show="patientSubmenuOpen && !isCollapsed">
