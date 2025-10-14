@@ -398,117 +398,672 @@ const editCurrent = () => {
 const printProfile = () => {
   const p = selectedUserData.value
   if (!p) return
-  const logoPath = '/Logo.png'
+  
+  // Construir HTML profesional para impresión
   const html = `
-  <!doctype html>
-  <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Ficha Clínica - ${getFullName(p)}</title>
-    <style>
-      @page { size: A4; margin: 20mm }
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #0f172a; }
-      .container { max-width: 820px; margin: 0 auto; }
-      .header { display:flex; align-items:center; gap:16px; border-bottom:2px solid #e6eef8; padding-bottom:12px; margin-bottom:18px }
-      .logo { width:84px; height:84px; object-fit:contain }
-      h1 { font-size:20px; margin:0 }
-      .meta { color:#4b5563; margin-top:6px }
-      .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px }
-      .card { border:1px solid #e6eef8; padding:12px; border-radius:6px; background:#fff }
-      .card h3 { margin:0 0 8px 0; font-size:14px }
-      .row { display:flex; gap:8px; padding:6px 0; border-bottom:1px dashed rgba(15,23,42,0.04) }
-      .row:last-child { border-bottom:none }
-      .label { width:36%; font-weight:700; color:#0f172a }
-      .value { color:#0f172a }
-      .full { grid-column: 1 / -1 }
-      .footer { margin-top:18px; display:flex; justify-content:space-between; align-items:center }
-      .signature { width:45%; text-align:center }
-      .small { color:#6b7280; font-size:12px }
-      @media print {
-        body { -webkit-print-color-adjust: exact }
-        .container { box-shadow:none }
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Perfil de Paciente - ${getFullName(p)}</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        @page {
+          size: A4;
+          margin: 15mm;
+        }
+        
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 11pt;
+          line-height: 1.4;
+          color: #1e293b;
+        }
+        
+        .print-header {
+          text-align: center;
+          padding: 20px 0;
+          border-bottom: 3px solid #3b82f6;
+          margin-bottom: 25px;
+        }
+        
+        .print-header h1 {
+          font-size: 24pt;
+          color: #1e40af;
+          margin-bottom: 5px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        
+        .print-header .subtitle {
+          font-size: 12pt;
+          color: #64748b;
+          font-weight: 600;
+        }
+        
+        .patient-photo {
+          float: right;
+          width: 120px;
+          height: 140px;
+          margin: 0 0 15px 15px;
+          border: 3px solid #3b82f6;
+          border-radius: 8px;
+          object-fit: cover;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .no-photo {
+          float: right;
+          width: 120px;
+          height: 140px;
+          margin: 0 0 15px 15px;
+          border: 3px dashed #cbd5e1;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f8fafc;
+          color: #94a3b8;
+          font-size: 40pt;
+        }
+        
+        .section {
+          margin-bottom: 25px;
+          page-break-inside: avoid;
+        }
+        
+        .section-title {
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          color: white;
+          padding: 10px 15px;
+          font-size: 13pt;
+          font-weight: 700;
+          margin-bottom: 15px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .section-icon {
+          font-size: 16pt;
+        }
+        
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px 20px;
+          margin-bottom: 10px;
+        }
+        
+        .info-grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px 15px;
+          margin-bottom: 10px;
+        }
+        
+        .info-item {
+          padding: 8px;
+          background: #f8fafc;
+          border-left: 3px solid #3b82f6;
+          border-radius: 4px;
+        }
+        
+        .info-label {
+          font-size: 9pt;
+          color: #64748b;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 3px;
+        }
+        
+        .info-value {
+          font-size: 11pt;
+          color: #1e293b;
+          font-weight: 600;
+        }
+        
+        .info-value-highlight {
+          font-size: 13pt;
+          color: #1e40af;
+          font-weight: 700;
+        }
+        
+        .badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 9pt;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .badge-active {
+          background: #d1fae5;
+          color: #065f46;
+          border: 1px solid #10b981;
+        }
+        
+        .badge-inactive {
+          background: #fee2e2;
+          color: #991b1b;
+          border: 1px solid #ef4444;
+        }
+        
+        .badge-primary {
+          background: #dbeafe;
+          color: #1e40af;
+          border: 1px solid #3b82f6;
+        }
+        
+        .badge-success {
+          background: #d1fae5;
+          color: #065f46;
+          border: 1px solid #10b981;
+        }
+        
+        .badge-warning {
+          background: #fef3c7;
+          color: #92400e;
+          border: 1px solid #f59e0b;
+        }
+        
+        .badge-danger {
+          background: #fee2e2;
+          color: #991b1b;
+          border: 1px solid #ef4444;
+        }
+        
+        .tags-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 8px;
+        }
+        
+        .tag {
+          padding: 5px 12px;
+          background: #e0e7ff;
+          color: #3730a3;
+          border-radius: 15px;
+          font-size: 9pt;
+          font-weight: 600;
+          border: 1px solid #818cf8;
+        }
+        
+        .tag-danger {
+          background: #fee2e2;
+          color: #991b1b;
+          border-color: #ef4444;
+        }
+        
+        .tag-purple {
+          background: #f3e8ff;
+          color: #6b21a8;
+          border-color: #a855f7;
+        }
+        
+        .full-width {
+          grid-column: 1 / -1;
+        }
+        
+        .status-banner {
+          padding: 12px 15px;
+          background: ${p.isActive ? '#d1fae5' : '#fee2e2'};
+          border-left: 4px solid ${p.isActive ? '#10b981' : '#ef4444'};
+          border-radius: 6px;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-weight: 600;
+        }
+        
+        .footer {
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 2px solid #e5e7eb;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+          text-align: center;
+        }
+        
+        .footer-item {
+          padding: 12px;
+          background: #f8fafc;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+        }
+        
+        .footer-label {
+          font-size: 9pt;
+          color: #64748b;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        .footer-value {
+          font-size: 11pt;
+          color: #1e293b;
+          font-weight: 700;
+          margin-top: 5px;
+        }
+        
+        .signature-section {
+          margin-top: 40px;
+          display: flex;
+          justify-content: space-around;
+          gap: 40px;
+        }
+        
+        .signature-box {
+          text-align: center;
+          flex: 1;
+        }
+        
+        .signature-line {
+          border-top: 2px solid #1e293b;
+          margin: 60px 20px 10px 20px;
+        }
+        
+        .signature-label {
+          font-size: 10pt;
+          color: #475569;
+          font-weight: 600;
+        }
+        
+        .print-timestamp {
+          text-align: center;
+          margin-top: 25px;
+          padding-top: 15px;
+          border-top: 1px dashed #cbd5e1;
+          font-size: 9pt;
+          color: #94a3b8;
+        }
+        
+        @media print {
+          body {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <!-- Header -->
+      <div class="print-header">
+        <h1>🏥 Perfil Clínico de Paciente</h1>
+        <div class="subtitle">Sistema de Gestión Médica - VitalRecorder</div>
+      </div>
+      
+      <!-- Foto del paciente -->
+      ${p.persona?.fotografia ? 
+        `<img src="${p.persona.fotografia}" class="patient-photo" alt="Foto paciente" />` : 
+        '<div class="no-photo">👤</div>'
       }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <img src="${logoPath}" alt="Logo" class="logo" />
-        <div>
-          <h1>Ficha Clínica - ${getFullName(p)}</h1>
-          <div class="meta">ID: ${p.id} · DNI: ${p.dni || 'N/A'} · Registro: ${p.createdAt ? new Date(p.createdAt).toLocaleString('es-ES') : 'N/D'}</div>
+      
+      <!-- Banner de Estado -->
+      <div class="status-banner">
+        <span style="font-size: 18pt;">${p.isActive ? '✅' : '❌'}</span>
+        <span>Estado del Paciente: <strong>${p.isActive ? 'ACTIVO' : 'INACTIVO'}</strong></span>
+      </div>
+      
+      <!-- Información Personal -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">👤</span>
+          Información Personal
+        </div>
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <div class="info-label">Nombre Completo</div>
+            <div class="info-value-highlight">${getFullName(p)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Cédula de Identidad</div>
+            <div class="info-value">🆔 ${p.dni || p.persona?.dni || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">N° Expediente</div>
+            <div class="info-value">📋 ${p.numeroExpediente || p.expediente || p.id?.slice(0,8) || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Fecha de Nacimiento</div>
+            <div class="info-value">${formatDate(p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/D'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Edad</div>
+            <div class="info-value">${computeAge(p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/A'} <span class="badge badge-primary">${getAgeCategory(p)}</span></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Sexo/Género</div>
+            <div class="info-value">${p.persona?.sexo || 'N/D'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Estado Civil</div>
+            <div class="info-value">${p.persona?.estado_civil || p.estadoCivil || 'N/D'}</div>
+          </div>
+          ${p.lugarNacimiento || p.persona?.lugar_nacimiento ? `
+          <div class="info-item">
+            <div class="info-label">Lugar de Nacimiento</div>
+            <div class="info-value">📍 ${p.lugarNacimiento || p.persona?.lugar_nacimiento}</div>
+          </div>
+          ` : ''}
+          ${p.ocupacion || p.persona?.ocupacion ? `
+          <div class="info-item">
+            <div class="info-label">Ocupación</div>
+            <div class="info-value">💼 ${p.ocupacion || p.persona?.ocupacion}</div>
+          </div>
+          ` : ''}
         </div>
       </div>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Datos Personales</h3>
-          <div class="row"><div class="label">Nombre</div><div class="value">${getFullName(p)}</div></div>
-          <div class="row"><div class="label">Documento</div><div class="value">${p.dni || 'N/D'}</div></div>
-          <div class="row"><div class="label">Fecha Nac.</div><div class="value">${formatDate(p.fechaNacimiento)}</div></div>
-          <div class="row"><div class="label">Edad</div><div class="value">${computeAge(p.fechaNacimiento)}</div></div>
-          <div class="row"><div class="label">Sexo</div><div class="value">${p.persona?.sexo || 'N/D'}</div></div>
-          <div class="row"><div class="label">Ocupación</div><div class="value">${p.ocupacion || 'N/D'}</div></div>
+      
+      <!-- Información de Contacto -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">📞</span>
+          Información de Contacto
         </div>
-
-        <div class="card">
-          <h3>Contacto</h3>
-          <div class="row"><div class="label">Teléfono</div><div class="value">${p.telefono || 'N/D'}</div></div>
-          <div class="row"><div class="label">Teléfono alt.</div><div class="value">${p.telefono2 || 'N/D'}</div></div>
-          <div class="row"><div class="label">Email</div><div class="value">${p.email || 'N/D'}</div></div>
-          <div class="row"><div class="label">Dirección</div><div class="value">${formatAddress(p.direccion)}</div></div>
+        <div class="info-grid-3">
+          <div class="info-item">
+            <div class="info-label">Teléfono Principal</div>
+            <div class="info-value">📱 ${p.telefono || p.persona?.telefono || 'N/A'}</div>
+          </div>
+          ${p.telefono2 ? `
+          <div class="info-item">
+            <div class="info-label">Teléfono Secundario</div>
+            <div class="info-value">📱 ${p.telefono2}</div>
+          </div>
+          ` : ''}
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">📧 ${p.email || p.persona?.correo || 'N/A'}</div>
+          </div>
+          ${p.preferenciaContacto ? `
+          <div class="info-item">
+            <div class="info-label">Preferencia de Contacto</div>
+            <div class="info-value">✨ ${p.preferenciaContacto}</div>
+          </div>
+          ` : ''}
+          <div class="info-item full-width">
+            <div class="info-label">Dirección / Domicilio</div>
+            <div class="info-value">🏠 ${p.persona?.domicilio || formatAddress(p.direccion) || 'N/D'}</div>
+          </div>
         </div>
-
-        <div class="card">
-          <h3>Responsable</h3>
-          <div class="row"><div class="label">Nombre</div><div class="value">${p.responsable?.nombre || 'N/D'}</div></div>
-          <div class="row"><div class="label">Parentesco</div><div class="value">${p.responsable?.parentesco || 'N/D'}</div></div>
-          <div class="row"><div class="label">Teléfono</div><div class="value">${p.responsable?.telefono || 'N/D'}</div></div>
-          <div class="row"><div class="label">Email</div><div class="value">${p.responsable?.email || 'N/D'}</div></div>
-        </div>
-
-        <div class="card full">
-          <h3>Información Médica</h3>
-          <div class="row"><div class="label">Tipo de sangre</div><div class="value">${p.medicalInfo?.bloodGroup || 'N/D'}</div></div>
-          <div class="row"><div class="label">Peso</div><div class="value">${p.medicalInfo?.peso ? p.medicalInfo.peso + ' kg' : 'N/D'}</div></div>
-          <div class="row"><div class="label">Altura</div><div class="value">${p.medicalInfo?.altura ? p.medicalInfo.altura + ' cm' : 'N/D'}</div></div>
-          <div class="row"><div class="label">IMC</div><div class="value">${p.medicalInfo?.imc || 'N/D'}</div></div>
-          <div class="row"><div class="label">Condiciones</div><div class="value">${formatChronic(p.medicalInfo?.chronic)}</div></div>
-          <div class="row"><div class="label">Alergias</div><div class="value">${(p.medicalInfo?.allergies?.length && p.medicalInfo.medicalInfo?.allergies?.join(', ')) || (p.medicalInfo?.allergies?.join(', ') || 'Ninguna')}</div></div>
-          <div class="row"><div class="label">Antecedentes familiares</div><div class="value">${p.medicalInfo?.antecedentesFamiliares || 'N/D'}</div></div>
-        </div>
-
-        <div class="card full">
-          <h3>Seguro / Administrativo</h3>
-          <div class="row"><div class="label">Aseguradora</div><div class="value">${p.seguro?.nombre || 'N/D'}</div></div>
-          <div class="row"><div class="label">Póliza</div><div class="value">${p.seguro?.polid || 'N/D'}</div></div>
-          <div class="row"><div class="label">Usuario Registro</div><div class="value">${p.usuarioRegistro || 'Sistema'}</div></div>
-        </div>
-
-        <div class="card full">
-          <h3>Observaciones</h3>
-          <div class="value">${p.observaciones || 'Sin observaciones'}</div>
-        </div>
-
       </div>
-
+      
+      <!-- Información Médica -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">🏥</span>
+          Información Médica
+        </div>
+        <div class="info-grid">
+          ${p.medicalInfo?.estadoActual ? `
+          <div class="info-item">
+            <div class="info-label">Estado Actual</div>
+            <div class="info-value"><span class="badge badge-success">${p.medicalInfo.estadoActual}</span></div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.estadoAdherencia ? `
+          <div class="info-item">
+            <div class="info-label">Adherencia al Tratamiento</div>
+            <div class="info-value"><span class="badge badge-primary">${p.medicalInfo.estadoAdherencia}</span></div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.bloodGroup ? `
+          <div class="info-item">
+            <div class="info-label">Tipo de Sangre</div>
+            <div class="info-value">🩸 ${p.medicalInfo.bloodGroup}</div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.peso ? `
+          <div class="info-item">
+            <div class="info-label">Peso</div>
+            <div class="info-value">⚖️ ${p.medicalInfo.peso} kg</div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.altura ? `
+          <div class="info-item">
+            <div class="info-label">Altura</div>
+            <div class="info-value">📏 ${p.medicalInfo.altura} cm</div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.imc ? `
+          <div class="info-item">
+            <div class="info-label">IMC</div>
+            <div class="info-value"><span class="badge badge-warning">${p.medicalInfo.imc}</span></div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo?.estadoFisico ? `
+          <div class="info-item">
+            <div class="info-label">Estado Físico</div>
+            <div class="info-value">${p.medicalInfo.estadoFisico}</div>
+          </div>
+          ` : ''}
+        </div>
+        
+        ${(p.medicalInfo?.alergias && p.medicalInfo.alergias.length > 0) || (p.medicalInfo?.allergies && p.medicalInfo.allergies.length > 0) ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">⚠️ Alergias Registradas</div>
+          <div class="tags-container">
+            ${(p.medicalInfo?.alergias || p.medicalInfo?.allergies || []).map(a => `<span class="tag tag-danger">${a}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${(p.medicalInfo?.enfermedades && p.medicalInfo.enfermedades.length > 0) || formatChronic(p.medicalInfo?.chronic) !== 'N/D' ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">🩺 Enfermedades/Condiciones Crónicas</div>
+          <div class="tags-container">
+            ${p.medicalInfo?.enfermedades ? p.medicalInfo.enfermedades.map(e => `<span class="tag tag-purple">${e}</span>`).join('') : `<span class="tag tag-purple">${formatChronic(p.medicalInfo?.chronic)}</span>`}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${p.medicalInfo?.medicamentos && p.medicalInfo.medicamentos.length > 0 ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">💊 Medicamentos Actuales</div>
+          <div class="tags-container">
+            ${p.medicalInfo.medicamentos.map(m => `<span class="tag">${m}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${p.medicalInfo?.frecuenciaTratamiento || p.medicalInfo?.condicionToma ? `
+        <div class="info-grid" style="margin-top: 15px;">
+          ${p.medicalInfo.frecuenciaTratamiento ? `
+          <div class="info-item">
+            <div class="info-label">Frecuencia de Tratamiento</div>
+            <div class="info-value">⏰ ${p.medicalInfo.frecuenciaTratamiento}</div>
+          </div>
+          ` : ''}
+          ${p.medicalInfo.condicionToma ? `
+          <div class="info-item">
+            <div class="info-label">Condición de Toma</div>
+            <div class="info-value">🍽️ ${p.medicalInfo.condicionToma}</div>
+          </div>
+          ` : ''}
+        </div>
+        ` : ''}
+        
+        ${p.medicalInfo?.recetadoPor ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">Recetado/Tratado por</div>
+          <div class="info-value">👨‍⚕️ Dr./Dra. ${p.medicalInfo.recetadoPor}</div>
+        </div>
+        ` : ''}
+        
+        ${p.medicalInfo?.antecedentesFamiliares ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">Antecedentes Familiares</div>
+          <div class="info-value">${p.medicalInfo.antecedentesFamiliares}</div>
+        </div>
+        ` : ''}
+        
+        ${p.medicalInfo?.observaciones ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">Observaciones Médicas</div>
+          <div class="info-value">${p.medicalInfo.observaciones}</div>
+        </div>
+        ` : ''}
+      </div>
+      
+      ${p.responsable && (p.responsable.nombres || p.responsable.nombre) ? `
+      <!-- Tutor/Responsable -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">👨‍👩‍👧‍👦</span>
+          Tutor / Familiar Responsable
+        </div>
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <div class="info-label">Nombre Completo</div>
+            <div class="info-value-highlight">${p.responsable.nombres || p.responsable.nombre || ''} ${p.responsable.apellidos || ''}</div>
+          </div>
+          ${p.responsable.parentesco ? `
+          <div class="info-item">
+            <div class="info-label">Parentesco</div>
+            <div class="info-value"><span class="badge badge-primary">${p.responsable.parentesco}</span></div>
+          </div>
+          ` : ''}
+          ${p.responsable.ci ? `
+          <div class="info-item">
+            <div class="info-label">CI</div>
+            <div class="info-value">🆔 ${p.responsable.ci}</div>
+          </div>
+          ` : ''}
+          ${p.responsable.telefono ? `
+          <div class="info-item">
+            <div class="info-label">Teléfono</div>
+            <div class="info-value">📱 ${p.responsable.telefono}</div>
+          </div>
+          ` : ''}
+          ${p.responsable.email ? `
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">📧 ${p.responsable.email}</div>
+          </div>
+          ` : ''}
+          ${p.responsable.domicilio ? `
+          <div class="info-item full-width">
+            <div class="info-label">Domicilio</div>
+            <div class="info-value">🏠 ${p.responsable.domicilio}</div>
+          </div>
+          ` : ''}
+          ${p.responsable.ocupacion ? `
+          <div class="info-item">
+            <div class="info-label">Ocupación</div>
+            <div class="info-value">💼 ${p.responsable.ocupacion}</div>
+          </div>
+          ` : ''}
+          ${p.responsable.estado_civil ? `
+          <div class="info-item">
+            <div class="info-label">Estado Civil</div>
+            <div class="info-value">${p.responsable.estado_civil}</div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
+      
+      ${p.seguro && (p.seguro.nombre || p.seguro.polid) ? `
+      <!-- Información de Seguro -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">🛡️</span>
+          Información de Seguro Médico
+        </div>
+        <div class="info-grid">
+          ${p.seguro.nombre ? `
+          <div class="info-item">
+            <div class="info-label">Aseguradora</div>
+            <div class="info-value">🏢 ${p.seguro.nombre}</div>
+          </div>
+          ` : ''}
+          ${p.seguro.polid ? `
+          <div class="info-item">
+            <div class="info-label">N° de Póliza</div>
+            <div class="info-value">📄 ${p.seguro.polid}</div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
+      
+      ${p.observaciones ? `
+      <!-- Observaciones Generales -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">📝</span>
+          Observaciones Generales
+        </div>
+        <div class="info-item full-width">
+          <div class="info-value">${p.observaciones}</div>
+        </div>
+      </div>
+      ` : ''}
+      
+      <!-- Footer -->
       <div class="footer">
-        <div class="small">Generado: ${new Date().toLocaleString('es-ES')}</div>
-        <div class="signature">
-          <div>__________________________</div>
-          <div>Firma del Profesional</div>
+        <div class="footer-item">
+          <div class="footer-label">Estado</div>
+          <div class="footer-value"><span class="badge ${p.isActive ? 'badge-active' : 'badge-inactive'}">${p.isActive ? 'Activo' : 'Inactivo'}</span></div>
+        </div>
+        <div class="footer-item">
+          <div class="footer-label">Registrado Por</div>
+          <div class="footer-value">👤 ${p.usuarioRegistro || 'Sistema'}</div>
+        </div>
+        <div class="footer-item">
+          <div class="footer-label">Fecha de Registro</div>
+          <div class="footer-value">📅 ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('es-ES') : 'N/D'}</div>
         </div>
       </div>
-    </div>
-  </body>
-  </html>`
-
+      
+      <!-- Sección de Firmas -->
+      <div class="signature-section">
+        <div class="signature-box">
+          <div class="signature-line"></div>
+          <div class="signature-label">Firma del Médico Tratante</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-line"></div>
+          <div class="signature-label">Firma del Paciente / Responsable</div>
+        </div>
+      </div>
+      
+      <!-- Timestamp -->
+      <div class="print-timestamp">
+        Documento generado el ${new Date().toLocaleDateString('es-ES', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })} a las ${new Date().toLocaleTimeString('es-ES')}
+      </div>
+    </body>
+    </html>
+  `
+  
   const w = window.open('', '_blank')
   if (!w) return
   w.document.write(html)
   w.document.close()
   w.focus()
-  setTimeout(() => w.print(), 400)
+  
+  // Dar tiempo para que las imágenes se carguen antes de imprimir
+  setTimeout(() => {
+    w.print()
+  }, 250)
 }
 
 // Cargar pacientes desde Firebase

@@ -1292,14 +1292,588 @@ const resetForm = () => {
 const printPreview = () => {
   const w = window.open('', '_blank')
   if (!w) return
+  
+  // Construir HTML profesional para impresión
   const html = `
-    <html><head><title>Ficha paciente</title></head><body>
-    <h2>Ficha de registro</h2>
-    <pre>${JSON.stringify(form, null, 2)}</pre>
-    </body></html>`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Ficha de Paciente - ${form.persona.nombres} ${form.persona.apellidos}</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        @page {
+          size: A4;
+          margin: 15mm;
+        }
+        
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 11pt;
+          line-height: 1.4;
+          color: #1e293b;
+        }
+        
+        .print-header {
+          text-align: center;
+          padding: 20px 0;
+          border-bottom: 3px solid #3b82f6;
+          margin-bottom: 25px;
+        }
+        
+        .print-header h1 {
+          font-size: 24pt;
+          color: #1e40af;
+          margin-bottom: 5px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        
+        .print-header .subtitle {
+          font-size: 12pt;
+          color: #64748b;
+          font-weight: 600;
+        }
+        
+        .patient-photo {
+          float: right;
+          width: 120px;
+          height: 140px;
+          margin: 0 0 15px 15px;
+          border: 3px solid #3b82f6;
+          border-radius: 8px;
+          object-fit: cover;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .no-photo {
+          float: right;
+          width: 120px;
+          height: 140px;
+          margin: 0 0 15px 15px;
+          border: 3px dashed #cbd5e1;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f8fafc;
+          color: #94a3b8;
+          font-size: 40pt;
+        }
+        
+        .section {
+          margin-bottom: 25px;
+          page-break-inside: avoid;
+        }
+        
+        .section-title {
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          color: white;
+          padding: 10px 15px;
+          font-size: 13pt;
+          font-weight: 700;
+          margin-bottom: 15px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .section-icon {
+          font-size: 16pt;
+        }
+        
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px 20px;
+          margin-bottom: 10px;
+        }
+        
+        .info-grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px 15px;
+          margin-bottom: 10px;
+        }
+        
+        .info-item {
+          padding: 8px;
+          background: #f8fafc;
+          border-left: 3px solid #3b82f6;
+          border-radius: 4px;
+        }
+        
+        .info-label {
+          font-size: 9pt;
+          color: #64748b;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 3px;
+        }
+        
+        .info-value {
+          font-size: 11pt;
+          color: #1e293b;
+          font-weight: 600;
+        }
+        
+        .info-value-highlight {
+          font-size: 13pt;
+          color: #1e40af;
+          font-weight: 700;
+        }
+        
+        .badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 9pt;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .badge-primary {
+          background: #dbeafe;
+          color: #1e40af;
+          border: 1px solid #3b82f6;
+        }
+        
+        .badge-success {
+          background: #d1fae5;
+          color: #065f46;
+          border: 1px solid #10b981;
+        }
+        
+        .badge-warning {
+          background: #fef3c7;
+          color: #92400e;
+          border: 1px solid #f59e0b;
+        }
+        
+        .badge-danger {
+          background: #fee2e2;
+          color: #991b1b;
+          border: 1px solid #ef4444;
+        }
+        
+        .tags-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 8px;
+        }
+        
+        .tag {
+          padding: 5px 12px;
+          background: #e0e7ff;
+          color: #3730a3;
+          border-radius: 15px;
+          font-size: 9pt;
+          font-weight: 600;
+          border: 1px solid #818cf8;
+        }
+        
+        .tag-danger {
+          background: #fee2e2;
+          color: #991b1b;
+          border-color: #ef4444;
+        }
+        
+        .tag-purple {
+          background: #f3e8ff;
+          color: #6b21a8;
+          border-color: #a855f7;
+        }
+        
+        .full-width {
+          grid-column: 1 / -1;
+        }
+        
+        .medical-photos {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+          margin-top: 15px;
+        }
+        
+        .medical-photo-item {
+          text-align: center;
+        }
+        
+        .medical-photo-item img {
+          width: 100%;
+          max-height: 180px;
+          object-fit: contain;
+          border: 2px solid #cbd5e1;
+          border-radius: 6px;
+          margin-top: 8px;
+        }
+        
+        .medical-photo-label {
+          font-weight: 700;
+          color: #475569;
+          font-size: 10pt;
+        }
+        
+        .footer {
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 2px solid #e5e7eb;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+          text-align: center;
+        }
+        
+        .footer-item {
+          padding: 12px;
+          background: #f8fafc;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+        }
+        
+        .footer-label {
+          font-size: 9pt;
+          color: #64748b;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        .footer-value {
+          font-size: 11pt;
+          color: #1e293b;
+          font-weight: 700;
+          margin-top: 5px;
+        }
+        
+        .print-timestamp {
+          text-align: center;
+          margin-top: 25px;
+          padding-top: 15px;
+          border-top: 1px dashed #cbd5e1;
+          font-size: 9pt;
+          color: #94a3b8;
+        }
+        
+        @media print {
+          body {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <!-- Header -->
+      <div class="print-header">
+        <h1>🏥 Ficha de Registro de Paciente</h1>
+        <div class="subtitle">Sistema de Gestión Médica - VitalRecorder</div>
+      </div>
+      
+      <!-- Foto del paciente -->
+      ${photoDataUrl.value ? 
+        `<img src="${photoDataUrl.value}" class="patient-photo" alt="Foto paciente" />` : 
+        '<div class="no-photo">📷</div>'
+      }
+      
+      <!-- Información Personal -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">👤</span>
+          Información Personal
+        </div>
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <div class="info-label">Nombre Completo</div>
+            <div class="info-value-highlight">${form.persona.nombres} ${form.persona.apellidos}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Cédula de Identidad</div>
+            <div class="info-value">🆔 ${form.dni || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Expediente</div>
+            <div class="info-value">📋 ${form.expediente}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Fecha de Nacimiento</div>
+            <div class="info-value">${form.fechaNacimiento || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Edad</div>
+            <div class="info-value">${ageString.value || 'N/A'} ${ageCategory.value ? `<span class="badge badge-primary">${ageCategory.value}</span>` : ''}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Sexo</div>
+            <div class="info-value">${form.persona.sexo || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Estado Civil</div>
+            <div class="info-value">${form.estadoCivil || 'N/A'}</div>
+          </div>
+          ${form.lugarNacimiento ? `
+          <div class="info-item">
+            <div class="info-label">Lugar de Nacimiento</div>
+            <div class="info-value">📍 ${form.lugarNacimiento}</div>
+          </div>
+          ` : ''}
+          ${form.ocupacion ? `
+          <div class="info-item">
+            <div class="info-label">Ocupación</div>
+            <div class="info-value">💼 ${form.ocupacion}</div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      
+      <!-- Información de Contacto -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">📞</span>
+          Información de Contacto
+        </div>
+        <div class="info-grid-3">
+          <div class="info-item">
+            <div class="info-label">Teléfono Principal</div>
+            <div class="info-value">📱 ${form.telefono || 'N/A'}</div>
+          </div>
+          ${form.telefono2 ? `
+          <div class="info-item">
+            <div class="info-label">Teléfono Secundario</div>
+            <div class="info-value">📱 ${form.telefono2}</div>
+          </div>
+          ` : ''}
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">📧 ${form.email || 'N/A'}</div>
+          </div>
+          <div class="info-item full-width">
+            <div class="info-label">Dirección</div>
+            <div class="info-value">🏠 ${form.direccion.calle} ${form.direccion.numero}, ${form.direccion.zona || ''} ${form.direccion.ciudad || ''}, ${form.direccion.provincia || ''}</div>
+          </div>
+        </div>
+      </div>
+      
+      ${showMedicalInfo.value ? `
+      <!-- Información Médica -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">🏥</span>
+          Información Médica
+        </div>
+        <div class="info-grid">
+          ${form.medicalInfo.estadoActual ? `
+          <div class="info-item">
+            <div class="info-label">Estado Actual</div>
+            <div class="info-value"><span class="badge badge-success">${form.medicalInfo.estadoActual}</span></div>
+          </div>
+          ` : ''}
+          ${form.medicalInfo.estadoAdherencia ? `
+          <div class="info-item">
+            <div class="info-label">Adherencia al Tratamiento</div>
+            <div class="info-value"><span class="badge badge-primary">${form.medicalInfo.estadoAdherencia}</span></div>
+          </div>
+          ` : ''}
+          ${form.medicalInfo.peso ? `
+          <div class="info-item">
+            <div class="info-label">Peso</div>
+            <div class="info-value">⚖️ ${form.medicalInfo.peso} kg</div>
+          </div>
+          ` : ''}
+          ${form.medicalInfo.altura ? `
+          <div class="info-item">
+            <div class="info-label">Altura</div>
+            <div class="info-value">📏 ${form.medicalInfo.altura} cm</div>
+          </div>
+          ` : ''}
+          ${imcString.value ? `
+          <div class="info-item">
+            <div class="info-label">IMC</div>
+            <div class="info-value"><span class="badge badge-warning">${imcString.value}</span></div>
+          </div>
+          ` : ''}
+          ${form.medicalInfo.estadoFisico ? `
+          <div class="info-item">
+            <div class="info-label">Estado Físico</div>
+            <div class="info-value">${form.medicalInfo.estadoFisico}</div>
+          </div>
+          ` : ''}
+        </div>
+        
+        ${form.medicalInfo.alergias.length > 0 ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">⚠️ Alergias Registradas</div>
+          <div class="tags-container">
+            ${form.medicalInfo.alergias.map(a => `<span class="tag tag-danger">${a}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${form.medicalInfo.enfermedades.length > 0 ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">🩺 Enfermedades/Condiciones</div>
+          <div class="tags-container">
+            ${form.medicalInfo.enfermedades.map(e => `<span class="tag tag-purple">${e}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${form.medicalInfo.medicamentos.length > 0 ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">💊 Medicamentos Actuales</div>
+          <div class="tags-container">
+            ${form.medicalInfo.medicamentos.map(m => `<span class="tag">${m}</span>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        
+        ${form.medicalInfo.frecuenciaTratamiento || form.medicalInfo.condicionToma ? `
+        <div class="info-grid" style="margin-top: 15px;">
+          ${form.medicalInfo.frecuenciaTratamiento ? `
+          <div class="info-item">
+            <div class="info-label">Frecuencia de Tratamiento</div>
+            <div class="info-value">⏰ ${form.medicalInfo.frecuenciaTratamiento}</div>
+          </div>
+          ` : ''}
+          ${form.medicalInfo.condicionToma ? `
+          <div class="info-item">
+            <div class="info-label">Condición de Toma</div>
+            <div class="info-value">🍽️ ${form.medicalInfo.condicionToma}</div>
+          </div>
+          ` : ''}
+        </div>
+        ` : ''}
+        
+        ${form.medicalInfo.recetadoPor ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">Recetado por</div>
+          <div class="info-value">👨‍⚕️ Dr./Dra. ${form.medicalInfo.recetadoPor}</div>
+        </div>
+        ` : ''}
+        
+        ${form.medicalInfo.observaciones ? `
+        <div class="info-item full-width" style="margin-top: 15px;">
+          <div class="info-label">Observaciones Médicas</div>
+          <div class="info-value">${form.medicalInfo.observaciones}</div>
+        </div>
+        ` : ''}
+        
+        ${ciPhotoDataUrl.value || recetaFotoDataUrl.value ? `
+        <div class="medical-photos">
+          ${ciPhotoDataUrl.value ? `
+          <div class="medical-photo-item">
+            <div class="medical-photo-label">🆔 Foto CI</div>
+            <img src="${ciPhotoDataUrl.value}" alt="CI" />
+          </div>
+          ` : ''}
+          ${recetaFotoDataUrl.value ? `
+          <div class="medical-photo-item">
+            <div class="medical-photo-label">📄 Receta Médica</div>
+            <img src="${recetaFotoDataUrl.value}" alt="Receta" />
+          </div>
+          ` : ''}
+        </div>
+        ` : ''}
+      </div>
+      ` : ''}
+      
+      ${showResponsable.value && form.responsable.nombres ? `
+      <!-- Tutor/Responsable -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">👨‍👩‍👧‍👦</span>
+          Tutor / Familiar Responsable
+        </div>
+        <div class="info-grid">
+          <div class="info-item full-width">
+            <div class="info-label">Nombre Completo</div>
+            <div class="info-value-highlight">${form.responsable.nombres} ${form.responsable.apellidos}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Parentesco</div>
+            <div class="info-value"><span class="badge badge-primary">${form.responsable.parentesco}</span></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">CI</div>
+            <div class="info-value">🆔 ${form.responsable.ci || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Teléfono</div>
+            <div class="info-value">📱 ${form.responsable.telefono || 'N/A'}</div>
+          </div>
+          ${form.responsable.email ? `
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">📧 ${form.responsable.email}</div>
+          </div>
+          ` : ''}
+          ${form.responsable.domicilio ? `
+          <div class="info-item full-width">
+            <div class="info-label">Domicilio</div>
+            <div class="info-value">🏠 ${form.responsable.domicilio}</div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
+      
+      ${form.observaciones ? `
+      <!-- Observaciones Generales -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-icon">📝</span>
+          Observaciones Generales
+        </div>
+        <div class="info-item full-width">
+          <div class="info-value">${form.observaciones}</div>
+        </div>
+      </div>
+      ` : ''}
+      
+      <!-- Footer -->
+      <div class="footer">
+        <div class="footer-item">
+          <div class="footer-label">Estado</div>
+          <div class="footer-value"><span class="badge badge-success">${form.estado}</span></div>
+        </div>
+        <div class="footer-item">
+          <div class="footer-label">Registrado Por</div>
+          <div class="footer-value">👤 ${form.usuarioRegistro || currentUserName.value}</div>
+        </div>
+        <div class="footer-item">
+          <div class="footer-label">Fecha de Registro</div>
+          <div class="footer-value">📅 ${registrationDate.value}</div>
+        </div>
+      </div>
+      
+      <!-- Timestamp -->
+      <div class="print-timestamp">
+        Documento generado el ${new Date().toLocaleDateString('es-ES', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })} a las ${new Date().toLocaleTimeString('es-ES')}
+      </div>
+    </body>
+    </html>
+  `
+  
   w.document.write(html)
   w.document.close()
-  w.print()
+  
+  // Dar tiempo para que las imágenes se carguen antes de imprimir
+  setTimeout(() => {
+    w.print()
+  }, 250)
 }
 
 onMounted(async () => {
