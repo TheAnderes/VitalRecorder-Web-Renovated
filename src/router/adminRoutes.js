@@ -35,55 +35,47 @@ export const adminRoutes = [
       requiredRole: ['admin', 'super_admin']
     }
   },
-  {
+  //--------------------------------------------------------------------------
+  // Rutas para gestión de pacientes
+   {
     path: '/admin/patient',
     name: 'admin-patient',
-    component: () => import('@/views/admin/PatientManagement.vue'),
+    component: () => import('@/views/admin/AdminPatient/PatientManagement.vue'),
     meta: { 
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     },
     children: [
+      // default redirect to list
+      { path: '', redirect: { name: 'admin-patient-list' } },
       {
-        path: '',
+        path: 'list',
         name: 'admin-patient-list',
-        component: () => import('@/views/admin/PatientList.vue'),
+        component: () => import('@/views/admin/AdminPatient/PatientList.vue'),
         meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
       },
-      // Submódulos para gestión de pacientes
       {
         path: 'registro',
         name: 'admin-patient-registro',
-        component: () => import('@/views/admin/PatientRegistro.vue'),
+        component: () => import('@/views/admin/AdminPatient/PatientRegistro.vue'),
+        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+      },
+      {
+        // edit uses query param `editId` in existing code; keep path simple
+        path: 'edit',
+        name: 'admin-patient-edit',
+        component: () => import('@/views/admin/AdminPatient/PatientEdit.vue'),
         meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
       },
       {
         path: 'perfil',
         name: 'admin-patient-perfil',
-        component: () => import('@/views/admin/PatientPerfil.vue'),
+        component: () => import('@/views/admin/AdminPatient/PatientPerfil.vue'),
         meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
-      },
-      {
-        path: 'editar',
-        name: 'admin-patient-edit',
-        component: () => import('@/views/admin/PatientEdit.vue'),
-        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
-      },
-      {
-        path: 'busqueda',
-        name: 'admin-patient-busqueda',
-        component: () => import('@/views/admin/PatientBusqueda.vue'),
-        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
-      },
-      {
-        path: 'reportes',
-        name: 'admin-patient-reportes',
-        component: () => import('@/views/admin/PatientReportes.vue'),
-        meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
-      },
-      
+      }
     ]
   },
+  //--------------------------------------------------------------------------
   {
     path: '/admin/analytics',
     name: 'admin-analytics',

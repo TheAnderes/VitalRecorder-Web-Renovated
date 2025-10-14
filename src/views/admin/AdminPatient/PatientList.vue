@@ -12,7 +12,7 @@
           >
         </div>
 
-        <input type="text" class="role-filter" placeholder="DNI" v-model="dniFilter" @input="updateDniFilter" />
+        <input type="text" class="role-filter" placeholder="CI" v-model="dniFilter" @input="updateDniFilter" />
 
         <select v-model="medicalStatusFilter" @change="updateMedicalStatusFilter" class="role-filter">
           <option value="all">Todos los estados</option>
@@ -94,7 +94,7 @@
                     {{ getUserInitial(patient) }}
                   </div>
                   <div class="user-details">
-                    <span class="user-name">{{ getUserFullName(patient) }}</span>
+                    <span class="user-name">{{ list[0].persona.nombres }}</span>
                     <span class="user-id">DNI: {{ patient.dni || 'N/A' }}</span>
                   </div>
                 </div>
@@ -173,6 +173,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAdminStore } from '@/stores/admin'
+import * as AdminPatientService from '@/services/AdminPatientService'
 
 const { canManageUsers, canDeleteUsers } = useAdmin()
 const adminStore = useAdminStore()
@@ -440,8 +441,41 @@ const formatDate = (timestamp) => {
 
 
 onMounted(async () => {
-  await refreshData()
+  try {
+    adminStore.loading.value = true
+    adminStore.error.value = null
+
+    const list = await AdminPatientService.listPatients()
+
+    // 👇 Aquí puedes ver lo que obtienes directamente de Firestore
+    console.log("📦 Datos originales de Firebase:", list)
+
+    // Normaliza los timestamps si es necesario
+    const normalized = (list || []).map(p => ({
+      ...p,
+      createdAt: p.createdAt && typeof p.createdAt === 'object' && p.createdAt.toDate
+        ? p.createdAt.toDate()
+        : (p.createdAt ? new Date(p.createdAt) : undefined)
+    }))
+
+    // 👇 También puedes mostrar los datos ya normalizados
+    console.log(list[0].persona.nombres)
+
+    // Guarda en el store
+    if (adminStore.users && adminStore.users.value !== undefined) {
+      adminStore.users.value = normalized
+    }
+
+    if (typeof adminStore.fetchStats === 'function') await adminStore.fetchStats()
+  } catch (err) {
+    console.error('❌ Error cargando pacientes desde AdminPatientService:', err)
+    if (adminStore.error) adminStore.error.value = err?.message || 'Error cargando pacientes'
+  } finally {
+    if (adminStore.loading) adminStore.loading.value = false
+  }
 })
+
+
 </script>
 
 <style scoped>
