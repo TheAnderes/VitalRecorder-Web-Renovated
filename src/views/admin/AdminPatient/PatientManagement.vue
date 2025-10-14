@@ -10,7 +10,7 @@
           </svg>
         </div>
         <div class="header-text">
-          <h1>Gestión de Pacientes</h1>
+          <h1>Registro y Administración de Pacientes</h1>
           <p>Sistema completo de registro, administración y seguimiento de pacientes</p>
         </div>
       </div>
