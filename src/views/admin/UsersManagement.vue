@@ -265,23 +265,65 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAdmin } from '@/composables/useAdmin'
-import { useAdminStore } from '@/stores/admin'
+import { AdminUserService } from '@/services/adminUserService'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
 
 const { canManageUsers, canDeleteUsers } = useAdmin()
-const adminStore = useAdminStore()
 
-// State
+// State local
+const users = ref([])
+const loading = ref(false)
+const error = ref(null)
 const searchQuery = ref('')
 const roleFilter = ref('all')
 const sortBy = ref('createdAt')
 const sortOrder = ref('desc')
 
-// Refs from store (avoid double-wrapping with computed)
-const loading = adminStore.loading
-const error = adminStore.error
-const stats = adminStore.stats
-const filteredUsers = adminStore.filteredUsers
+// Stats computadas
+const stats = computed(() => {
+  const total = users.value.length
+  const active = users.value.filter(u => u.isActive !== false).length
+  const admins = users.value.filter(u => u.role === 'admin').length
+  return { totalUsers: total, total, activeUsers: active, adminUsers: admins }
+})
+
+// Filtrado y ordenamiento
+const filteredUsers = computed(() => {
+  let list = [...users.value]
+  
+  // Búsqueda por texto
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(u => 
+      (u.persona?.nombres || '').toLowerCase().includes(q) ||
+      (u.persona?.apellidos || '').toLowerCase().includes(q) ||
+      (u.email || '').toLowerCase().includes(q) ||
+      (u.telefono || '').toLowerCase().includes(q)
+    )
+  }
+  
+  // Filtro por rol
+  if (roleFilter.value && roleFilter.value !== 'all') {
+    list = list.filter(u => u.role === roleFilter.value)
+  }
+  
+  // Ordenamiento
+  list.sort((a, b) => {
+    let aV = a[sortBy.value]
+    let bV = b[sortBy.value]
+    
+    if (sortBy.value === 'name') {
+      aV = a.persona?.nombres || a.email || ''
+      bV = b.persona?.nombres || b.email || ''
+    }
+    
+    if (aV > bV) return sortOrder.value === 'asc' ? 1 : -1
+    if (aV < bV) return sortOrder.value === 'asc' ? -1 : 1
+    return 0
+  })
+  
+  return list
+})
 
 // Local state for modals
 const selectedUser = ref(null)
@@ -292,25 +334,42 @@ const showDeleteModal = ref(false)
 const editForm = ref(null)
 
 // Methods
+const loadUsers = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    console.log("🔄 [UsersManagement] Cargando usuarios desde Firebase...")
+    
+    const result = await AdminUserService.getUsersPaginated(null, 100, {})
+    users.value = result.users || []
+    
+    console.log("✅ [UsersManagement] Usuarios cargados:", users.value.length)
+  } catch (err) {
+    console.error("❌ [UsersManagement] Error cargando usuarios:", err)
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
 const refreshData = async () => {
-  await adminStore.refreshData()
+  await loadUsers()
 }
 
 const updateSearch = () => {
-  adminStore.updateFilters({ search: searchQuery.value })
+  // El computed filteredUsers ya es reactivo a searchQuery
 }
 
 const updateRoleFilter = () => {
-  adminStore.updateFilters({ role: roleFilter.value })
+  // El computed filteredUsers ya es reactivo a roleFilter
 }
 
 const updateSort = () => {
-  adminStore.updateFilters({ sortBy: sortBy.value })
+  // El computed filteredUsers ya es reactivo a sortBy
 }
 
 const toggleSortOrder = () => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  adminStore.updateFilters({ sortOrder: sortOrder.value })
 }
 
 // Action handlers
@@ -334,22 +393,21 @@ const editUser = (user) => {
 const saveUserEdits = async () => {
   if (!selectedUser.value || !editForm.value) return
   try {
-    // Attempt to call store update if available
-    if (typeof adminStore.updateUser === 'function') {
-      await adminStore.updateUser(selectedUser.value.id, {
-        persona: { nombres: editForm.value.nombres, apellidos: editForm.value.apellidos },
-        email: editForm.value.email,
-        role: editForm.value.role,
-        isActive: editForm.value.isActive
-      })
-    } else {
-      console.warn('updateUser no está implementado en adminStore; se simula la edición local.')
-    }
+    console.log("💾 [UsersManagement] Actualizando usuario en Firebase:", selectedUser.value.id)
+    
+    await AdminUserService.updateUserRole(
+      selectedUser.value.id,
+      editForm.value.role,
+      'admin' // TODO: obtener ID del admin actual
+    )
+    
+    console.log("✅ [UsersManagement] Usuario actualizado")
+    await loadUsers()
   } catch (e) {
-    console.error('Error guardando usuario:', e)
+    console.error('❌ [UsersManagement] Error guardando usuario:', e)
+    alert('Error al actualizar usuario. Revise la consola.')
   } finally {
     closeModals()
-    refreshData()
   }
 }
 
@@ -361,16 +419,17 @@ const deleteUser = (user) => {
 const confirmDeleteUser = async () => {
   if (!selectedUser.value) return
   try {
-    if (typeof adminStore.deleteUser === 'function') {
-      await adminStore.deleteUser(selectedUser.value.id)
-    } else {
-      console.warn('deleteUser no está implementado en adminStore; se simula la eliminación local.')
-    }
+    console.log("🗑️ [UsersManagement] Eliminando usuario de Firebase:", selectedUser.value.id)
+    
+    await AdminUserService.deleteUser(selectedUser.value.id, 'admin')
+    
+    console.log("✅ [UsersManagement] Usuario eliminado")
+    await loadUsers()
   } catch (e) {
-    console.error('Error eliminando usuario:', e)
+    console.error('❌ [UsersManagement] Error eliminando usuario:', e)
+    alert('Error al eliminar usuario. Revise la consola.')
   } finally {
     closeModals()
-    refreshData()
   }
 }
 
@@ -424,7 +483,7 @@ const formatDate = (timestamp) => {
 
 
 onMounted(async () => {
-  await refreshData()
+  await loadUsers()
 })
 </script>
 

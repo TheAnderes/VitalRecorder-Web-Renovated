@@ -30,13 +30,18 @@
 
             <div class="field">
               <label>Fecha de Nacimiento *</label>
-              <input type="date" v-model="form.fechaNacimiento" @change="recalculate" :class="{'invalid': errors.fechaNacimiento}" />
+              <input type="date" v-model="form.fechaNacimiento" @change="recalculate" :max="maxDate" :class="{'invalid': errors.fechaNacimiento}" />
               <small v-if="errors.fechaNacimiento" class="error-msg">{{ errors.fechaNacimiento }}</small>
             </div>
 
             <div class="field">
               <label>Edad</label>
               <input :value="ageString" readonly />
+            </div>
+
+            <div class="field">
+              <label>Categoría de Edad</label>
+              <input :value="ageCategory" readonly />
             </div>
 
             <div class="field">
@@ -50,8 +55,8 @@
             </div>
 
             <div class="field">
-              <label>Documento (CI/DNI/Pass) *</label>
-              <input v-model="form.dni" @input="validateField('dni'); checkDuplicates()" :class="{'invalid': errors.dni}" placeholder="Número de documento" />
+              <label>🆔 Carnet de Identidad (CI) *</label>
+              <input v-model="form.dni" @input="validateField('dni'); checkDuplicates()" :class="{'invalid': errors.dni}" placeholder="Número de CI" />
               <small v-if="errors.dni" class="error-msg">{{ errors.dni }}</small>
             </div>
 
@@ -76,13 +81,68 @@
               <input v-model="form.ocupacion" placeholder="Profesión u ocupación" />
             </div>
 
-            <div class="field photo-field">
-              <label>Fotografía del paciente</label>
-              <div class="photo-controls">
-                <input ref="photoInput" type="file" accept="image/*" capture="environment" @change="onPhotoSelected" />
-                <div class="photo-preview" v-if="photoDataUrl">
-                  <img :src="photoDataUrl" alt="Preview" />
-                  <button type="button" class="link-btn" @click="removePhoto">Quitar</button>
+            <!-- Fotografía del paciente -->
+            <div class="field full">
+              <label class="photo-label">📷 Fotografía del paciente</label>
+              <div class="photo-upload-container">
+                <input 
+                  ref="photoInput" 
+                  type="file" 
+                  accept="image/*" 
+                  capture="environment" 
+                  @change="onPhotoSelected" 
+                  class="photo-input"
+                  id="photo-paciente"
+                />
+                <label for="photo-paciente" class="photo-upload-btn" v-if="!photoDataUrl">
+                  <div class="upload-icon">📸</div>
+                  <div class="upload-text">
+                    <strong>Click para subir foto</strong>
+                    <small>o arrastra una imagen aquí</small>
+                  </div>
+                </label>
+                <div class="photo-preview-enhanced" v-if="photoDataUrl">
+                  <img :src="photoDataUrl" alt="Foto del paciente" />
+                  <div class="photo-overlay">
+                    <button type="button" class="btn-remove-photo" @click="removePhoto">
+                      <span>🗑️</span> Eliminar foto
+                    </button>
+                    <button type="button" class="btn-change-photo" @click="$refs.photoInput.click()">
+                      <span>🔄</span> Cambiar foto
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Foto del CI -->
+            <div class="field full">
+              <label class="photo-label">🆔 Foto del Carnet de Identidad (CI)</label>
+              <div class="photo-upload-container">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  @change="onCIPhotoSelected" 
+                  class="photo-input"
+                  id="photo-ci"
+                />
+                <label for="photo-ci" class="photo-upload-btn" v-if="!ciPhotoDataUrl">
+                  <div class="upload-icon">🆔</div>
+                  <div class="upload-text">
+                    <strong>Click para subir foto del CI</strong>
+                    <small>Ambos lados del carnet</small>
+                  </div>
+                </label>
+                <div class="photo-preview-enhanced" v-if="ciPhotoDataUrl">
+                  <img :src="ciPhotoDataUrl" alt="Foto del CI" />
+                  <div class="photo-overlay">
+                    <button type="button" class="btn-remove-photo" @click="removeCIPhoto">
+                      <span>🗑️</span> Eliminar
+                    </button>
+                    <button type="button" class="btn-change-photo" @click="document.getElementById('photo-ci').click()">
+                      <span>🔄</span> Cambiar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -146,23 +206,82 @@
           </div>
         </section>
 
-        <!-- Información Médica Básica -->
-        <section class="section">
-          <h3>Información Médica Básica</h3>
+        <!-- Toggle para Información Médica -->
+        <div class="toggle-section">
+          <label class="toggle-label">
+            <input type="checkbox" v-model="showMedicalInfo" class="toggle-checkbox" />
+            <span class="toggle-switch"></span>
+            <span class="toggle-text">
+              <span class="toggle-icon">🏥</span>
+              <strong>Agregar Información Médica Completa</strong>
+              <span class="toggle-hint">(Opcional)</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Información Médica Completa -->
+        <section class="section" v-if="showMedicalInfo">
+          <h3>Información Médica Completa</h3>
           <div class="form-grid">
+            
+            <!-- Estado del paciente respecto a medicamentos -->
             <div class="field">
-              <label>Tipo de sangre</label>
-              <select v-model="form.medicalInfo.bloodGroup">
+              <label>Estado de adherencia al tratamiento *</label>
+              <select v-model="form.medicalInfo.estadoAdherencia">
                 <option value="">Seleccione...</option>
-                <option>A+</option>
-                <option>A-</option>
-                <option>B+</option>
-                <option>B-</option>
-                <option>AB+</option>
-                <option>AB-</option>
-                <option>O+</option>
-                <option>O-</option>
+                <option>Olvidadizo</option>
+                <option>Dependiente</option>
+                <option>Autónomo</option>
+                <option>Supervisado</option>
+                <option>Irregular</option>
               </select>
+            </div>
+
+            <!-- Estado actual del paciente -->
+            <div class="field">
+              <label>Estado actual del paciente *</label>
+              <select v-model="form.medicalInfo.estadoActual">
+                <option value="">Seleccione...</option>
+                <option>Recuperación</option>
+                <option>Tratamiento</option>
+                <option>Observación</option>
+                <option>Estable</option>
+                <option>Crítico</option>
+              </select>
+            </div>
+
+            <!-- Alergias -->
+            <div class="field full">
+              <label>⚠️ Alergias conocidas</label>
+              <div class="tag-input">
+                <input v-model="_allergy_temp" placeholder="Ej: Penicilina, Polen, Mariscos..." @keyup.enter.prevent="addAllergy" />
+                <div class="tags">
+                  <span class="tag tag-alergia" v-for="(a, i) in form.medicalInfo.alergias" :key="i">
+                    ⚠️ {{ a }} 
+                    <button type="button" @click="removeAllergy(i)" class="tag-remove">&times;</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enfermedades -->
+            <div class="field full">
+              <label>🩺 Enfermedades diagnosticadas</label>
+              <div class="tag-input">
+                <input v-model="_enfermedad_temp" placeholder="Ej: Diabetes, Hipertensión..." @keyup.enter.prevent="addEnfermedad" />
+                <div class="tags">
+                  <span class="tag tag-enfermedad" v-for="(e, i) in form.medicalInfo.enfermedades" :key="i">
+                    🩺 {{ e }} 
+                    <button type="button" @click="removeEnfermedad(i)" class="tag-remove">&times;</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Altura y Peso -->
+            <div class="field">
+              <label>Altura (cm)</label>
+              <input type="number" v-model.number="form.medicalInfo.altura" @input="recalculate" placeholder="cm" min="0" step="0.1" />
             </div>
 
             <div class="field">
@@ -171,82 +290,281 @@
             </div>
 
             <div class="field">
-              <label>Altura (cm)</label>
-              <input type="number" v-model.number="form.medicalInfo.altura" @input="recalculate" placeholder="cm" min="0" step="0.1" />
-            </div>
-
-            <div class="field">
               <label>IMC</label>
               <input :value="imcString" readonly />
             </div>
 
+            <!-- Estado físico -->
+            <div class="field">
+              <label>Estado físico del paciente *</label>
+              <select v-model="form.medicalInfo.estadoFisico">
+                <option value="">Seleccione...</option>
+                <option>Delicado</option>
+                <option>Normal</option>
+                <option>Estable</option>
+                <option>Crítico</option>
+                <option>Requiere atención</option>
+              </select>
+            </div>
+
+            <!-- Medicamentos -->
             <div class="field full">
-              <label>Alergias conocidas</label>
+              <label>💊 Medicamentos actuales</label>
               <div class="tag-input">
-                <input v-model="_allergy_temp" placeholder="Agregar alergia y presionar Enter" @keyup.enter.prevent="addAllergy" />
+                <input v-model="_medicamento_temp" placeholder="Ej: Ibuprofeno 400mg, Paracetamol..." @keyup.enter.prevent="addMedicamento" />
                 <div class="tags">
-                  <span class="tag" v-for="(a, i) in form.medicalInfo.allergies" :key="i">{{ a }} <button type="button" @click="removeAllergy(i)">&times;</button></span>
+                  <span class="tag tag-medicamento" v-for="(m, i) in form.medicalInfo.medicamentos" :key="i">
+                    💊 {{ m }} 
+                    <button type="button" @click="removeMedicamento(i)" class="tag-remove">&times;</button>
+                  </span>
                 </div>
               </div>
             </div>
 
+            <!-- Recetado por -->
+            <div class="field">
+              <label>Recetado por (médico tratante)</label>
+              <input v-model="form.medicalInfo.recetadoPor" placeholder="Nombre del médico" />
+            </div>
+
+            <!-- Foto de receta médica -->
             <div class="field full">
-              <label>Condiciones preexistentes / crónicas</label>
-              <div class="checkboxes">
-                <label><input type="checkbox" v-model="form.medicalInfo.chronic.diabetes" /> Diabetes</label>
-                <label><input type="checkbox" v-model="form.medicalInfo.chronic.hipertension" /> Hipertensión</label>
-                <label><input type="checkbox" v-model="form.medicalInfo.chronic.asma" /> Asma</label>
-                <label><input type="checkbox" v-model="form.medicalInfo.chronic.cardiopatias" /> Cardiopatías</label>
+              <label class="photo-label">📄 Fotografía de receta médica</label>
+              <div class="photo-upload-container">
+                <input 
+                  ref="recetaFotoInput"
+                  type="file" 
+                  accept="image/*" 
+                  @change="onRecetaFotoSelected"
+                  class="photo-input"
+                  id="photo-receta"
+                />
+                <label for="photo-receta" class="photo-upload-btn" v-if="!recetaFotoDataUrl">
+                  <div class="upload-icon">📋</div>
+                  <div class="upload-text">
+                    <strong>Click para subir receta médica</strong>
+                    <small>Formato JPG, PNG o PDF</small>
+                  </div>
+                </label>
+                <div class="photo-preview-enhanced" v-if="recetaFotoDataUrl">
+                  <img :src="recetaFotoDataUrl" alt="Receta médica" />
+                  <div class="photo-overlay">
+                    <button type="button" class="btn-remove-photo" @click="removeRecetaFoto">
+                      <span>🗑️</span> Eliminar
+                    </button>
+                    <button type="button" class="btn-change-photo" @click="$refs.recetaFotoInput.click()">
+                      <span>🔄</span> Cambiar
+                    </button>
+                  </div>
+                </div>
               </div>
-              <input v-model="form.medicalInfo.chronic.otras" placeholder="Otras (describa)" />
             </div>
 
-            <div class="field full">
-              <label>Antecedentes médicos familiares</label>
-              <textarea v-model="form.medicalInfo.antecedentesFamiliares" rows="2" placeholder="Detalles"></textarea>
+            <!-- Frecuencia de tratamiento -->
+            <div class="field">
+              <label>Frecuencia de tratamiento</label>
+              <select v-model="form.medicalInfo.frecuenciaTratamiento">
+                <option value="">Seleccione...</option>
+                <option>Cada 4 horas</option>
+                <option>Cada 5 horas</option>
+                <option>Cada 6 horas</option>
+                <option>Cada 8 horas</option>
+                <option>Cada 12 horas</option>
+                <option>Cada 24 horas (diario)</option>
+                <option>Cada 2 días</option>
+                <option>Semanal</option>
+                <option>Quincenal</option>
+                <option>Mensual</option>
+                <option>Según necesidad</option>
+              </select>
             </div>
 
-            <div class="field full">
-              <label>Observaciones generales</label>
-              <textarea v-model="form.observaciones" rows="2" placeholder="Observaciones"></textarea>
+            <!-- Condiciones para tomar medicamento -->
+            <div class="field">
+              <label>Condición para tomar medicamento</label>
+              <select v-model="form.medicalInfo.condicionToma">
+                <option value="">Seleccione...</option>
+                <option>Antes del desayuno</option>
+                <option>Después del desayuno</option>
+                <option>Antes del almuerzo</option>
+                <option>Después del almuerzo</option>
+                <option>Antes de la cena</option>
+                <option>Después de la cena</option>
+                <option>Con las comidas</option>
+                <option>Entre comidas</option>
+                <option>En ayunas</option>
+                <option>Antes de dormir</option>
+              </select>
             </div>
+
+            <!-- Observaciones adicionales -->
+            <div class="field full">
+              <label>Observaciones médicas adicionales</label>
+              <textarea v-model="form.medicalInfo.observaciones" rows="3" placeholder="Información adicional relevante"></textarea>
+            </div>
+
           </div>
         </section>
 
+        <!-- Toggle para Tutor/Responsable -->
+        <div class="toggle-section">
+          <label class="toggle-label">
+            <input type="checkbox" v-model="showResponsable" class="toggle-checkbox" />
+            <span class="toggle-switch"></span>
+            <span class="toggle-text">
+              <span class="toggle-icon">👨‍👩‍👧‍👦</span>
+              <strong>Agregar Tutor / Familiar Responsable</strong>
+              <span class="toggle-hint">(Opcional - para menores o personas dependientes)</span>
+            </span>
+          </label>
+        </div>
+
         <!-- Tutor / Familiar Responsable -->
-        <section class="section">
+        <section class="section" v-if="showResponsable">
           <h3>Tutor / Familiar Responsable</h3>
           <div class="form-grid">
             <div class="field">
-              <label>Nombre del responsable</label>
-              <input v-model="form.responsable.nombre" placeholder="Nombre completo" />
-            </div>
-
-            <div class="field">
-              <label>Parentesco</label>
+              <label>Parentesco *</label>
               <select v-model="form.responsable.parentesco">
                 <option value="">Seleccione...</option>
                 <option>Padre</option>
                 <option>Madre</option>
-                <option>Hijo</option>
+                <option>Hijo/a</option>
+                <option>Hermano/a</option>
                 <option>Cónyuge</option>
+                <option>Abuelo/a</option>
+                <option>Tío/a</option>
+                <option>Primo/a</option>
                 <option>Otro</option>
               </select>
             </div>
 
             <div class="field">
-              <label>Teléfono de emergencia</label>
+              <label>Nombres *</label>
+              <input v-model="form.responsable.nombres" placeholder="Nombres" />
+            </div>
+
+            <div class="field">
+              <label>Apellidos *</label>
+              <input v-model="form.responsable.apellidos" placeholder="Apellidos" />
+            </div>
+
+            <div class="field">
+              <label>Fecha de nacimiento *</label>
+              <input type="date" v-model="form.responsable.fecha_nacimiento" :max="maxDate" />
+            </div>
+
+            <div class="field">
+              <label>Edad</label>
+              <input :value="edadResponsable" readonly />
+            </div>
+
+            <div class="field">
+              <label>Categoría de edad</label>
+              <input :value="ageCategoryResponsable" readonly />
+            </div>
+
+            <div class="field">
+              <label>Carnet de identidad (CI) *</label>
+              <input v-model="form.responsable.ci" placeholder="CI" />
+            </div>
+
+            <div class="field full">
+              <label>Domicilio *</label>
+              <input v-model="form.responsable.domicilio" placeholder="Dirección completa" />
+            </div>
+
+            <div class="field">
+              <label>Ocupación</label>
+              <input v-model="form.responsable.ocupacion" placeholder="Ocupación" />
+            </div>
+
+            <div class="field">
+              <label>Estado civil</label>
+              <select v-model="form.responsable.estado_civil">
+                <option value="">Seleccione...</option>
+                <option>Soltero/a</option>
+                <option>Casado/a</option>
+                <option>Divorciado/a</option>
+                <option>Viudo/a</option>
+                <option>Unión libre</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Teléfono *</label>
               <input v-model="form.responsable.telefono" placeholder="Teléfono" />
             </div>
 
             <div class="field">
-              <label>Correo responsable</label>
-              <input v-model="form.responsable.email" placeholder="correo@ejemplo.com" />
+              <label>Correo electrónico</label>
+              <input v-model="form.responsable.email" type="email" placeholder="correo@ejemplo.com" />
             </div>
 
+            <!-- Fotografía del responsable -->
             <div class="field full">
-              <label>Dirección del responsable (si es diferente)</label>
-              <input v-model="form.responsable.direccion" placeholder="Dirección completa" />
+              <label class="photo-label">📷 Fotografía del responsable</label>
+              <div class="photo-upload-container">
+                <input 
+                  ref="responsableFotoInput"
+                  type="file" 
+                  accept="image/*" 
+                  @change="onResponsableFotoSelected"
+                  class="photo-input"
+                  id="photo-responsable"
+                />
+                <label for="photo-responsable" class="photo-upload-btn" v-if="!responsableFotoDataUrl">
+                  <div class="upload-icon">👤</div>
+                  <div class="upload-text">
+                    <strong>Click para subir foto del responsable</strong>
+                    <small>Foto reciente y clara</small>
+                  </div>
+                </label>
+                <div class="photo-preview-enhanced" v-if="responsableFotoDataUrl">
+                  <img :src="responsableFotoDataUrl" alt="Foto del responsable" />
+                  <div class="photo-overlay">
+                    <button type="button" class="btn-remove-photo" @click="removeResponsableFoto">
+                      <span>🗑️</span> Eliminar
+                    </button>
+                    <button type="button" class="btn-change-photo" @click="$refs.responsableFotoInput.click()">
+                      <span>🔄</span> Cambiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Foto del CI del responsable -->
+            <div class="field full">
+              <label class="photo-label">🆔 Foto del CI del responsable</label>
+              <div class="photo-upload-container">
+                <input 
+                  ref="responsableCIInput"
+                  type="file" 
+                  accept="image/*" 
+                  @change="onResponsableCISelected"
+                  class="photo-input"
+                  id="photo-ci-responsable"
+                />
+                <label for="photo-ci-responsable" class="photo-upload-btn" v-if="!responsableCIDataUrl">
+                  <div class="upload-icon">🆔</div>
+                  <div class="upload-text">
+                    <strong>Click para subir CI del responsable</strong>
+                    <small>Foto clara y legible</small>
+                  </div>
+                </label>
+                <div class="photo-preview-enhanced" v-if="responsableCIDataUrl">
+                  <img :src="responsableCIDataUrl" alt="CI del responsable" />
+                  <div class="photo-overlay">
+                    <button type="button" class="btn-remove-photo" @click="removeResponsableCI">
+                      <span>🗑️</span> Eliminar
+                    </button>
+                    <button type="button" class="btn-change-photo" @click="$refs.responsableCIInput.click()">
+                      <span>🔄</span> Cambiar
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="field">
@@ -317,40 +635,217 @@
       <p v-for="(m, i) in duplicateWarningMessages" :key="i">{{ m }}</p>
     </div>
 
-    <!-- Preview Modal -->
-    <div v-if="showPreview" class="modal-overlay">
-      <div class="modal">
-        <h3>Previsualización del registro</h3>
-        <div class="preview">
-          <div class="preview-row">
-            <div><strong>Nombre:</strong> {{ form.persona.nombres }} {{ form.persona.apellidos }}</div>
-            <div><strong>DNI:</strong> {{ form.dni }}</div>
+    <!-- Preview Modal Mejorado -->
+    <div v-if="showPreview" class="modal-overlay" @click.self="showPreview = false">
+      <div class="modal-preview">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="modal-icon">👁️</span>
+            <h3>Previsualización del Registro</h3>
           </div>
-          <div class="preview-row">
-            <div><strong>Edad:</strong> {{ ageString }}</div>
-            <div><strong>Sexo:</strong> {{ form.persona.sexo }}</div>
+          <button class="close-modal" @click="showPreview = false">&times;</button>
+        </div>
+
+        <div class="preview-content">
+          <!-- Sección: Información Personal -->
+          <div class="preview-section">
+            <div class="section-header">
+              <span class="section-icon">👤</span>
+              <h4>Información Personal</h4>
+            </div>
+            <div class="preview-grid">
+              <div class="preview-item">
+                <div class="preview-photo" v-if="photoDataUrl">
+                  <img :src="photoDataUrl" alt="Foto paciente" />
+                </div>
+                <div class="preview-photo-placeholder" v-else>
+                  <span>📷</span>
+                  <small>Sin foto</small>
+                </div>
+              </div>
+              <div class="preview-details">
+                <div class="preview-field">
+                  <label>Nombre completo</label>
+                  <div class="value-highlight">{{ form.persona.nombres }} {{ form.persona.apellidos }}</div>
+                </div>
+                <div class="preview-field">
+                  <label>CI</label>
+                  <div class="value">{{ form.dni }}</div>
+                </div>
+                <div class="preview-field">
+                  <label>Sexo</label>
+                  <div class="value">{{ form.persona.sexo }}</div>
+                </div>
+                <div class="preview-field">
+                  <label>Fecha de Nacimiento</label>
+                  <div class="value">{{ form.fechaNacimiento }} ({{ ageString }})</div>
+                </div>
+                <div class="preview-field" v-if="ageCategory">
+                  <label>Categoría</label>
+                  <span class="badge badge-category">{{ ageCategory }}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <div><strong>Teléfono:</strong> {{ form.telefono }}</div>
-            <div><strong>Email:</strong> {{ form.email || 'N/A' }}</div>
+
+          <!-- Sección: Contacto -->
+          <div class="preview-section">
+            <div class="section-header">
+              <span class="section-icon">📞</span>
+              <h4>Información de Contacto</h4>
+            </div>
+            <div class="preview-grid-3">
+              <div class="preview-field">
+                <label>Teléfono</label>
+                <div class="value">📱 {{ form.telefono || 'N/A' }}</div>
+              </div>
+              <div class="preview-field">
+                <label>Email</label>
+                <div class="value">📧 {{ form.email || 'N/A' }}</div>
+              </div>
+              <div class="preview-field">
+                <label>Dirección</label>
+                <div class="value">🏠 {{ form.direccion.calle }} {{ form.direccion.numero }}, {{ form.direccion.ciudad || 'N/A' }}</div>
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <div><strong>Tipo de sangre:</strong> {{ form.medicalInfo.bloodGroup || 'N/D' }}</div>
-            <div><strong>IMC:</strong> {{ imcString }}</div>
+
+          <!-- Sección: Información Médica -->
+          <div class="preview-section" v-if="showMedicalInfo">
+            <div class="section-header">
+              <span class="section-icon">🏥</span>
+              <h4>Información Médica</h4>
+            </div>
+            <div class="preview-grid-2">
+              <div class="preview-field" v-if="form.medicalInfo.estadoAdherencia">
+                <label>Estado de adherencia</label>
+                <span class="badge badge-info">{{ form.medicalInfo.estadoAdherencia }}</span>
+              </div>
+              <div class="preview-field" v-if="form.medicalInfo.estadoActual">
+                <label>Estado actual</label>
+                <span class="badge badge-success">{{ form.medicalInfo.estadoActual }}</span>
+              </div>
+              <div class="preview-field" v-if="form.medicalInfo.estadoFisico">
+                <label>Estado físico</label>
+                <span class="badge badge-warning">{{ form.medicalInfo.estadoFisico }}</span>
+              </div>
+              <div class="preview-field" v-if="imcString">
+                <label>IMC</label>
+                <div class="value">{{ imcString }}</div>
+              </div>
+            </div>
+
+            <!-- Alergias -->
+            <div class="preview-field-full" v-if="form.medicalInfo.alergias.length > 0">
+              <label>⚠️ Alergias</label>
+              <div class="tags-preview">
+                <span class="tag-preview tag-danger" v-for="(a, i) in form.medicalInfo.alergias" :key="i">{{ a }}</span>
+              </div>
+            </div>
+
+            <!-- Enfermedades -->
+            <div class="preview-field-full" v-if="form.medicalInfo.enfermedades.length > 0">
+              <label>🩺 Enfermedades</label>
+              <div class="tags-preview">
+                <span class="tag-preview tag-purple" v-for="(e, i) in form.medicalInfo.enfermedades" :key="i">{{ e }}</span>
+              </div>
+            </div>
+
+            <!-- Medicamentos -->
+            <div class="preview-field-full" v-if="form.medicalInfo.medicamentos.length > 0">
+              <label>💊 Medicamentos</label>
+              <div class="tags-preview">
+                <span class="tag-preview tag-blue" v-for="(m, i) in form.medicalInfo.medicamentos" :key="i">{{ m }}</span>
+              </div>
+            </div>
+
+            <!-- Tratamiento -->
+            <div class="preview-grid-2" v-if="form.medicalInfo.frecuenciaTratamiento">
+              <div class="preview-field">
+                <label>Frecuencia de tratamiento</label>
+                <div class="value">⏰ {{ form.medicalInfo.frecuenciaTratamiento }}</div>
+              </div>
+              <div class="preview-field" v-if="form.medicalInfo.condicionToma">
+                <label>Condición de toma</label>
+                <div class="value">🍽️ {{ form.medicalInfo.condicionToma }}</div>
+              </div>
+            </div>
+
+            <!-- Fotos médicas -->
+            <div class="preview-photos" v-if="ciPhotoDataUrl || recetaFotoDataUrl">
+              <div class="photo-item" v-if="ciPhotoDataUrl">
+                <label>🆔 Foto CI</label>
+                <img :src="ciPhotoDataUrl" alt="CI" />
+              </div>
+              <div class="photo-item" v-if="recetaFotoDataUrl">
+                <label>📄 Receta médica</label>
+                <img :src="recetaFotoDataUrl" alt="Receta" />
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <div><strong>Alergias:</strong> {{ form.medicalInfo.allergies.join(', ') || 'Ninguna' }}</div>
+
+          <!-- Sección: Responsable -->
+          <div class="preview-section" v-if="showResponsable && form.responsable.nombres">
+            <div class="section-header">
+              <span class="section-icon">👨‍👩‍👧‍👦</span>
+              <h4>Tutor / Familiar Responsable</h4>
+            </div>
+            <div class="preview-grid-3">
+              <div class="preview-field">
+                <label>Nombre</label>
+                <div class="value">{{ form.responsable.nombres }} {{ form.responsable.apellidos }}</div>
+              </div>
+              <div class="preview-field">
+                <label>Parentesco</label>
+                <span class="badge badge-primary">{{ form.responsable.parentesco }}</span>
+              </div>
+              <div class="preview-field">
+                <label>Teléfono</label>
+                <div class="value">📱 {{ form.responsable.telefono }}</div>
+              </div>
+              <div class="preview-field" v-if="form.responsable.ci">
+                <label>CI</label>
+                <div class="value">{{ form.responsable.ci }}</div>
+              </div>
+              <div class="preview-field" v-if="form.responsable.email">
+                <label>Email</label>
+                <div class="value">{{ form.responsable.email }}</div>
+              </div>
+            </div>
           </div>
-          <div class="preview-row photo-preview-big" v-if="photoDataUrl">
-            <img :src="photoDataUrl" alt="Foto paciente" />
+
+          <!-- Expediente y Estado -->
+          <div class="preview-section preview-footer">
+            <div class="preview-grid-3">
+              <div class="preview-field">
+                <label>Expediente</label>
+                <div class="value-badge">📋 {{ form.expediente }}</div>
+              </div>
+              <div class="preview-field">
+                <label>Estado</label>
+                <span class="badge badge-active">{{ form.estado }}</span>
+              </div>
+              <div class="preview-field">
+                <label>Registrado por</label>
+                <div class="value">👤 {{ form.usuarioRegistro || currentUserName }}</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="modal-actions">
-          <button class="secondary" @click="showPreview = false">Editar</button>
-          <button class="primary" @click="confirmSave(false)">Guardar</button>
-          <button class="primary" @click="confirmSave(true)">Guardar y Ver Perfil</button>
-          <button class="link-btn" @click="printPreview">Imprimir ficha</button>
+        <div class="modal-actions-enhanced">
+          <button class="btn-secondary" @click="showPreview = false">
+            <span>✏️</span> Editar
+          </button>
+          <button class="btn-print" @click="printPreview">
+            <span>🖨️</span> Imprimir
+          </button>
+          <button class="btn-primary" @click="confirmSave(false)">
+            <span>💾</span> Guardar
+          </button>
+          <button class="btn-success" @click="confirmSave(true)">
+            <span>✅</span> Guardar y Ver Perfil
+          </button>
         </div>
       </div>
     </div>
@@ -391,20 +886,58 @@ const form = reactive({
   email: '',
   preferenciaContacto: 'telefono',
   direccion: { calle: '', numero: '', zona: '', ciudad: '', provincia: '' },
-  medicalInfo: { bloodGroup: '', peso: null, altura: null, imc: null, allergies: [], chronic: { diabetes:false, hipertension:false, asma:false, cardiopatias:false, otras: '' }, antecedentesFamiliares: '' },
+  medicalInfo: { 
+    estadoAdherencia: '', 
+    estadoActual: '', 
+    alergias: [], 
+    enfermedades: [], 
+    altura: null, 
+    peso: null, 
+    imc: null, 
+    estadoFisico: '', 
+    medicamentos: [], 
+    recetadoPor: '', 
+    frecuenciaTratamiento: '', 
+    condicionToma: '', 
+    observaciones: '' 
+  },
   observaciones: '',
-  responsable: { nombre: '', parentesco: '', telefono: '', email: '', direccion: '', autorizacion: false },
+  responsable: { 
+    parentesco: '', 
+    nombres: '', 
+    apellidos: '', 
+    fecha_nacimiento: '', 
+    ci: '', 
+    domicilio: '', 
+    ocupacion: '', 
+    estado_civil: '', 
+    telefono: '', 
+    email: '', 
+    autorizacion: false 
+  },
   seguro: { nombre: '', polid: '' },
   createdAt: new Date().toISOString()
 })
 
 const errors = reactive({})
 const _allergy_temp = ref('')
+const _enfermedad_temp = ref('')
+const _medicamento_temp = ref('')
 const photoFile = ref(null)
 const photoDataUrl = ref('')
+const ciPhotoFile = ref(null)
+const ciPhotoDataUrl = ref('')
+const responsableFotoFile = ref(null)
+const responsableFotoDataUrl = ref('')
+const responsableCIFile = ref(null)
+const responsableCIDataUrl = ref('')
+const recetaFotoFile = ref(null)
+const recetaFotoDataUrl = ref('')
 const showPreview = ref(false)
 const duplicateWarning = ref(false)
 const duplicateWarningMessages = ref([])
+const showMedicalInfo = ref(false)
+const showResponsable = ref(false)
 
 const currentUserName = computed(() => getUserName() || user.value?.email || 'Sistema')
 
@@ -434,6 +967,32 @@ const imc = computed(() => {
 
 const imcString = computed(() => imc.value ? `${imc.value} kg/m²` : '')
 
+const maxDate = computed(() => new Date().toISOString().split('T')[0])
+
+const ageCategory = computed(() => {
+  if (!age.value) return ''
+  if (age.value < 12) return 'Niño'
+  if (age.value < 18) return 'Joven'
+  return 'Adulto'
+})
+
+const edadResponsable = computed(() => {
+  if (!form.responsable.fecha_nacimiento) return ''
+  const b = new Date(form.responsable.fecha_nacimiento)
+  const now = new Date()
+  let years = now.getFullYear() - b.getFullYear()
+  const m = now.getMonth() - b.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) years--
+  return years
+})
+
+const ageCategoryResponsable = computed(() => {
+  if (!edadResponsable.value) return ''
+  if (edadResponsable.value < 12) return 'Niño'
+  if (edadResponsable.value < 18) return 'Joven'
+  return 'Adulto'
+})
+
 const validateField = (field) => {
   switch (field) {
     case 'nombres':
@@ -446,7 +1005,7 @@ const validateField = (field) => {
       errors.fechaNacimiento = form.fechaNacimiento ? '' : 'Fecha de nacimiento requerida'
       break
     case 'dni':
-      errors.dni = form.dni && form.dni.trim().length >= 5 ? '' : 'Documento inválido o muy corto'
+      errors.dni = form.dni && form.dni.trim().length >= 5 ? '' : 'CI inválido o muy corto (mínimo 5 dígitos)'
       break
     case 'telefono':
       errors.telefono = form.telefono && /^\+?\d{7,15}$/.test(form.telefono.replace(/\s+/g, '')) ? '' : 'Teléfono inválido (ej: +51 9xxxxxxx)'
@@ -463,16 +1022,42 @@ const recalculate = () => {
 }
 
 const addAllergy = () => {
-  if (!_allergy_temp.value && !form.medicalInfo.allergies.length) return
+  if (!_allergy_temp.value && !form.medicalInfo.alergias.length) return
   const v = _allergy_temp.value.trim()
-  if (v && !form.medicalInfo.allergies.includes(v)) {
-    form.medicalInfo.allergies.push(v)
+  if (v && !form.medicalInfo.alergias.includes(v)) {
+    form.medicalInfo.alergias.push(v)
   }
   _allergy_temp.value = ''
 }
 
 const removeAllergy = (i) => {
-  form.medicalInfo.allergies.splice(i,1)
+  form.medicalInfo.alergias.splice(i,1)
+}
+
+const addEnfermedad = () => {
+  if (!_enfermedad_temp.value && !form.medicalInfo.enfermedades.length) return
+  const v = _enfermedad_temp.value.trim()
+  if (v && !form.medicalInfo.enfermedades.includes(v)) {
+    form.medicalInfo.enfermedades.push(v)
+  }
+  _enfermedad_temp.value = ''
+}
+
+const removeEnfermedad = (i) => {
+  form.medicalInfo.enfermedades.splice(i,1)
+}
+
+const addMedicamento = () => {
+  if (!_medicamento_temp.value && !form.medicalInfo.medicamentos.length) return
+  const v = _medicamento_temp.value.trim()
+  if (v && !form.medicalInfo.medicamentos.includes(v)) {
+    form.medicalInfo.medicamentos.push(v)
+  }
+  _medicamento_temp.value = ''
+}
+
+const removeMedicamento = (i) => {
+  form.medicalInfo.medicamentos.splice(i,1)
 }
 
 const onPhotoSelected = (e) => {
@@ -486,6 +1071,50 @@ const onPhotoSelected = (e) => {
 
 const removePhoto = () => { photoFile.value = null; photoDataUrl.value = '' }
 
+const onCIPhotoSelected = (e) => {
+  const f = e.target.files && e.target.files[0]
+  if (!f) return
+  ciPhotoFile.value = f
+  const reader = new FileReader()
+  reader.onload = () => { ciPhotoDataUrl.value = reader.result }
+  reader.readAsDataURL(f)
+}
+
+const removeCIPhoto = () => { ciPhotoFile.value = null; ciPhotoDataUrl.value = '' }
+
+const onResponsableFotoSelected = (e) => {
+  const f = e.target.files && e.target.files[0]
+  if (!f) return
+  responsableFotoFile.value = f
+  const reader = new FileReader()
+  reader.onload = () => { responsableFotoDataUrl.value = reader.result }
+  reader.readAsDataURL(f)
+}
+
+const removeResponsableFoto = () => { responsableFotoFile.value = null; responsableFotoDataUrl.value = '' }
+
+const onResponsableCISelected = (e) => {
+  const f = e.target.files && e.target.files[0]
+  if (!f) return
+  responsableCIFile.value = f
+  const reader = new FileReader()
+  reader.onload = () => { responsableCIDataUrl.value = reader.result }
+  reader.readAsDataURL(f)
+}
+
+const removeResponsableCI = () => { responsableCIFile.value = null; responsableCIDataUrl.value = '' }
+
+const onRecetaFotoSelected = (e) => {
+  const f = e.target.files && e.target.files[0]
+  if (!f) return
+  recetaFotoFile.value = f
+  const reader = new FileReader()
+  reader.onload = () => { recetaFotoDataUrl.value = reader.result }
+  reader.readAsDataURL(f)
+}
+
+const removeRecetaFoto = () => { recetaFotoFile.value = null; recetaFotoDataUrl.value = '' }
+
 const usersList = computed(() => patients.value)
 
 const checkDuplicates = () => {
@@ -494,7 +1123,7 @@ const checkDuplicates = () => {
   if (form.dni) {
     const match = usersList.value.find(u => (u.dni && u.dni.toString() === form.dni.toString()))
     if (match) {
-      duplicateWarningMessages.value.push(`Documento duplicado: ya existe paciente con DNI ${form.dni}`)
+      duplicateWarningMessages.value.push(`⚠️ CI duplicado: Ya existe un paciente con CI ${form.dni}`)
       duplicateWarning.value = true
     }
   }
@@ -552,9 +1181,15 @@ const confirmSave = async (viewAfterSave = false) => {
     payload.photo = photoDataUrl.value
   }
 
+  // Asegurar estado activo por defecto
+  payload.estado = 'Activo'
+  payload.isActive = true
+  payload.role = 'user'
   payload.usuarioRegistro = currentUserName.value
+  
   console.log("📋 [PatientRegistro] Usuario registro:", payload.usuarioRegistro)
   console.log("👤 [PatientRegistro] Usuario autenticado:", user.value)
+  console.log("✅ [PatientRegistro] Estado del paciente:", payload.estado, "- isActive:", payload.isActive)
 
   if (!user.value) {
     console.error("❌ [PatientRegistro] No hay usuario autenticado")
@@ -606,8 +1241,34 @@ const resetForm = () => {
   form.expediente = expediente
   form.estado = 'Activo'
   form.persona = { nombres: '', apellidos: '', sexo: '' }
-  form.medicalInfo = { bloodGroup: '', peso: null, altura: null, imc: null, allergies: [], chronic: { diabetes:false, hipertension:false, asma:false, cardiopatias:false, otras: '' }, antecedentesFamiliares: '' }
-  form.responsable = { nombre: '', parentesco: '', telefono: '', email: '', direccion: '', autorizacion: false }
+  form.medicalInfo = { 
+    estadoAdherencia: '', 
+    estadoActual: '', 
+    alergias: [], 
+    enfermedades: [], 
+    altura: null, 
+    peso: null, 
+    imc: null, 
+    estadoFisico: '', 
+    medicamentos: [], 
+    recetadoPor: '', 
+    frecuenciaTratamiento: '', 
+    condicionToma: '', 
+    observaciones: '' 
+  }
+  form.responsable = { 
+    parentesco: '', 
+    nombres: '', 
+    apellidos: '', 
+    fecha_nacimiento: '', 
+    ci: '', 
+    domicilio: '', 
+    ocupacion: '', 
+    estado_civil: '', 
+    telefono: '', 
+    email: '', 
+    autorizacion: false 
+  }
   form.direccion = { calle: '', numero: '', zona: '', ciudad: '', provincia: '' }
   form.seguro = { nombre: '', polid: '' }
   form.telefono = ''
@@ -615,6 +1276,14 @@ const resetForm = () => {
   form.createdAt = new Date().toISOString()
   photoFile.value = null
   photoDataUrl.value = ''
+  ciPhotoFile.value = null
+  ciPhotoDataUrl.value = ''
+  responsableFotoFile.value = null
+  responsableFotoDataUrl.value = ''
+  responsableCIFile.value = null
+  responsableCIDataUrl.value = ''
+  recetaFotoFile.value = null
+  recetaFotoDataUrl.value = ''
   Object.keys(errors).forEach(k => delete errors[k])
   duplicateWarning.value = false
   duplicateWarningMessages.value = []
@@ -679,16 +1348,237 @@ onMounted(async () => {
   box-shadow: 0 10px 30px rgba(37,99,235,0.08), inset 0 1px 0 rgba(16,24,40,0.02);
   transform: translateY(-1px);
 }
-.photo-field .photo-controls input { display:block; }
 .form-card input[readonly] { background:#f1f5f9; color:#111827 }
 .form-card input::placeholder, .form-card textarea::placeholder { color:#9ca3af }
-.form-card input[type='file'] { padding:0.4rem }
-.photo-preview img { width:110px; height:110px; object-fit:cover; border-radius:12px; margin-top:0.5rem; box-shadow:0 6px 18px rgba(17,24,39,0.04) }
-.photo-preview-big img { width:180px; height:180px; object-fit:cover; border-radius:12px; }
+
+/* Estilos mejorados para fotografías */
+.photo-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.photo-upload-container {
+  position: relative;
+  width: 100%;
+}
+
+.photo-input {
+  display: none;
+}
+
+.photo-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem;
+  border: 3px dashed #cbd5e1;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 220px;
+}
+
+.photo-upload-btn:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+}
+
+.upload-icon {
+  font-size: 4rem;
+  line-height: 1;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.photo-upload-btn:hover .upload-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.upload-text {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.upload-text strong {
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.upload-text small {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.photo-preview-enhanced {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.photo-preview-enhanced:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.photo-preview-enhanced img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+  background: #f8fafc;
+}
+
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-preview-enhanced:hover .photo-overlay {
+  opacity: 1;
+}
+
+.btn-remove-photo,
+.btn-change-photo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-remove-photo {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.btn-remove-photo:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.btn-change-photo {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.btn-change-photo:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
 .tag-input { display:flex; flex-direction:column }
-.tags { margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap }
-.tag { background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:999px; display:inline-flex; align-items:center; gap:0.5rem }
-.tag button { background:transparent; border:none; cursor:pointer }
+.tag-input input { 
+  padding: 0.75rem; 
+  border: 2px solid #e5e7eb; 
+  border-radius: 10px; 
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.tag-input input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.tags { 
+  margin-top: 0.75rem; 
+  display: flex; 
+  gap: 0.6rem; 
+  flex-wrap: wrap;
+  min-height: 2.5rem;
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+.tag { 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 0.75rem; 
+  border-radius: 20px; 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+  transition: all 0.2s;
+}
+.tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+}
+/* Colores específicos para cada tipo de tag */
+.tag-alergia {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+.tag-alergia:hover {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+.tag-enfermedad {
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+.tag-enfermedad:hover {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+.tag-medicamento {
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+.tag-medicamento:hover {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+.tag button, .tag .tag-remove { 
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s;
+}
+.tag button:hover, .tag .tag-remove:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
 .checkboxes label { display:inline-flex; gap:0.5rem; margin-right:0.75rem }
 .form-actions { display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1.25rem }
 .primary { background:#2563eb; color:#fff; border:none; padding:0.9rem 1.1rem; border-radius:12px; cursor:pointer; font-weight:600; box-shadow:0 8px 20px rgba(37,99,235,0.12) }
@@ -701,14 +1591,575 @@ onMounted(async () => {
 .error-msg { color:#dc2626; font-size:0.86rem; margin-top:0.35rem }
 .warning-card { background:#fffbeb; border-left:4px solid #f59e0b; padding:0.75rem; margin-top:1rem }
 
-/* Modal */
-.modal-overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:60 }
-.modal { background:white; padding:1rem; border-radius:8px; width:min(900px,95%); max-height:90vh; overflow:auto }
-.preview { display:flex; flex-direction:column; gap:0.5rem; }
-.preview-row { display:flex; gap:1rem; justify-content:space-between }
-.modal-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem }
+/* Modal Mejorado */
+.modal-overlay { 
+  position: fixed; 
+  inset: 0; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999 !important;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-preview {
+  background: white;
+  border-radius: 20px;
+  width: min(1100px, 95%);
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10000 !important;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.modal-title h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.close-modal {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.preview-content {
+  overflow-y: auto;
+  padding: 2rem;
+  background: #f8fafc;
+  flex: 1;
+}
+
+.preview-section {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.section-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.section-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.preview-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.preview-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.preview-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-photo-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e5e7eb 0%, #cbd5e1 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 3rem;
+  color: #64748b;
+}
+
+.preview-photo-placeholder small {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.preview-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.preview-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.preview-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-field .value {
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.preview-field .value-highlight {
+  font-size: 1.25rem;
+  color: #667eea;
+  font-weight: 700;
+}
+
+.value-badge {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #1e293b;
+  display: inline-block;
+}
+
+.preview-field-full {
+  margin-top: 1rem;
+}
+
+.preview-field-full label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.tags-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag-preview {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tag-danger {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+}
+
+.tag-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+}
+
+.tag-blue {
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge-category {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+}
+
+.badge-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.badge-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.badge-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #dc2626 100%);
+  color: white;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.badge-active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.preview-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.photo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.photo-item label {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-footer {
+  background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
+  border: 2px dashed #cbd5e1;
+}
+
+.modal-actions-enhanced {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem 2rem;
+  background: white;
+  border-top: 2px solid #e5e7eb;
+}
+
+.modal-actions-enhanced button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #1e293b;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-print {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: white;
+}
+
+.btn-print:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Toggle Section Styles */
+.toggle-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  margin: 1.5rem 0;
+  border: 2px dashed #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.toggle-section:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-checkbox {
+  display: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  background: #cbd5e1;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.toggle-checkbox:checked + .toggle-switch::after {
+  transform: translateX(26px);
+}
+
+.toggle-text {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.toggle-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.toggle-text strong {
+  color: #1e293b;
+  font-size: 1.05rem;
+}
+
+.toggle-hint {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+/* Animación de aparición para las secciones */
+.section {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @media (max-width:768px) {
   .form-grid { grid-template-columns: 1fr }
+  
+  .toggle-section {
+    padding: 1rem;
+  }
+  
+  .toggle-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .toggle-hint {
+    margin-left: 0;
+  }
+
+  /* Modal responsive */
+  .modal-preview {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-title h3 {
+    font-size: 1.25rem;
+  }
+
+  .preview-content {
+    padding: 1rem;
+  }
+
+  .preview-section {
+    padding: 1rem;
+  }
+
+  .preview-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .preview-grid-2,
+  .preview-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-details {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-photo,
+  .preview-photo-placeholder {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .modal-actions-enhanced {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .modal-actions-enhanced button {
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
 }
 </style>

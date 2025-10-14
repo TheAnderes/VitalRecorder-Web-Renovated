@@ -1,59 +1,255 @@
 <template>
   <div>
-    <!-- Filters -->
-    <div class="filters-section">
-      <div class="filter-row">
-        <div class="search-box">
-          <input 
-            type="text" 
-            placeholder="Buscar por nombre, email, teléfono o DNI..."
-            v-model="searchQuery"
-            @input="updateSearch"
-          >
+    <!-- Filters Enhanced -->
+    <div class="filters-section-enhanced">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M3 4h18M3 8h12M3 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Filtros de Búsqueda
+        </h3>
+        <div class="filters-actions">
+          <button @click="clearAllFilters" class="btn-clear-filters" v-if="hasActiveFilters">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Limpiar Filtros
+          </button>
+          <span class="results-count">{{ filteredUsers.length }} resultados</span>
+        </div>
+      </div>
+
+      <div class="filters-grid">
+        <!-- Search Box -->
+        <div class="filter-item filter-search">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+              <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Búsqueda General
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              placeholder="Nombre, CI, teléfono, correo..."
+              v-model="searchQuery"
+              @input="updateSearch"
+              class="filter-input"
+            />
+            <button 
+              v-if="searchQuery" 
+              @click="searchQuery = ''" 
+              class="btn-clear-input"
+              title="Limpiar búsqueda"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <input type="text" class="role-filter" placeholder="CI" v-model="dniFilter" @input="updateDniFilter" />
+        <!-- CI Filter -->
+        <div class="filter-item">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M7 8h10M7 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Carnet de Identidad
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              placeholder="Buscar por CI..." 
+              v-model="dniFilter" 
+              @input="updateDniFilter"
+              class="filter-input"
+            />
+            <button 
+              v-if="dniFilter" 
+              @click="dniFilter = ''" 
+              class="btn-clear-input"
+              title="Limpiar CI"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
 
-        <select v-model="medicalStatusFilter" @change="updateMedicalStatusFilter" class="role-filter">
-          <option value="all">Todos los estados</option>
-          <option value="Activo">Activo</option>
-          <option value="Inactivo">Inactivo</option>
-          <option value="Crítico">Crítico</option>
-          <option value="En tratamiento">En tratamiento</option>
-        </select>
+        <!-- Medical Status Filter -->
+        <div class="filter-item">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Estado Médico
+          </label>
+          <div class="select-wrapper">
+            <select 
+              v-model="medicalStatusFilter" 
+              @change="updateMedicalStatusFilter" 
+              class="filter-select"
+            >
+              <option value="all">📋 Todos los estados</option>
+              <option value="Activo">✅ Activo</option>
+              <option value="Inactivo">❌ Inactivo</option>
+              <option value="Crítico">🚨 Crítico</option>
+              <option value="En tratamiento">💊 En tratamiento</option>
+            </select>
+            <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
 
-        <select v-model="sortBy" @change="updateSort" class="sort-select">
-          <option value="lastVisit">Última visita</option>
-          <option value="createdAt">Fecha de registro</option>
-          <option value="nombres">Nombre</option>
-          <option value="age">Edad</option>
-        </select>
+        <!-- Gender Filter -->
+        <div class="filter-item">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Sexo
+          </label>
+          <div class="select-wrapper">
+            <select 
+              v-model="genderFilter" 
+              @change="updateGenderFilter" 
+              class="filter-select"
+            >
+              <option value="all">👥 Todos</option>
+              <option value="Masculino">👨 Masculino</option>
+              <option value="Femenino">👩 Femenino</option>
+            </select>
+            <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
 
-        <button @click="toggleSortOrder" class="sort-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M7 4v16l4-4M17 20V4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <!-- Age Range Filter -->
+        <div class="filter-item">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Rango de Edad
+          </label>
+          <div class="select-wrapper">
+            <select 
+              v-model="ageRangeFilter" 
+              @change="updateAgeRangeFilter" 
+              class="filter-select"
+            >
+              <option value="all">🎂 Todas las edades</option>
+              <option value="0-12">👶 Niños (0-12)</option>
+              <option value="13-17">🧒 Adolescentes (13-17)</option>
+              <option value="18-59">🧑 Adultos (18-59)</option>
+              <option value="60-120">👴 Adultos Mayores (60+)</option>
+            </select>
+            <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Sort By -->
+        <div class="filter-item">
+          <label class="filter-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M3 6h18M7 12h10M11 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Ordenar Por
+          </label>
+          <div class="sort-controls">
+            <div class="select-wrapper">
+              <select 
+                v-model="sortBy" 
+                @change="updateSort" 
+                class="filter-select"
+              >
+                <option value="createdAt">📅 Fecha de registro</option>
+                <option value="nombres">🔤 Nombre</option>
+                <option value="age">🎂 Edad</option>
+                <option value="lastVisit">🕐 Última visita</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <button 
+              @click="toggleSortOrder" 
+              class="btn-sort-order"
+              :class="{ 'order-desc': sortOrder === 'desc' }"
+              :title="sortOrder === 'asc' ? 'Orden ascendente' : 'Orden descendente'"
+            >
+              <svg v-if="sortOrder === 'asc'" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Filters Tags -->
+      <div class="active-filters" v-if="hasActiveFilters">
+        <span class="active-filters-label">Filtros activos:</span>
+        <div class="filter-tags">
+          <span v-if="searchQuery" class="filter-tag">
+            Búsqueda: "{{ searchQuery }}"
+            <button @click="searchQuery = ''" class="remove-tag">×</button>
+          </span>
+          <span v-if="dniFilter" class="filter-tag">
+            CI: "{{ dniFilter }}"
+            <button @click="dniFilter = ''" class="remove-tag">×</button>
+          </span>
+          <span v-if="medicalStatusFilter !== 'all'" class="filter-tag">
+            Estado: {{ medicalStatusFilter }}
+            <button @click="medicalStatusFilter = 'all'" class="remove-tag">×</button>
+          </span>
+          <span v-if="genderFilter !== 'all'" class="filter-tag">
+            Sexo: {{ genderFilter }}
+            <button @click="genderFilter = 'all'" class="remove-tag">×</button>
+          </span>
+          <span v-if="ageRangeFilter !== 'all'" class="filter-tag">
+            Edad: {{ getAgeRangeLabel(ageRangeFilter) }}
+            <button @click="ageRangeFilter = 'all'" class="remove-tag">×</button>
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- Stats Bar -->
     <div class="stats-bar">
       <div class="stat-item">
-        <span class="stat-number">{{ filteredUsers.length }}</span>
-        <span class="stat-label">pacientes mostrados</span>
+        <span class="stat-number">{{ stats.total }}</span>
+        <span class="stat-label">📊 Total Pacientes</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number">{{ stats.totalUsers || stats.total }}</span>
-        <span class="stat-label">total pacientes</span>
+        <span class="stat-number">{{ stats.activePatients }}</span>
+        <span class="stat-label">✅ Pacientes Activos</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number">{{ stats.activeUsers || stats.patientsActive }}</span>
-        <span class="stat-label">pacientes activos</span>
+        <span class="stat-number">{{ stats.inactivePatients }}</span>
+        <span class="stat-label">❌ Pacientes Inactivos</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number">{{ stats.criticalPatients || criticalCount }}</span>
-        <span class="stat-label">pacientes críticos</span>
+        <span class="stat-number">{{ stats.masculinePatients }}</span>
+        <span class="stat-label">👨 Pacientes Masculinos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ stats.femininePatients }}</span>
+        <span class="stat-label">👩 Pacientes Femeninos</span>
       </div>
     </div>
 
@@ -99,24 +295,33 @@
                     {{ getUserInitial(patient) }}
                   </div>
                   <div class="user-details">
-                    <span class="user-name">{{ getUserFullName(patient) }}</span>
-                    <span class="user-id">DNI: {{ patient.dni || 'N/A' }}</span>
+                    <div class="user-name">{{ getUserFullName(patient) }}</div>
+                    <div class="user-secondary">
+                      <span class="user-ci">🆔 {{ patient.dni || patient.persona?.dni || 'N/A' }}</span>
+                      <span class="separator">•</span>
+                      <span class="user-age">{{ calculateAge(patient) }} años</span>
+                    </div>
                   </div>
                 </div>
               </div>
+              
               <div class="cell contact">
-                <div class="contact-row">
-                  <div class="phone">{{ patient.telefono || (patient.contactoPrincipal?.telefono) || 'N/D' }}</div>
-                  <div class="email muted" v-if="patient.email">{{ patient.email }}</div>
+                <div class="contact-stacked">
+                  <div class="contact-phone">📱 {{ patient.telefono || patient.persona?.telefono || 'N/D' }}</div>
+                  <div class="contact-email">📧 {{ patient.email || patient.persona?.correo || 'N/D' }}</div>
                 </div>
               </div>
 
               <div class="cell medical">
-                <div class="responsible-row">
-                  <div class="responsible-name">{{ patient.responsable?.nombre || 'N/D' }}</div>
-                  <div class="responsible-rel muted">
+                <div class="responsible-stacked">
+                  <div class="responsible-name">{{ getResponsableName(patient) }}</div>
+                  <div class="responsible-details">
                     <span v-if="patient.responsable?.parentesco">{{ patient.responsable.parentesco }}</span>
-                    <span v-if="patient.responsable?.telefono"> · {{ patient.responsable.telefono }}</span>
+                    <span v-if="patient.responsable?.parentesco && patient.responsable?.telefono"> • </span>
+                    <span v-if="patient.responsable?.telefono">📱 {{ patient.responsable.telefono }}</span>
+                  </div>
+                  <div class="responsible-email" v-if="patient.responsable?.correo || patient.responsable?.email">
+                    📧 {{ patient.responsable.correo || patient.responsable.email }}
                   </div>
                 </div>
               </div>
@@ -184,13 +389,27 @@ const sortBy = ref('createdAt')
 const sortOrder = ref('desc')
 const dniFilter = ref('')
 const medicalStatusFilter = ref('all')
+const genderFilter = ref('all')
+const ageRangeFilter = ref('all')
 
 // Stats computadas
 const stats = computed(() => {
   const total = patients.value.length
-  const active = patients.value.filter(p => p.isActive !== false).length
+  const active = patients.value.filter(p => p.isActive !== false && p.estado !== 'Inactivo').length
+  const inactive = patients.value.filter(p => p.isActive === false || p.estado === 'Inactivo').length
+  const masculine = patients.value.filter(p => p.persona?.sexo === 'Masculino' || p.persona?.sexo === 'M').length
+  const feminine = patients.value.filter(p => p.persona?.sexo === 'Femenino' || p.persona?.sexo === 'F').length
   const critical = patients.value.filter(p => (p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
-  return { totalUsers: total, total, activePatients: active, criticalPatients: critical }
+  
+  return { 
+    totalUsers: total, 
+    total, 
+    activePatients: active,
+    inactivePatients: inactive,
+    masculinePatients: masculine,
+    femininePatients: feminine,
+    criticalPatients: critical 
+  }
 })
 
 // Filtrado y ordenamiento
@@ -200,33 +419,77 @@ const filteredUsers = computed(() => {
   // Búsqueda por texto
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
-    list = list.filter(p => 
-      (p.persona?.nombres || '').toLowerCase().includes(q) ||
-      (p.persona?.apellidos || '').toLowerCase().includes(q) ||
-      (p.email || '').toLowerCase().includes(q) ||
-      (p.telefono || '').toLowerCase().includes(q) ||
-      (p.dni || '').toString().includes(q)
-    )
+    list = list.filter(p => {
+      const nombres = (p.persona?.nombres || '').toLowerCase()
+      const apellidos = (p.persona?.apellidos || '').toLowerCase()
+      const email = (p.email || p.persona?.correo || '').toLowerCase()
+      const telefono = (p.telefono || p.persona?.telefono || '').toString()
+      const dni = (p.dni || p.persona?.dni || '').toString()
+      
+      return nombres.includes(q) || 
+             apellidos.includes(q) || 
+             email.includes(q) || 
+             telefono.includes(q) || 
+             dni.includes(q)
+    })
   }
   
-  // Filtro por DNI
+  // Filtro por CI/DNI
   if (dniFilter.value) {
-    list = list.filter(p => p.dni && p.dni.toString().includes(dniFilter.value))
+    const dniQuery = dniFilter.value.toString()
+    list = list.filter(p => {
+      const dni = (p.dni || p.persona?.dni || '').toString()
+      return dni.includes(dniQuery)
+    })
   }
   
   // Filtro por estado médico
   if (medicalStatusFilter.value && medicalStatusFilter.value !== 'all') {
-    list = list.filter(p => (p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')) === medicalStatusFilter.value)
+    list = list.filter(p => {
+      const status = p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')
+      return status === medicalStatusFilter.value
+    })
+  }
+  
+  // Filtro por sexo/género
+  if (genderFilter.value && genderFilter.value !== 'all') {
+    list = list.filter(p => {
+      const sexo = p.persona?.sexo || ''
+      return sexo === genderFilter.value || 
+             (genderFilter.value === 'Masculino' && sexo === 'M') ||
+             (genderFilter.value === 'Femenino' && sexo === 'F')
+    })
+  }
+  
+  // Filtro por rango de edad
+  if (ageRangeFilter.value && ageRangeFilter.value !== 'all') {
+    list = list.filter(p => {
+      const age = calculateAge(p)
+      if (age === 'N/A') return false
+      
+      const ageNum = parseInt(age)
+      const [min, max] = ageRangeFilter.value.split('-').map(Number)
+      
+      return ageNum >= min && ageNum <= max
+    })
   }
   
   // Ordenamiento
   list.sort((a, b) => {
-    let aV = a[sortBy.value]
-    let bV = b[sortBy.value]
+    let aV, bV
     
     if (sortBy.value === 'nombres') {
-      aV = a.persona?.nombres || ''
-      bV = b.persona?.nombres || ''
+      aV = (a.persona?.nombres || '').toLowerCase()
+      bV = (b.persona?.nombres || '').toLowerCase()
+    } else if (sortBy.value === 'age') {
+      aV = calculateAge(a)
+      bV = calculateAge(b)
+      // Handle 'N/A' values
+      if (aV === 'N/A') aV = -1
+      if (bV === 'N/A') bV = -1
+    } else {
+      aV = a[sortBy.value]
+      bV = b[sortBy.value]
     }
     
     if (aV > bV) return sortOrder.value === 'asc' ? 1 : -1
@@ -259,6 +522,42 @@ const addForm = ref({
 const criticalCount = computed(() => {
   return patients.value.filter(u => (u.medicalStatus || (u.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
 })
+
+// Computed para detectar filtros activos
+const hasActiveFilters = computed(() => {
+  return searchQuery.value !== '' ||
+         dniFilter.value !== '' ||
+         medicalStatusFilter.value !== 'all' ||
+         genderFilter.value !== 'all' ||
+         ageRangeFilter.value !== 'all'
+})
+
+// Methods
+const clearAllFilters = () => {
+  searchQuery.value = ''
+  dniFilter.value = ''
+  medicalStatusFilter.value = 'all'
+  genderFilter.value = 'all'
+  ageRangeFilter.value = 'all'
+}
+
+const getAgeRangeLabel = (range) => {
+  const labels = {
+    '0-12': 'Niños (0-12)',
+    '13-17': 'Adolescentes (13-17)',
+    '18-59': 'Adultos (18-59)',
+    '60-120': 'Adultos Mayores (60+)'
+  }
+  return labels[range] || range
+}
+
+const updateGenderFilter = () => {
+  // El computed filteredUsers ya reactivo a genderFilter
+}
+
+const updateAgeRangeFilter = () => {
+  // El computed filteredUsers ya reactivo a ageRangeFilter
+}
 
 // Methods
 const loadPatients = async () => {
@@ -399,9 +698,11 @@ const addPatient = async () => {
       medicalInfo: addForm.value.medicalInfo,
       medicalStatus: addForm.value.medicalStatus,
       emergencyContacts: addForm.value.emergencyContacts,
+      estado: 'Activo',  // Estado por defecto
       role: 'user',
-      isActive: true
+      isActive: true     // Activo por defecto
     }
+    console.log("💾 [PatientList] Creando paciente con estado:", payload.estado, "- isActive:", payload.isActive)
     await AdminPatientService.createPatient(payload)
     console.log("✅ Paciente creado en Firebase")
     await loadPatients()
@@ -469,6 +770,46 @@ const statusClass = (status) => {
   return map[status] || 'inactive'
 }
 
+const calculateAge = (patient) => {
+  try {
+    const fechaNac = patient.persona?.fecha_nacimiento || patient.fecha_nacimiento
+    if (!fechaNac) return 'N/A'
+    
+    let birthDate
+    if (typeof fechaNac === 'string') {
+      birthDate = new Date(fechaNac)
+    } else if (fechaNac.toDate) {
+      // Firestore Timestamp
+      birthDate = fechaNac.toDate()
+    } else if (fechaNac instanceof Date) {
+      birthDate = fechaNac
+    } else {
+      return 'N/A'
+    }
+    
+    const today = new Date()
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--
+    }
+    
+    return age >= 0 ? age : 'N/A'
+  } catch (e) {
+    console.error('Error calculando edad:', e)
+    return 'N/A'
+  }
+}
+
+const getResponsableName = (patient) => {
+  if (!patient.responsable) return 'N/D'
+  const nombres = patient.responsable.nombres || ''
+  const apellidos = patient.responsable.apellidos || ''
+  const fullName = `${nombres} ${apellidos}`.trim()
+  return fullName || patient.responsable.nombre || 'N/D'
+}
+
 const formatDate = (timestamp) => {
   if (!timestamp) return 'No disponible'
   
@@ -495,16 +836,75 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.contact-row { display:flex; flex-direction:column; gap:0.15rem }
-.contact-row .phone { font-weight:700; color:#111827 }
-.contact-row .email { font-size:0.8rem; color:#6b7280 }
-.responsible-row { display:flex; flex-direction:column; gap:0.15rem }
-.responsible-name { font-weight:700; color:#111827 }
-.responsible-rel { font-size:0.82rem; color:#6b7280 }
+/* Stacked user info styles */
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.user-name {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.95rem;
+}
+.user-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+.user-ci {
+  font-weight: 500;
+}
+.user-age {
+  font-weight: 500;
+}
+.separator {
+  color: #d1d5db;
+}
+
+/* Stacked contact styles */
+.contact-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.contact-phone {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.9rem;
+}
+.contact-email {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+/* Stacked responsible styles */
+.responsible-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.responsible-name {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.9rem;
+}
+.responsible-details {
+  font-size: 0.82rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+.responsible-email {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
 .grid-header .cell.contact { max-width: 220px }
 .grid-row .cell.contact { max-width: 220px; overflow: hidden; text-overflow: ellipsis }
-.grid-header .cell.medical { max-width: 200px }
-.grid-row .cell.medical { max-width: 200px }
+.grid-header .cell.medical { max-width: 240px }
+.grid-row .cell.medical { max-width: 240px }
 .status-badge.inactive { background:#fee2e2; color:#991b1b }
 .status-badge.active { background:#dcfce7; color:#065f46 }
 .action-buttons { display:flex; gap:0.5rem; align-items:center }
@@ -565,70 +965,296 @@ onMounted(async () => {
   cursor: not-allowed;
 }
 
-.filters-section {
+/* Enhanced Filters Section */
+.filters-section-enhanced {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e2e8f0;
 }
 
-.filter-row {
-  display: grid;
-  grid-template-columns: minmax(280px, 1fr) repeat(3, minmax(140px, max-content));
-  gap: 0.75rem 1rem;
+.filters-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
 }
 
-.search-box {
+.filters-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.filters-title svg {
+  color: #3b82f6;
+}
+
+.filters-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-clear-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.btn-clear-filters:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.results-count {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: #f1f5f9;
+  border-radius: 20px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-item.filter-search {
+  grid-column: 1 / -1;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-label svg {
+  color: #3b82f6;
+}
+
+.input-wrapper {
   position: relative;
-  flex: 1 1 320px;
-  min-width: 260px;
-  max-width: 600px;
+  width: 100%;
 }
 
-.search-box svg {
+.filter-input {
+  width: 90%;
+  padding: 0.85rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  background: #f8fafc;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-clear-input {
   position: absolute;
-  left: 1rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.role-filter, .sort-select {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  background: white;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  flex: 0 0 auto;
-  min-width: 160px;
+  transition: all 0.2s;
+  color: #64748b;
 }
 
-.sort-btn {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+.btn-clear-input:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.85rem 2.5rem 0.85rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sort-controls .select-wrapper {
+  flex: 1;
+}
+
+.btn-sort-order {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  padding: 0.85rem;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
+  color: white;
+  transition: all 0.2s;
+  min-width: 48px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
 }
 
-.sort-btn:hover {
-  background: #e5e7eb;
+.btn-sort-order:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.btn-sort-order.order-desc {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+/* Active Filters Tags */
+.active-filters {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.active-filters-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #1e40af;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid #93c5fd;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.remove-tag {
+  background: rgba(30, 64, 175, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1e40af;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.remove-tag:hover {
+  background: #ef4444;
+  color: white;
+  transform: rotate(90deg);
 }
 
 .stats-bar {
-  display: flex;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
   padding: 1rem;
   background: #f9fafb;
@@ -639,16 +1265,27 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   text-align: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .stat-number {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: #2563eb;
+  margin-bottom: 0.25rem;
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -861,13 +1498,7 @@ onMounted(async () => {
   justify-content: center;
 }
 
-.contact-row { display:flex; flex-direction:column; gap:0.25rem }
-.contact-row .phone { font-weight:500; color:#111827 }
-.contact-row .email { font-size:0.82rem }
-
-.responsible-row { display:flex; flex-direction:column; gap:0.25rem }
-.responsible-name { font-weight:600; color:#1f2937 }
-.responsible-rel { font-size:0.82rem }
+/* Stacked contact and responsible already defined above */
 
 .cell.actions { display:flex; align-items:center; justify-content:center }
 .action-buttons { justify-content:flex-end }
@@ -936,6 +1567,32 @@ onMounted(async () => {
   color: #374151;
 }
 
+@media (max-width: 900px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-item.filter-search {
+    grid-column: 1;
+  }
+  
+  .filters-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .filters-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-clear-filters {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 768px) {
   .users-management {
     padding: 0;
@@ -965,6 +1622,35 @@ onMounted(async () => {
   .page-header .header-content p {
     margin: 0;
     font-size: 0.875rem;
+  }
+  
+  .filters-section-enhanced {
+    padding: 1rem;
+  }
+  
+  .sort-controls {
+    flex-direction: column;
+  }
+  
+  .sort-controls .select-wrapper {
+    width: 100%;
+  }
+  
+  .btn-sort-order {
+    width: 100%;
+  }
+  
+  .active-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-tags {
+    width: 100%;
+  }
+  
+  .filter-tag {
+    flex: 0 0 auto;
   }
   
   .page-header .refresh-btn {
@@ -1009,14 +1695,26 @@ onMounted(async () => {
     margin: 0;
   }
   
-  /* Stats bar - zero spacing */
+  /* Stats bar - responsive grid */
   .stats-bar {
-    flex-direction: row;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     text-align: center;
     padding: 0.75rem;
     margin: 0 0 1rem 0;
     border-radius: 0.375rem;
+  }
+  
+  .stat-item {
+    padding: 0.5rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
   }
   
   /* Table container - zero spacing */
