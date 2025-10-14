@@ -104,14 +104,15 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAdminStore } from '@/stores/admin'
+import * as AdminPatientService from '@/services/AdminPatientService'
 
 const route = useRoute()
 const router = useRouter()
-const adminStore = useAdminStore()
 
 const editId = route.query.editId || route.query.id
 const patient = ref(null)
+const patients = ref([])
+const loading = ref(false)
 const local = reactive({
   persona: {},
   direccion: {},
@@ -121,13 +122,28 @@ const local = reactive({
 })
 const allergyText = ref('')
 
-const load = () => {
-  const list = adminStore.users?.value || []
-  const found = list.find(u => u.id === editId)
-  if (found) {
-    patient.value = found
-    Object.assign(local, JSON.parse(JSON.stringify(found)))
-    allergyText.value = (local.medicalInfo?.allergies || []).join(', ')
+const loadPatients = async () => {
+  try {
+    loading.value = true
+    console.log("🔄 [PatientEdit] Cargando pacientes desde Firebase...")
+    const list = await AdminPatientService.listPatients()
+    patients.value = list || []
+    console.log("✅ [PatientEdit] Pacientes cargados:", patients.value.length)
+    
+    // Buscar el paciente a editar
+    const found = patients.value.find(u => u.id === editId)
+    if (found) {
+      patient.value = found
+      Object.assign(local, JSON.parse(JSON.stringify(found)))
+      allergyText.value = (local.medicalInfo?.allergies || []).join(', ')
+      console.log("👤 [PatientEdit] Paciente cargado para edición:", patient.value)
+    } else {
+      console.warn("⚠️ [PatientEdit] No se encontró el paciente con id:", editId)
+    }
+  } catch (err) {
+    console.error("❌ [PatientEdit] Error cargando pacientes:", err)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -138,12 +154,8 @@ watch(allergyText, (val) => {
 const save = async () => {
   if (!patient.value) return
   try {
-    if (typeof adminStore.updateUser === 'function') {
-      await adminStore.updateUser(patient.value.id, local)
-    } else {
-      adminStore.users.value = adminStore.users.value.map(u => u.id === patient.value.id ? { ...u, ...local } : u)
-    }
-    await adminStore.refreshData()
+    await AdminPatientService.updatePatient(patient.value.id, local)
+    console.log("✅ [PatientEdit] Paciente actualizado en Firebase")
     router.push({ name: 'admin-patient-perfil', query: { id: patient.value.id } })
   } catch (e) {
     console.error('Error guardando edición:', e)
@@ -153,10 +165,7 @@ const save = async () => {
 const cancel = () => router.back()
 
 onMounted(async () => {
-  if ((!adminStore.users || (adminStore.users.value || []).length === 0) && typeof adminStore.fetchUsers === 'function') {
-    await adminStore.fetchUsers()
-  }
-  load()
+  await loadPatients()
 })
 </script>
 

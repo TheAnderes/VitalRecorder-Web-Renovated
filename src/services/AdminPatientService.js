@@ -27,8 +27,21 @@ export async function getPatient(id) {
 }
 
 export async function createPatient(data) {
-  const ref = await addDoc(collection(db, COLLECTION), data)
-  return ref.id
+  try {
+    console.log("🔥 [AdminPatientService] Creando paciente en Firestore...", data)
+    const ref = await addDoc(collection(db, COLLECTION), {
+      ...data,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    })
+    console.log("✅ [AdminPatientService] Documento creado con ID:", ref.id)
+    return ref.id
+  } catch (error) {
+    console.error("❌ [AdminPatientService] Error creando paciente:", error)
+    console.error("Código de error:", error.code)
+    console.error("Mensaje:", error.message)
+    throw error
+  }
 }
 
 export async function updatePatient(id, updates) {

@@ -75,7 +75,12 @@
     </div>
 
     <div v-else class="users-table">
-      <div class="table-container">
+      <div v-if="filteredUsers.length === 0" class="empty-state">
+        <p>📭 No hay pacientes registrados en Firebase</p>
+        <p style="font-size: 0.9rem; color: #6b7280;">Total de pacientes cargados: {{ patients.length }}</p>
+        <button @click="openAddModal" class="primary-btn">Agregar primer paciente</button>
+      </div>
+      <div v-else class="table-container">
         <!-- table markup (copied) -->
         <div class="data-grid">
           <div class="grid-header">
@@ -94,7 +99,7 @@
                     {{ getUserInitial(patient) }}
                   </div>
                   <div class="user-details">
-                    <span class="user-name">{{ list[0].persona.nombres }}</span>
+                    <span class="user-name">{{ getUserFullName(patient) }}</span>
                     <span class="user-id">DNI: {{ patient.dni || 'N/A' }}</span>
                   </div>
                 </div>
@@ -156,14 +161,6 @@
         </div>
       </div>
 
-      <!-- Empty State -->
-      <div v-if="filteredUsers.length === 0" class="empty-state">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke="currentColor" stroke-width="2" fill="none"/>
-        </svg>
-        <h3>No se encontraron pacientes</h3>
-        <p>Prueba ajustando los filtros de búsqueda</p>
-      </div>
     </div>
   </div>
 </template>
@@ -172,24 +169,73 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
-import { useAdminStore } from '@/stores/admin'
 import * as AdminPatientService from '@/services/AdminPatientService'
 
 const { canManageUsers, canDeleteUsers } = useAdmin()
-const adminStore = useAdminStore()
 const router = useRouter()
 
-// State
+// State directo (sin store)
+const patients = ref([])
+const loading = ref(false)
+const error = ref(null)
 const searchQuery = ref('')
 const roleFilter = ref('all')
 const sortBy = ref('createdAt')
 const sortOrder = ref('desc')
+const dniFilter = ref('')
+const medicalStatusFilter = ref('all')
 
-// Refs from store (avoid double-wrapping with computed)
-const loading = adminStore.loading
-const error = adminStore.error
-const stats = adminStore.stats
-const filteredUsers = adminStore.filteredUsers
+// Stats computadas
+const stats = computed(() => {
+  const total = patients.value.length
+  const active = patients.value.filter(p => p.isActive !== false).length
+  const critical = patients.value.filter(p => (p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
+  return { totalUsers: total, total, activePatients: active, criticalPatients: critical }
+})
+
+// Filtrado y ordenamiento
+const filteredUsers = computed(() => {
+  let list = [...patients.value]
+  
+  // Búsqueda por texto
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(p => 
+      (p.persona?.nombres || '').toLowerCase().includes(q) ||
+      (p.persona?.apellidos || '').toLowerCase().includes(q) ||
+      (p.email || '').toLowerCase().includes(q) ||
+      (p.telefono || '').toLowerCase().includes(q) ||
+      (p.dni || '').toString().includes(q)
+    )
+  }
+  
+  // Filtro por DNI
+  if (dniFilter.value) {
+    list = list.filter(p => p.dni && p.dni.toString().includes(dniFilter.value))
+  }
+  
+  // Filtro por estado médico
+  if (medicalStatusFilter.value && medicalStatusFilter.value !== 'all') {
+    list = list.filter(p => (p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')) === medicalStatusFilter.value)
+  }
+  
+  // Ordenamiento
+  list.sort((a, b) => {
+    let aV = a[sortBy.value]
+    let bV = b[sortBy.value]
+    
+    if (sortBy.value === 'nombres') {
+      aV = a.persona?.nombres || ''
+      bV = b.persona?.nombres || ''
+    }
+    
+    if (aV > bV) return sortOrder.value === 'asc' ? 1 : -1
+    if (aV < bV) return sortOrder.value === 'asc' ? -1 : 1
+    return 0
+  })
+  
+  return list
+})
 
 // Local state for modals
 const selectedUser = ref(null)
@@ -210,35 +256,51 @@ const addForm = ref({
   emergencyContacts: []
 })
 
-// Filters local state
-const dniFilter = ref('')
-const medicalStatusFilter = ref('all')
-
 const criticalCount = computed(() => {
-  const list = adminStore.users?.value || []
-  return list.filter(u => (u.medicalStatus || (u.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
+  return patients.value.filter(u => (u.medicalStatus || (u.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
 })
 
 // Methods
+const loadPatients = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    console.log("🔄 Cargando pacientes desde Firebase...")
+    const list = await AdminPatientService.listPatients()
+    console.log("📦 Datos recibidos de Firebase:", list)
+    console.log("📊 Cantidad de pacientes:", list?.length || 0)
+    patients.value = list || []
+    console.log("✅ Pacientes asignados al state:", patients.value)
+  } catch (err) {
+    console.error("❌ Error cargando pacientes:", err)
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
 const refreshData = async () => {
-  await adminStore.refreshData()
+  await loadPatients()
 }
 
 const updateSearch = () => {
-  adminStore.updateFilters({ search: searchQuery.value })
+  // El computed filteredUsers ya reactivo a searchQuery
 }
 
-const updateRoleFilter = () => {
-  adminStore.updateFilters({ role: roleFilter.value })
+const updateDniFilter = () => {
+  // El computed filteredUsers ya reactivo a dniFilter
+}
+
+const updateMedicalStatusFilter = () => {
+  // El computed filteredUsers ya reactivo a medicalStatusFilter
 }
 
 const updateSort = () => {
-  adminStore.updateFilters({ sortBy: sortBy.value })
+  // El computed filteredUsers ya reactivo a sortBy
 }
 
 const toggleSortOrder = () => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  adminStore.updateFilters({ sortOrder: sortOrder.value })
 }
 
 // Action handlers
@@ -265,24 +327,21 @@ const editPatient = (user) => {
 const savePatientEdits = async () => {
   if (!selectedUser.value || !editForm.value) return
   try {
-    if (typeof adminStore.updateUser === 'function') {
-      await adminStore.updateUser(selectedUser.value.id, {
-        persona: { nombres: editForm.value.nombres, apellidos: editForm.value.apellidos },
-        email: editForm.value.email,
-        role: editForm.value.role,
-        isActive: editForm.value.isActive,
-        dni: editForm.value.dni,
-        medicalInfo: editForm.value.medicalInfo,
-        medicalStatus: editForm.value.medicalStatus
-      })
-    } else {
-      console.warn('updateUser no está implementado en adminStore; se simula la edición local.')
-    }
+    await AdminPatientService.updatePatient(selectedUser.value.id, {
+      persona: { nombres: editForm.value.nombres, apellidos: editForm.value.apellidos },
+      email: editForm.value.email,
+      role: editForm.value.role,
+      isActive: editForm.value.isActive,
+      dni: editForm.value.dni,
+      medicalInfo: editForm.value.medicalInfo,
+      medicalStatus: editForm.value.medicalStatus
+    })
+    console.log("✅ Paciente actualizado en Firebase")
+    await loadPatients() // Recargar lista
   } catch (e) {
     console.error('Error guardando paciente:', e)
   } finally {
     closeModals()
-    refreshData()
   }
 }
 
@@ -295,9 +354,7 @@ const deletePatient = (user) => {
 // Instead of hard delete, mark as inactive
 const deactivatePatient = async (user) => {
   if (!user || !user.id) return
-  // get latest from store
-  const storeList = adminStore.users?.value || []
-  const stored = storeList.find(u => u.id === user.id)
+  const stored = patients.value.find(u => u.id === user.id)
   if (!stored) {
     alert('No se encontró el paciente en la lista')
     return
@@ -307,17 +364,10 @@ const deactivatePatient = async (user) => {
   const ok = confirm(confirmMsg)
   if (!ok) return
   try {
-    const newState = { isActive: !willDeactivate }
-    if (typeof adminStore.updateUser === 'function') {
-      // updateUser already updates local state and recalculates stats (see store)
-      await adminStore.updateUser(stored.id, newState)
-      // don't refetch users from external source to avoid overwriting local change
-      if (typeof adminStore.fetchStats === 'function') await adminStore.fetchStats()
-    } else {
-      adminStore.users.value = adminStore.users.value.map(u => u.id === stored.id ? { ...u, ...newState } : u)
-      if (typeof adminStore.fetchStats === 'function') await adminStore.fetchStats()
-    }
-    alert(`Paciente ${getUserFullName(stored)} actualizado: ${newState.isActive ? 'Activo' : 'Inactivo'}`)
+    await AdminPatientService.updatePatient(stored.id, { isActive: !willDeactivate })
+    console.log("✅ Estado del paciente actualizado en Firebase")
+    await loadPatients()
+    alert(`Paciente ${getUserFullName(stored)} actualizado: ${!willDeactivate ? 'Activo' : 'Inactivo'}`)
   } catch (e) {
     console.error('Error actualizando estado del paciente:', e)
     alert('Error actualizando estado. Revisa la consola.')
@@ -352,16 +402,13 @@ const addPatient = async () => {
       role: 'user',
       isActive: true
     }
-    if (typeof adminStore.addUser === 'function') {
-      await adminStore.addUser(payload)
-    } else {
-      console.warn('addUser no está implementado en adminStore; se simula la creación local.')
-    }
+    await AdminPatientService.createPatient(payload)
+    console.log("✅ Paciente creado en Firebase")
+    await loadPatients()
   } catch (e) {
     console.error('Error agregando paciente:', e)
   } finally {
     showAddModal.value = false
-    refreshData()
   }
 }
 
@@ -441,38 +488,7 @@ const formatDate = (timestamp) => {
 
 
 onMounted(async () => {
-  try {
-    adminStore.loading.value = true
-    adminStore.error.value = null
-
-    const list = await AdminPatientService.listPatients()
-
-    // 👇 Aquí puedes ver lo que obtienes directamente de Firestore
-    console.log("📦 Datos originales de Firebase:", list)
-
-    // Normaliza los timestamps si es necesario
-    const normalized = (list || []).map(p => ({
-      ...p,
-      createdAt: p.createdAt && typeof p.createdAt === 'object' && p.createdAt.toDate
-        ? p.createdAt.toDate()
-        : (p.createdAt ? new Date(p.createdAt) : undefined)
-    }))
-
-    // 👇 También puedes mostrar los datos ya normalizados
-    console.log(list[0].persona.nombres)
-
-    // Guarda en el store
-    if (adminStore.users && adminStore.users.value !== undefined) {
-      adminStore.users.value = normalized
-    }
-
-    if (typeof adminStore.fetchStats === 'function') await adminStore.fetchStats()
-  } catch (err) {
-    console.error('❌ Error cargando pacientes desde AdminPatientService:', err)
-    if (adminStore.error) adminStore.error.value = err?.message || 'Error cargando pacientes'
-  } finally {
-    if (adminStore.loading) adminStore.loading.value = false
-  }
+  await loadPatients()
 })
 
 

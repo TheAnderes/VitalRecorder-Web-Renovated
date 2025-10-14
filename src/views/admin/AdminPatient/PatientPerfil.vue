@@ -95,23 +95,26 @@
 </template>
 
 <script setup>
-import { computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAdminStore } from '@/stores/admin'
+import * as AdminPatientService from '@/services/AdminPatientService'
 
 const route = useRoute()
 const router = useRouter()
-const adminStore = useAdminStore()
 
-const selectedId = computed(() => route.query.id || (adminStore.selectedUser?.value?.id))
+// State local
+const patients = ref([])
+const loading = ref(false)
+const selectedPatient = ref(null)
 
-const recentPatients = computed(() => (adminStore.users?.value || []).slice(0, 20))
+const selectedId = computed(() => route.query.id)
+
+const recentPatients = computed(() => patients.value.slice(0, 20))
 
 const selectedUserData = computed(() => {
-  if (adminStore.selectedUser?.value) return adminStore.selectedUser.value
-  // fallback: try to find in users list
-  const list = adminStore.users?.value || []
-  return list.find(u => u.id === (route.query.id)) || null
+  if (selectedPatient.value) return selectedPatient.value
+  // fallback: try to find in patients list
+  return patients.value.find(u => u.id === route.query.id) || null
 })
 
 const getInitial = (u) => {
@@ -160,8 +163,7 @@ const formatDate = (iso) => {
 
 const goToPatient = (p) => {
   router.replace({ path: route.path, query: { id: p.id } })
-  // ensure store selects the user (for detail fetch)
-  if (typeof adminStore.selectUser === 'function') adminStore.selectUser(p.id)
+  selectedPatient.value = p
 }
 
 const editCurrent = () => {
@@ -285,19 +287,37 @@ const printProfile = () => {
   setTimeout(() => w.print(), 400)
 }
 
-// Ensure users are loaded
+// Cargar pacientes desde Firebase
+const loadPatients = async () => {
+  try {
+    loading.value = true
+    console.log("🔄 [PatientPerfil] Cargando pacientes desde Firebase...")
+    const list = await AdminPatientService.listPatients()
+    patients.value = list || []
+    console.log("✅ [PatientPerfil] Pacientes cargados:", patients.value.length)
+    
+    // Si hay un id en la URL, seleccionar ese paciente
+    if (route.query.id) {
+      selectedPatient.value = patients.value.find(p => p.id === route.query.id)
+      console.log("👤 [PatientPerfil] Paciente seleccionado:", selectedPatient.value)
+    }
+  } catch (err) {
+    console.error("❌ [PatientPerfil] Error cargando pacientes:", err)
+  } finally {
+    loading.value = false
+  }
+}
+
 onMounted(async () => {
-  if ((!adminStore.users || (adminStore.users.value || []).length === 0) && typeof adminStore.fetchUsers === 'function') {
-    await adminStore.fetchUsers()
-  }
-  if (route.query.id && typeof adminStore.selectUser === 'function') {
-    adminStore.selectUser(route.query.id)
-  }
+  await loadPatients()
 })
 
 // react to query change
 watch(() => route.query.id, (id) => {
-  if (id && typeof adminStore.selectUser === 'function') adminStore.selectUser(id)
+  if (id) {
+    selectedPatient.value = patients.value.find(p => p.id === id)
+    console.log("👤 [PatientPerfil] Cambio de paciente:", selectedPatient.value)
+  }
 })
 </script>
 

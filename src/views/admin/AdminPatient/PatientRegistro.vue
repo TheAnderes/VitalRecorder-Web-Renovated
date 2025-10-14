@@ -360,12 +360,15 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAdminStore } from '@/stores/admin'
 import { useAdmin } from '@/composables/useAdmin'
+import { useAuth } from '@/composables/useAuth'
+import * as AdminPatientService from '@/services/AdminPatientService'
 
-const adminStore = useAdminStore()
 const { canManageUsers } = useAdmin()
+const { user, getUserName } = useAuth()
 const router = useRouter()
+const patients = ref([])
+const loading = ref(false)
 
 // Helpers
 const generateId = () => `p-${Date.now()}-${Math.floor(Math.random()*9000+1000)}`
@@ -403,7 +406,7 @@ const showPreview = ref(false)
 const duplicateWarning = ref(false)
 const duplicateWarningMessages = ref([])
 
-const currentUserName = computed(() => (adminStore.user?.value?.persona?.nombres ? `${adminStore.user.value.persona.nombres} ${adminStore.user.value.persona.apellidos || ''}` : (adminStore.user?.value?.email || 'Sistema')))
+const currentUserName = computed(() => getUserName() || user.value?.email || 'Sistema')
 
 const registrationDate = computed(() => new Date().toLocaleDateString('es-ES'))
 const registrationTime = computed(() => new Date().toLocaleTimeString('es-ES'))
@@ -483,7 +486,7 @@ const onPhotoSelected = (e) => {
 
 const removePhoto = () => { photoFile.value = null; photoDataUrl.value = '' }
 
-const usersList = computed(() => adminStore.users?.value || [])
+const usersList = computed(() => patients.value)
 
 const checkDuplicates = () => {
   duplicateWarningMessages.value = []
@@ -523,6 +526,8 @@ const openPreview = () => {
 }
 
 const confirmSave = async (viewAfterSave = false) => {
+  console.log("🔵 [PatientRegistro] Iniciando confirmSave, viewAfterSave:", viewAfterSave)
+  
   // final validation
   validateField('nombres')
   validateField('apellidos')
@@ -531,8 +536,11 @@ const confirmSave = async (viewAfterSave = false) => {
   validateField('telefono')
   checkDuplicates()
 
+  console.log("🔍 [PatientRegistro] Errores después de validación:", errors)
+  
   const hasErrors = Object.values(errors).some(v => v)
   if (hasErrors) {
+    console.warn("⚠️ [PatientRegistro] Hay errores de validación")
     alert('Corrija los campos obligatorios antes de guardar.')
     return
   }
@@ -545,32 +553,32 @@ const confirmSave = async (viewAfterSave = false) => {
   }
 
   payload.usuarioRegistro = currentUserName.value
+  console.log("📋 [PatientRegistro] Usuario registro:", payload.usuarioRegistro)
+  console.log("👤 [PatientRegistro] Usuario autenticado:", user.value)
+
+  if (!user.value) {
+    console.error("❌ [PatientRegistro] No hay usuario autenticado")
+    alert("Debe iniciar sesión para registrar pacientes")
+    return
+  }
 
   try {
-    let created
-    if (typeof adminStore.addUser === 'function') {
-      created = await adminStore.addUser(payload)
-    } else {
-      // Simular inserción local
-      if (!adminStore.users) adminStore.users = ref([])
-      adminStore.users.value = adminStore.users?.value || []
-      adminStore.users.value.unshift(payload)
-      created = payload
-      console.warn('addUser no implementado en adminStore; registro simulado localmente.')
-    }
+    console.log("💾 [PatientRegistro] Guardando paciente en Firebase:", payload)
+    const createdId = await AdminPatientService.createPatient(payload)
+    console.log("✅ [PatientRegistro] Paciente creado con ID:", createdId)
+    
     // Success feedback
-    window.alert('Registro guardado correctamente')
+    window.alert('Registro guardado correctamente en Firebase')
     showPreview.value = false
     if (viewAfterSave) {
       // navegar a perfil usando router
-      const idToOpen = created?.id || payload.id
-      router.push({ name: 'admin-patient-perfil', query: { id: idToOpen } }).catch(()=>{})
+      router.push({ name: 'admin-patient-perfil', query: { id: createdId } }).catch(()=>{})
     } else {
       // reset form si fue "Guardar y Crear Otro"
       resetForm()
     }
   } catch (e) {
-    console.error('Error guardando paciente:', e)
+    console.error('❌ [PatientRegistro] Error guardando paciente:', e)
     window.alert('Error guardando paciente. Revise la consola.')
   }
 }
@@ -625,9 +633,22 @@ const printPreview = () => {
   w.print()
 }
 
-onMounted(() => {
+onMounted(async () => {
   // ensure usuario registro
   form.usuarioRegistro = currentUserName.value
+  
+  // Cargar pacientes para validación de duplicados
+  try {
+    loading.value = true
+    console.log("🔄 [PatientRegistro] Cargando pacientes para validación...")
+    const list = await AdminPatientService.listPatients()
+    patients.value = list || []
+    console.log("✅ [PatientRegistro] Pacientes cargados:", patients.value.length)
+  } catch (err) {
+    console.error("❌ [PatientRegistro] Error cargando pacientes:", err)
+  } finally {
+    loading.value = false
+  }
 })
 </script>
 
