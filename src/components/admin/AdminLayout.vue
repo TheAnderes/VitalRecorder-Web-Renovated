@@ -28,6 +28,9 @@
           <slot />
         </div>
       </main>
+      
+      <!-- Footer -->
+      <AdminFooter />
     </div>
   </div>
 </template>
@@ -40,6 +43,7 @@ import { auth } from '@/firebase'
 import { useAuth } from '@/composables/useAuth'
 import AdminSidebar from './AdminSidebar.vue'
 import AdminHeader from './AdminHeader.vue'
+import AdminFooter from './AdminFooter.vue'
 
 const router = useRouter()
 const { user } = useAuth()
