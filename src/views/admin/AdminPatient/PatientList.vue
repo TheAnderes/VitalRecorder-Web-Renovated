@@ -98,9 +98,6 @@
             >
               <option value="all">📋 Todos los estados</option>
               <option value="Activo">✅ Activo</option>
-              <option value="Inactivo">❌ Inactivo</option>
-              <option value="Crítico">🚨 Crítico</option>
-              <option value="En tratamiento">💊 En tratamiento</option>
             </select>
             <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -331,9 +328,7 @@
                   </div>
 
                   <div class="cell status center">
-                    <span class="status-badge" :class="patient.isActive ? 'active' : 'inactive'">
-                      {{ patient.isActive ? 'Activo' : 'Inactivo' }}
-                    </span>
+                    <span class="status-badge active">Activo</span>
                   </div>
               <div class="cell actions center">
                 <div class="action-buttons">
@@ -395,11 +390,13 @@ const ageRangeFilter = ref('all')
 // Stats computadas
 const stats = computed(() => {
   const total = patients.value.length
-  const active = patients.value.filter(p => p.isActive !== false && p.estado !== 'Inactivo').length
-  const inactive = patients.value.filter(p => p.isActive === false || p.estado === 'Inactivo').length
+  // Forzar que todos los pacientes se consideren activos
+  const active = patients.value.length
+  const inactive = 0
   const masculine = patients.value.filter(p => p.persona?.sexo === 'Masculino' || p.persona?.sexo === 'M').length
   const feminine = patients.value.filter(p => p.persona?.sexo === 'Femenino' || p.persona?.sexo === 'F').length
-  const critical = patients.value.filter(p => (p.medicalStatus || (p.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
+  // No se muestran estados críticos; forzar a 0
+  const critical = 0
   
   return { 
     totalUsers: total, 
@@ -519,9 +516,7 @@ const addForm = ref({
   emergencyContacts: []
 })
 
-const criticalCount = computed(() => {
-  return patients.value.filter(u => (u.medicalStatus || (u.isActive ? 'Activo' : 'Inactivo')) === 'Crítico').length
-})
+const criticalCount = computed(() => 0)
 
 // Computed para detectar filtros activos
 const hasActiveFilters = computed(() => {
@@ -568,8 +563,10 @@ const loadPatients = async () => {
     const list = await AdminPatientService.listPatients()
     console.log("📦 Datos recibidos de Firebase:", list)
     console.log("📊 Cantidad de pacientes:", list?.length || 0)
-    patients.value = list || []
-    console.log("✅ Pacientes asignados al state:", patients.value)
+    // Normalizamos los estados: forzar 'Activo' y isActive true en todos los registros
+    const normalized = (list || []).map(p => ({ ...p, isActive: true, estado: 'Activo', medicalStatus: 'Activo' }))
+    patients.value = normalized
+    console.log("✅ Pacientes asignados al state (normalizados a Activo):", patients.value)
   } catch (err) {
     console.error("❌ Error cargando pacientes:", err)
     error.value = err.message
@@ -616,10 +613,12 @@ const editPatient = (user) => {
     apellidos: user.persona?.apellidos || '',
     email: user.email || '',
     role: user.role || 'user',
-    isActive: !!user.isActive,
+    // Forzar activo en edición
+    isActive: true,
     dni: user.dni || '',
     medicalInfo: user.medicalInfo || {},
-    medicalStatus: user.medicalStatus || (user.isActive ? 'Activo' : 'Inactivo')
+    // Forzar estado médico Activo
+    medicalStatus: 'Activo'
   }
   showEditModal.value = true
 }
@@ -759,16 +758,7 @@ const getRoleDisplayName = (role) => {
   return roleNames[role] || role
 }
 
-const statusClass = (status) => {
-  if (!status) return 'inactive'
-  const map = {
-    'Activo': 'active',
-    'Inactivo': 'inactive',
-    'Crítico': 'inactive',
-    'En tratamiento': 'active'
-  }
-  return map[status] || 'inactive'
-}
+const statusClass = (status) => 'active'
 
 const calculateAge = (patient) => {
   try {
