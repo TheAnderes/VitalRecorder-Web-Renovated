@@ -62,10 +62,7 @@
           <span class="stat-number">{{ stats.totalUsers }}</span>
           <span class="stat-label">total</span>
         </div>
-        <div class="stat-item">
-          <span class="stat-number">{{ stats.totalAdmins }}</span>
-          <span class="stat-label">administradores</span>
-        </div>
+      
       </div>
 
       <!-- Loading State -->
@@ -137,9 +134,9 @@
                   {{ formatDate(user.createdAt) }}
                 </div>
                 <div class="cell status center">
-                  <span class="status-badge" :class="user.isActive ? 'active' : 'inactive'">
+                  <span class="status-badge" :class="isUserActive(user) ? 'active' : 'inactive'">
                     <span class="status-dot"></span>
-                    {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                    {{ isUserActive(user) ? 'Activo' : 'Inactivo' }}
                   </span>
                 </div>
                 <div class="cell actions center">
@@ -385,9 +382,15 @@ const editUser = (user) => {
     apellidos: user.persona?.apellidos || '',
     email: user.email || '',
     role: user.role || 'user',
-    isActive: !!user.isActive
+    // Treat undefined as active by default
+    isActive: user.isActive === false ? false : true
   }
   showEditModal.value = true
+}
+
+const isUserActive = (user) => {
+  // undefined or true -> active; only explicit false -> inactive
+  return user && user.isActive !== false
 }
 
 const saveUserEdits = async () => {
