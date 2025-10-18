@@ -3,7 +3,7 @@
     <div class="footer-content">
       <div class="footer-left">
         <span class="footer-brand">VitalSystems Admin</span>
-        <span class="footer-copyright">© 2025 VitalSystems. Todos los derechos reservados.</span>
+        <span class="footer-copyright">© {{ currentYear }} VitalSystems. Todos los derechos reservados.</span>
       </div>
       <div class="footer-right">
         <a href="mailto:contacto@vitalsystems.com" class="footer-link">
@@ -18,6 +18,12 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+
+const currentYear = computed(() => new Date().getFullYear())
+</script>
 
 <style scoped>
 .admin-footer {
