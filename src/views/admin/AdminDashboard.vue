@@ -9,67 +9,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon users">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
-          </svg>
-        </div>
-        <div class="stat-content">
-          <h3>{{ stats.totalUsers }}</h3>
-          <p>Total de Usuarios</p>
-          <span class="stat-change positive">
-            +{{ stats.regularUsers }} usuarios normales
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon admins">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
-          </svg>
-        </div>
-        <div class="stat-content">
-          <h3>{{ stats.totalAdmins }}</h3>
-          <p>Administradores</p>
-          <span class="stat-change neutral">
-            {{ stats.regularUsers }} usuarios regulares
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon active">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/>
-          </svg>
-        </div>
-        <div class="stat-content">
-          <h3>24/7</h3>
-          <p>Sistema Activo</p>
-          <span class="stat-change positive">
-            ✓ Funcionando correctamente
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon growth">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
-          </svg>
-        </div>
-        <div class="stat-content">
-          <h3>{{ growthPercentage }}%</h3>
-          <p>Crecimiento</p>
-          <span class="stat-change positive">
-            +15% este mes
-          </span>
-        </div>
-      </div>
-    </div>
+    
 
     <!-- Quick Actions -->
     <div class="quick-actions">
@@ -145,43 +85,6 @@
           </div>
         </div>
         
-        <!-- System Health -->
-        <div class="system-health">
-          <h3>Estado del Sistema</h3>
-          <div class="health-metrics">
-            <div class="health-item">
-              <div class="health-indicator good"></div>
-              <div class="health-info">
-                <span class="health-label">Base de Datos</span>
-                <span class="health-value">Operacional</span>
-              </div>
-            </div>
-            
-            <div class="health-item">
-              <div class="health-indicator good"></div>
-              <div class="health-info">
-                <span class="health-label">API</span>
-                <span class="health-value">< 150ms</span>
-              </div>
-            </div>
-            
-            <div class="health-item">
-              <div class="health-indicator warning"></div>
-              <div class="health-info">
-                <span class="health-label">Almacenamiento</span>
-                <span class="health-value">75% usado</span>
-              </div>
-            </div>
-            
-            <div class="health-item">
-              <div class="health-indicator good"></div>
-              <div class="health-info">
-                <span class="health-label">Usuarios Online</span>
-                <span class="health-value">{{ onlineUsers }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
   </AdminLayout>
 </template>
 
