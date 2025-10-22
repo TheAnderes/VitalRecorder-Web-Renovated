@@ -176,7 +176,7 @@ onUnmounted(() => {
             title="Configura en la app"
             text="Descarga la aplicación en Google Play."
             :icon="IconApp"
-            url="https://drive.google.com/file/d/1X1kfyRmOlHzWPFpjSQW-10kk2j1tcBnl/view"
+            url="https://drive.google.com/file/d/1ejgnr03A9f1jFonTJ16_Y4AASaWVALPZ/view?usp=drivesdk"
           />
           <HowCard
             :step="2"
@@ -267,7 +267,7 @@ onUnmounted(() => {
 export default {
   data() {
     return {
-      url: "https://drive.google.com/file/d/1X1kfyRmOlHzWPFpjSQW-10kk2j1tcBnl/view",
+      url: "https://drive.google.com/file/d/1ejgnr03A9f1jFonTJ16_Y4AASaWVALPZ/view?usp=drivesdk",
     };
   },
   methods: {

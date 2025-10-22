@@ -131,7 +131,7 @@ const getUserInitial = computed(() => {
 // Funciones
 const downloadApp = () => {
   // Redireccionar al archivo APK en Google Drive
-  window.open('https://drive.google.com/file/d/1X1kfyRmOlHzWPFpjSQW-10kk2j1tcBnl/view', '_blank')
+  window.open('https://drive.google.com/file/d/1ejgnr03A9f1jFonTJ16_Y4AASaWVALPZ/view?usp=drivesdk', '_blank')
 }
 
 // Lifecycle
