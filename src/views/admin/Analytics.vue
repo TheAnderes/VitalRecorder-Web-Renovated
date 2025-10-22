@@ -210,7 +210,8 @@ import AdminLayout from '@/components/admin/AdminLayout.vue'
 import BarChart from '@/components/shared/BarChart.vue'
 import PieChart from '@/components/shared/PieChart.vue'
 import LineChart from '@/components/shared/LineChart.vue'
-import { getDemographicAnalytics, getGrowthData, getRecentActivity } from '@/data/placeholderUsers'
+import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 import { useAdmin } from '@/composables/useAdmin'
 
 const { getBasicStats, getRecentActivity: getRecentActivityComposable } = useAdmin()
@@ -323,27 +324,120 @@ const loadAnalytics = async () => {
     // Cargar estadísticas básicas
     const stats = await getBasicStats()
     analytics.value = {
-      totalUsers: stats.totalUsers,
-      activeUsers: Math.round((stats.activeUsers / stats.totalUsers) * 100) || 95,
-      recentUsers: stats.recentRegistrations,
-      totalAdmins: stats.totalAdmins,
-      totalSuperAdmins: stats.totalSuperAdmins,
+      totalUsers: stats.totalUsers || 0,
+      activeUsers: 0,
+      recentUsers: 0,
+      totalAdmins: stats.totalAdmins || 0,
+      totalSuperAdmins: stats.totalSuperAdmins || 0,
       usersWithFamily: 0,
       notificationsEnabled: 0,
       silentModeUsers: 0
     }
     
-    // Cargar datos demográficos
-    demographicData.value = getDemographicAnalytics()
-    analytics.value.usersWithFamily = demographicData.value.usersWithFamily
-    analytics.value.notificationsEnabled = demographicData.value.notificationStats.enabled
-    analytics.value.silentModeUsers = demographicData.value.notificationStats.silentMode
-    
-    // Cargar datos de crecimiento
-    growthData.value = getGrowthData()
-    
-    // Cargar actividad reciente
-    recentActivity.value = getRecentActivity()
+      // Cargar usuarios y pacientes reales desde Firestore
+      const [usersList, patientsList] = await Promise.all([
+        userService.getAllUsers(),
+        AdminPatientService.listPatients()
+      ])
+
+      // Basic analytics
+      analytics.value.totalUsers = usersList.length
+      analytics.value.totalAdmins = usersList.filter(u => u.role === 'admin' || u.role === 'super_admin').length
+      analytics.value.recentUsers = usersList.filter(u => {
+        const createdAt = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
+        const days = selectedPeriod.value === '7days' ? 7 : selectedPeriod.value === '30days' ? 30 : selectedPeriod.value === '3months' ? 90 : 365
+        const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days)
+        return createdAt >= cutoff
+      }).length
+
+      // Active users: prefer patients collection 'isActive' if present
+      const activePatientsCount = patientsList.filter(p => p.isActive === true || p.estado === 'Activo' || p.estado === 'activo').length
+      analytics.value.activeUsers = analytics.value.totalUsers ? Math.round((activePatientsCount / analytics.value.totalUsers) * 100) : 0
+
+      // Settings-based stats from users collection
+      analytics.value.usersWithFamily = usersList.filter(u => !!(u.settings && u.settings.familiar_email)).length
+      analytics.value.notificationsEnabled = usersList.filter(u => !!(u.settings && u.settings.notificar_a_familiar)).length
+      analytics.value.silentModeUsers = usersList.filter(u => !!(u.settings && u.settings.modo_silencio)).length
+
+      // Demographics: genders and age groups
+      const genders = { masculino: 0, femenino: 0, otro: 0 }
+      const ageGroups = {}
+      usersList.forEach(u => {
+        const sexo = (u.persona && u.persona.sexo) ? u.persona.sexo.toString().toLowerCase() : 'otro'
+        if (sexo.includes('mascul')) genders.masculino++
+        else if (sexo.includes('femen')) genders.femenino++
+        else genders.otro++
+
+        // age group
+        let age = null
+        if (u.persona && u.persona.fecha_nac) {
+          const d = (u.persona.fecha_nac.toDate) ? u.persona.fecha_nac.toDate() : new Date(u.persona.fecha_nac)
+          const now = new Date()
+          age = now.getFullYear() - d.getFullYear()
+          const m = now.getMonth() - d.getMonth()
+          if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--
+        }
+        let label = 'Desconocido'
+        if (age !== null) {
+          if (age < 12) label = 'Niño'
+          else if (age < 18) label = 'Joven'
+          else if (age < 65) label = 'Adulto'
+          else label = 'Adulto Mayor'
+        }
+        ageGroups[label] = (ageGroups[label] || 0) + 1
+      })
+
+      demographicData.value = {
+        genderStats: { masculino: genders.masculino, femenino: genders.femenino, otro: genders.otro },
+        ageGroups,
+        usersWithFamily: analytics.value.usersWithFamily,
+        notificationStats: { enabled: analytics.value.notificationsEnabled, silentMode: analytics.value.silentModeUsers }
+      }
+
+      // Growth data: users per month for the last 12 months (or shorter depending on selectedPeriod)
+      const months = []
+      const now = new Date()
+      const monthsCount = selectedPeriod.value === '7days' ? 1 : selectedPeriod.value === '30days' ? 3 : selectedPeriod.value === '3months' ? 6 : 12
+      for (let i = monthsCount - 1; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+        months.push(d.toLocaleString('default', { month: 'short', year: 'numeric' }))
+      }
+
+      const monthlyCounts = months.map((mLabel, idx) => {
+        // compute start and end for month index
+        const start = new Date(now.getFullYear(), now.getMonth() - (monthsCount - 1 - idx), 1)
+        const end = new Date(start.getFullYear(), start.getMonth() + 1, 1)
+        const count = usersList.filter(u => {
+          const createdAt = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
+          return createdAt >= start && createdAt < end
+        }).length
+        return count
+      })
+
+      growthData.value = { months, data: monthlyCounts }
+
+      // Recent activity: combine recent user registrations and recent patient updates/creations
+      const activities = []
+      usersList.slice().sort((a,b)=>{ // newest first
+        const at = (a.createdAt && a.createdAt.toDate) ? a.createdAt.toDate() : new Date(a.createdAt || 0)
+        const bt = (b.createdAt && b.createdAt.toDate) ? b.createdAt.toDate() : new Date(b.createdAt || 0)
+        return bt - at
+      }).slice(0,8).forEach(u => {
+        const ts = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
+        activities.push({ id: `u-${u.id}`, icon: 'user', message: `Registro: ${u.persona?.nombres || u.email || 'Usuario'}`, timestamp: ts })
+      })
+
+      patientsList.slice().sort((a,b)=>{
+        const at = (a.updatedAt && a.updatedAt.toDate) ? a.updatedAt.toDate() : new Date(a.updatedAt || a.createdAt || 0)
+        const bt = (b.updatedAt && b.updatedAt.toDate) ? b.updatedAt.toDate() : new Date(b.updatedAt || b.createdAt || 0)
+        return bt - at
+      }).slice(0,8).forEach(p => {
+        const ts = (p.updatedAt && p.updatedAt.toDate) ? p.updatedAt.toDate() : new Date(p.updatedAt || p.createdAt || Date.now())
+        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Paciente actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
+      })
+
+      // sort activities by timestamp and keep top 12
+      recentActivity.value = activities.sort((a,b)=> b.timestamp - a.timestamp).slice(0,12)
     
   } catch (error) {
     console.error('Error cargando analíticas:', error)

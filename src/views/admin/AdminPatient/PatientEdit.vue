@@ -36,23 +36,18 @@
         <div class="field"><label>Preferencia de Contacto</label><input v-model="local.preferenciaContacto" /></div>
         <div class="field wide">
           <label>Dirección</label>
-          <input v-model="local.direccion.calle" placeholder="Calle" />
-          <input v-model="local.direccion.numero" placeholder="Número" />
-          <input v-model="local.direccion.zona" placeholder="Zona" />
-          <input v-model="local.direccion.ciudad" placeholder="Ciudad" />
-          <input v-model="local.direccion.provincia" placeholder="Provincia" />
+            <div class="address-grid">
+              <input v-model="local.direccion.calle" placeholder="Calle" />
+              <input v-model="local.direccion.numero" placeholder="Número" />
+              <input v-model="local.direccion.zona" placeholder="Zona" />
+              <input v-model="local.direccion.ciudad" placeholder="Ciudad" />
+              <input v-model="local.direccion.provincia" placeholder="Provincia" />
+            </div>
         </div>
       </div>
 
       <!-- RESPONSABLE -->
-      <h3>Responsable</h3>
-      <div class="form-grid">
-        <div class="field"><label>Nombre</label><input v-model="local.responsable.nombre" /></div>
-        <div class="field"><label>Parentesco</label><input v-model="local.responsable.parentesco" /></div>
-        <div class="field"><label>Teléfono</label><input v-model="local.responsable.telefono" /></div>
-        <div class="field"><label>Email</label><input v-model="local.responsable.email" /></div>
-        <div class="field wide"><label>Dirección</label><input v-model="local.responsable.direccion" /></div>
-      </div>
+      <!-- Responsable section removed as requested -->
 
       <!-- INFORMACIÓN MÉDICA -->
       <h3>Información Médica</h3>
@@ -105,6 +100,7 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 
 const route = useRoute()
 const router = useRouter()
@@ -116,7 +112,7 @@ const loading = ref(false)
 const local = reactive({
   persona: {},
   direccion: {},
-  responsable: {},
+  // responsable removed
   medicalInfo: { chronic: {}, allergies: [] },
   seguro: {}
 })
@@ -134,11 +130,86 @@ const loadPatients = async () => {
     const found = patients.value.find(u => u.id === editId)
     if (found) {
       patient.value = found
-      Object.assign(local, JSON.parse(JSON.stringify(found)))
+      const clone = JSON.parse(JSON.stringify(found))
+      // shallow copy top-level simple fields
+  local.persona = clone.persona || {}
+  local.direccion = clone.direccion || {}
+      // ensure medicalInfo structure exists
+      local.medicalInfo = clone.medicalInfo || { chronic: {}, allergies: [] }
+      if (!local.medicalInfo.chronic) local.medicalInfo.chronic = {}
+      if (!Array.isArray(local.medicalInfo.allergies)) local.medicalInfo.allergies = []
+  local.seguro = clone.seguro || {}
+      // copy simple top-level primitive fields if present
+      local.fechaNacimiento = clone.fechaNacimiento || local.fechaNacimiento
+      local.dni = clone.dni || local.dni
+      local.ocupacion = clone.ocupacion || local.ocupacion
+      local.telefono = clone.telefono || local.telefono
+      local.telefono2 = clone.telefono2 || local.telefono2
+      local.email = clone.email || local.email
+      local.preferenciaContacto = clone.preferenciaContacto || local.preferenciaContacto
+      local.observaciones = clone.observaciones || local.observaciones
       allergyText.value = (local.medicalInfo?.allergies || []).join(', ')
       console.log("👤 [PatientEdit] Paciente cargado para edición:", patient.value)
     } else {
       console.warn("⚠️ [PatientEdit] No se encontró el paciente con id:", editId)
+      // Intentar crear un documento mínimo en patients si existe un usuario con este id
+      try {
+        const possibleUser = await userService.getUserById(editId)
+        if (possibleUser) {
+          console.log('ℹ️ [PatientEdit] Se encontró usuario pero no paciente. Creando paciente mínimo...')
+          const minimal = {
+            persona: {
+              nombres: possibleUser.persona?.nombres || '',
+              apellidos: possibleUser.persona?.apellidos || '',
+              sexo: possibleUser.persona?.sexo || ''
+            },
+            dni: possibleUser.dni || possibleUser.ci || '',
+            telefono: possibleUser.telefono || possibleUser.phone || '',
+            email: possibleUser.email || '',
+            direccion: {
+              calle: '',
+              numero: '',
+              zona: '',
+              ciudad: possibleUser.direccion?.ciudad || 'N/D',
+              provincia: possibleUser.direccion?.provincia || 'N/D'
+            },
+            medicalInfo: { chronic: {}, allergies: [] },
+            seguro: {},
+            observaciones: '',
+            estado: 'Activo',
+            isActive: true,
+            userUid: possibleUser.id
+          }
+
+          const newId = await AdminPatientService.createPatient(minimal)
+          console.log('✅ [PatientEdit] Paciente mínimo creado con ID:', newId)
+          // recargar la lista y setear el paciente creado
+          const newDoc = await AdminPatientService.getPatient(newId)
+          if (newDoc) {
+            patients.value.push(newDoc)
+            patient.value = newDoc
+            const clone = JSON.parse(JSON.stringify(newDoc))
+            local.persona = clone.persona || {}
+            local.direccion = clone.direccion || {}
+            local.medicalInfo = clone.medicalInfo || { chronic: {}, allergies: [] }
+            if (!local.medicalInfo.chronic) local.medicalInfo.chronic = {}
+            if (!Array.isArray(local.medicalInfo.allergies)) local.medicalInfo.allergies = []
+            local.seguro = clone.seguro || {}
+            local.fechaNacimiento = clone.fechaNacimiento || local.fechaNacimiento
+            local.dni = clone.dni || local.dni
+            local.ocupacion = clone.ocupacion || local.ocupacion
+            local.telefono = clone.telefono || local.telefono
+            local.telefono2 = clone.telefono2 || local.telefono2
+            local.email = clone.email || local.email
+            local.preferenciaContacto = clone.preferenciaContacto || local.preferenciaContacto
+            local.observaciones = clone.observaciones || local.observaciones
+            allergyText.value = (local.medicalInfo?.allergies || []).join(', ')
+            console.log('👤 [PatientEdit] Paciente mínimo cargado para edición:', patient.value)
+          }
+        }
+      } catch (createErr) {
+        console.error('❌ [PatientEdit] Error creando paciente mínimo:', createErr)
+      }
     }
   } catch (err) {
     console.error("❌ [PatientEdit] Error cargando pacientes:", err)
@@ -154,8 +225,42 @@ watch(allergyText, (val) => {
 const save = async () => {
   if (!patient.value) return
   try {
-    await AdminPatientService.updatePatient(patient.value.id, local)
-    console.log("✅ [PatientEdit] Paciente actualizado en Firebase")
+    // Comprobar si el documento existe en Firestore antes de intentar update
+    const existing = await AdminPatientService.getPatient(patient.value.id)
+    if (existing) {
+      await AdminPatientService.updatePatient(patient.value.id, local)
+      console.log("✅ [PatientEdit] Paciente actualizado en Firebase (update)")
+    } else {
+      // Si no existe, crear un nuevo documento en la colección patients
+      const newId = await AdminPatientService.createPatient(local)
+      console.log("ℹ️ [PatientEdit] Paciente no existía: creado nuevo ID:", newId)
+      // actualizar referencia local y patient.value.id para mantener consistencia
+      patient.value.id = newId
+    }
+    // Si el paciente está vinculado a un usuario, actualizar también los datos compartidos
+    try {
+      const userId = patient.value.userUid || patient.value.userDocId || patient.value.userId || null
+      if (userId) {
+        // Construir payload para users: mantener la misma estructura que usan los usuarios
+        const userPatch = {}
+        // persona
+        userPatch.persona = {
+          nombres: local.persona?.nombres || '',
+          apellidos: local.persona?.apellidos || '',
+          fecha_nac: local.fechaNacimiento || null
+        }
+        // telefono y email si están presentes
+        if (local.telefono !== undefined) userPatch.telefono = local.telefono
+        if (local.email !== undefined) userPatch.email = local.email
+
+        console.log('🔁 [PatientEdit] Actualizando usuario vinculado', userId, userPatch)
+        await userService.updateUser(userId, userPatch)
+        console.log('✅ [PatientEdit] Usuario vinculado actualizado')
+      }
+    } catch (uErr) {
+      console.error('❌ [PatientEdit] Error actualizando user vinculado:', uErr)
+      // No abortar el flujo principal; el paciente ya fue actualizado
+    }
     router.push({ name: 'admin-patient-perfil', query: { id: patient.value.id } })
   } catch (e) {
     console.error('Error guardando edición:', e)
@@ -170,15 +275,76 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.form-card { padding:1.15rem; border-radius:12px; background:white; box-shadow:0 8px 24px rgba(2,6,23,0.04) }
-.form-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:1rem }
+.form-card {
+  padding:1.15rem;
+  border-radius:12px;
+  background:white;
+  box-shadow:0 8px 24px rgba(2,6,23,0.04);
+  max-width: 1100px; /* prevent the card stretching too wide */
+  margin: 0 auto; /* center on wide screens */
+}
+.form-grid {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:1rem;
+  align-items: start; /* make rows align at top so labels/controls don't vertically center */
+}
 .field.wide { grid-column: 1 / -1 }
 h3 { margin-top:1.2rem; color:#111827; font-size:1.1rem }
 .form-actions { display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1.15rem }
 .primary { background:#2563eb; color:white; border:none; padding:0.8rem 1rem; border-radius:10px; font-weight:600 }
 .secondary { background:#f3f4f6; color:#0f172a; border:none; padding:0.75rem 0.95rem; border-radius:10px }
-.form-card input, textarea, select { width:100%; padding:0.85rem 0.95rem; border-radius:10px; border:1px solid #e6e9ee }
+.form-card input, .form-card textarea, .form-card select {
+  width:100%;
+  padding:0.7rem 0.9rem;
+  border-radius:10px;
+  border:1px solid #e6e9ee;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Ensure labels sit above inputs and fields stack vertically */
+.form-grid .field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+.form-grid .field label {
+  display: block;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: #111827;
+}
+.form-card input[type='date'] { max-width: 320px }
 .form-card input:focus, textarea:focus, select:focus { outline:none; border-color:rgba(37,99,235,0.9); box-shadow:0 6px 18px rgba(37,99,235,0.06) }
-textarea { resize: vertical; min-height:80px }
+textarea { resize: vertical; min-height:80px; width:100%; max-width:100%; }
+
+/* Address grid: compact layout for address subfields */
+.address-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; /* calle | numero | zona */
+  gap: 0.6rem;
+}
+.address-grid input { width:100%; max-width:100%; }
+
+/* Ensure wide fields span the full grid width */
+.field.wide textarea, .field.wide input { width: 100%; max-width: 100%; }
+
+/* make additional address fields appear below on smaller screens */
+.address-grid input[placeholder='Ciudad'],
+.address-grid input[placeholder='Provincia'] {
+  grid-column: 1 / -1;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .form-card { max-width: 920px }
+  .form-grid { grid-template-columns: 1fr }
+  .address-grid { grid-template-columns: 1fr }
+}
+
 @media (max-width:768px) { .form-grid{ grid-template-columns: 1fr } }
 </style>

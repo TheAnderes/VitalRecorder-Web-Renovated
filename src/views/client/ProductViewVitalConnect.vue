@@ -69,7 +69,7 @@ onUnmounted(() => {
     <!-- BLOQUE PRINCIPAL -->
     <section class="product-intro">
       <div class="product-view-content-wrapper">
-        <h1 class="product-hero-title">Vital Connect</h1>
+        <h1 class="product-hero-title">VITAL CONNECT</h1>
         <div class="product-container product-intro-grid">
           <div class="product-intro-text">
             <h2 class="product-intro-heading">
@@ -267,13 +267,12 @@ export default {
 .product-hero-title {
   font-family: var(--tipografia);
   font-weight: 900;
-  font-size: 80px;
+  font-size: 90px;
   font-weight: black;
   color: #ffffff;
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
   margin: 0;
-  text-decoration: underline 4px #ffffff;
-  text-underline-offset: 20px;
+
   margin-left: 0;
   text-align: left;
 }
@@ -312,7 +311,7 @@ export default {
 .product-intro-lead {
   text-align: center;
   padding: 10px;
-  font-size: 27px;
+  font-size: 25px;
   font-weight: var(--semibold);
   line-height: 1.6;
   color: #414143;

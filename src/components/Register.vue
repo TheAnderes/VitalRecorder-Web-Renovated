@@ -82,6 +82,7 @@ import { ref } from 'vue';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'vue-router';
+import { useAdmin } from '@/composables/useAdmin';
 import { auth, db } from '@/firebase.js'; // Importamos la instancia de auth y db
 import Swal from 'sweetalert2'; // Importamos SweetAlert2
 import PrimaryButton from './shared/PrimaryButton.vue';
@@ -128,6 +129,31 @@ const handleRegister = async () => {
       displayName: fullName.value.trim(),
     });
 
+    // Preguntar al usuario qué rol desea al registrarse
+    const { value: selectedRole } = await Swal.fire({
+      title: '¿Eres cuidador o paciente?',
+      input: 'radio',
+      inputOptions: {
+        paciente: 'Paciente (usuario)',
+        cuidador: 'Cuidador'
+      },
+      inputValidator: (value) => {
+        if (!value) return 'Por favor selecciona una opción';
+        return null;
+      },
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      reverseButtons: true
+    });
+
+    if (!selectedRole) {
+      isLoading.value = false;
+      return; // usuario canceló
+    }
+
+    const roleToSave = selectedRole === 'cuidador' ? 'cuidador' : 'user';
+
     // Separar nombres y apellidos del fullName
     const nameParts = fullName.value.trim().split(' ');
     const nombres = nameParts[0] || '';
@@ -146,7 +172,7 @@ const handleRegister = async () => {
         nombres: nombres,
         sexo: null
       },
-      role: 'user', // Rol automático
+      role: roleToSave, // Guardar el rol elegido por el usuario
       settings: {
         familiar_email: null,
         intensidad_vibracion: 2,
@@ -169,8 +195,19 @@ const handleRegister = async () => {
       }
     });
 
-    // Redirigir al login después de la alerta
-    router.push("/login");
+    // Redirigir según rol después de la alerta
+    try {
+      const { getUserRole } = useAdmin();
+      const newRole = await getUserRole(user.uid);
+      if (newRole === 'admin' || newRole === 'super_admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (e) {
+      console.error('Error al obtener rol después del registro (Register.vue):', e);
+      router.push('/dashboard');
+    }
 
   } catch (error) {
     console.error("Error al registrarse:", error);

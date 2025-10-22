@@ -98,6 +98,7 @@
             >
               <option value="all">📋 Todos los estados</option>
               <option value="Activo">✅ Activo</option>
+              <option value="Inactivo">❌ Inactivo</option>
             </select>
             <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -279,7 +280,8 @@
           <div class="grid-header">
             <div class="cell user">Paciente</div>
             <div class="cell contact">Información de Contacto</div>
-            <div class="cell medical">Responsable</div>
+            <div class="cell gender">Género</div>
+            <div class="cell department">Departamento</div>
             <div class="cell date center">Fecha de ingreso</div>
             <div class="cell status center">Estado</div>
             <div class="cell actions center">Acciones</div>
@@ -309,26 +311,23 @@
                 </div>
               </div>
 
-              <div class="cell medical">
-                <div class="responsible-stacked">
-                  <div class="responsible-name">{{ getResponsableName(patient) }}</div>
-                  <div class="responsible-details">
-                    <span v-if="patient.responsable?.parentesco">{{ patient.responsable.parentesco }}</span>
-                    <span v-if="patient.responsable?.parentesco && patient.responsable?.telefono"> • </span>
-                    <span v-if="patient.responsable?.telefono">📱 {{ patient.responsable.telefono }}</span>
-                  </div>
-                  <div class="responsible-email" v-if="patient.responsable?.correo || patient.responsable?.email">
-                    📧 {{ patient.responsable.correo || patient.responsable.email }}
-                  </div>
-                </div>
+              <div class="cell gender">
+                <div style="font-weight:600; color:#111827;">{{ formatResponsableSexo(patient.persona?.sexo || patient.persona?.gender || patient.sexo || '') }}</div>
+                <div style="font-size:0.82rem; color:#6b7280;">{{ patient.persona?.sexo || patient.persona?.gender || patient.sexo || 'N/D' }}</div>
+              </div>
+
+              <div class="cell department">
+                <div style="font-weight:600; color:#111827;">{{ patient.persona?.departamento || patient.departamento || patient.patientDoc?.persona?.departamento || 'N/D' }}</div>
               </div>
 
                   <div class="cell date center">
-                    <span>{{ formatDate(patient.createdAt) }}</span>
+                    <span>{{ formatDate(patient.patientCreatedAt || patient.createdAt || patient.patientDoc?.createdAt) }}</span>
                   </div>
 
                   <div class="cell status center">
-                    <span class="status-badge active">Activo</span>
+                    <span :class="['status-badge', (patient.isActive === false || String(patient.estado || '').toLowerCase() === 'inactivo') ? 'inactive' : 'active']">
+                      {{ (patient.isActive === false || String(patient.estado || '').toLowerCase() === 'inactivo') ? 'Inactivo' : 'Activo' }}
+                    </span>
                   </div>
               <div class="cell actions center">
                 <div class="action-buttons">
@@ -370,6 +369,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
 import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 
 const { canManageUsers, canDeleteUsers } = useAdmin()
 const router = useRouter()
@@ -390,22 +390,37 @@ const ageRangeFilter = ref('all')
 // Stats computadas
 const stats = computed(() => {
   const total = patients.value.length
-  // Forzar que todos los pacientes se consideren activos
-  const active = patients.value.length
-  const inactive = 0
+
+  // Cuenta activa/inactiva comprobando varios lugares donde pueda estar el estado
+  const isInactive = (p) => {
+    try {
+      // prioridad: patientDoc, luego top-level fields
+      const pd = p.patientDoc
+      if (pd && typeof pd.isActive === 'boolean') return pd.isActive === false
+      if (pd && pd.estado) return String(pd.estado).toLowerCase() === 'inactivo'
+
+      if (typeof p.isActive === 'boolean') return p.isActive === false
+      if (p.estado) return String(p.estado).toLowerCase() === 'inactivo'
+
+      return false
+    } catch (e) { return false }
+  }
+
+  const active = patients.value.filter(p => !isInactive(p)).length
+  const inactive = patients.value.filter(p => isInactive(p)).length
+
   const masculine = patients.value.filter(p => p.persona?.sexo === 'Masculino' || p.persona?.sexo === 'M').length
   const feminine = patients.value.filter(p => p.persona?.sexo === 'Femenino' || p.persona?.sexo === 'F').length
-  // No se muestran estados críticos; forzar a 0
   const critical = 0
-  
-  return { 
-    totalUsers: total, 
-    total, 
+
+  return {
+    totalUsers: total,
+    total,
     activePatients: active,
     inactivePatients: inactive,
     masculinePatients: masculine,
     femininePatients: feminine,
-    criticalPatients: critical 
+    criticalPatients: critical
   }
 })
 
@@ -471,6 +486,15 @@ const filteredUsers = computed(() => {
     })
   }
   
+  // Filtro por rol
+  if (roleFilter.value && roleFilter.value !== 'all') {
+    list = list.filter(p => {
+      // users from user collection will have role; patients may have role mirrored
+      const role = p.role || p.userRole || 'user'
+      return role === roleFilter.value
+    })
+  }
+  
   // Ordenamiento
   list.sort((a, b) => {
     let aV, bV
@@ -524,7 +548,8 @@ const hasActiveFilters = computed(() => {
          dniFilter.value !== '' ||
          medicalStatusFilter.value !== 'all' ||
          genderFilter.value !== 'all' ||
-         ageRangeFilter.value !== 'all'
+         ageRangeFilter.value !== 'all' ||
+         roleFilter.value !== 'all'
 })
 
 // Methods
@@ -534,6 +559,7 @@ const clearAllFilters = () => {
   medicalStatusFilter.value = 'all'
   genderFilter.value = 'all'
   ageRangeFilter.value = 'all'
+  roleFilter.value = 'all'
 }
 
 const getAgeRangeLabel = (range) => {
@@ -555,20 +581,91 @@ const updateAgeRangeFilter = () => {
 }
 
 // Methods
+// New: load users (role 'user') and merge linked patient data when available
+const loadUsersAndMergePatients = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    console.log("🔄 Cargando usuarios (role:user) y pacientes desde Firebase...")
+
+    // Load all users and then filter client-side for role 'user'
+    const allUsers = await userService.getAllUsers()
+    const users = (allUsers || []).filter(u => (u.role || 'user') === 'user')
+
+    // Load patients to merge contact info when linked
+    const patientDocs = await AdminPatientService.listPatients()
+
+    // Build quick lookups by possible link fields
+    const byEmail = {}
+    const byUid = {}
+    const byDocId = {}
+    ;(patientDocs || []).forEach(p => {
+      if (p.email) byEmail[(p.email || '').toLowerCase()] = p
+      if (p.userEmail) byEmail[(p.userEmail || '').toLowerCase()] = p
+      if (p.userUid) byUid[p.userUid] = p
+      if (p.userDocId) byDocId[p.userDocId] = p
+      if (p.id) byDocId[p.id] = p
+    })
+
+    // Merge patient contact details into user object where available
+    const merged = users.map(u => {
+      const emailKey = (u.email || '').toLowerCase()
+      const linked = byUid[u.uid] || byUid[u.userUid] || byDocId[u.id] || byDocId[u.userDocId] || byEmail[emailKey] || null
+
+      // create merged view: prefer user fields but copy contact & persona from patient link
+      const mergedItem = {
+        id: u.id,
+        userId: u.id,
+        userUid: u.uid || u.userUid || null,
+        userEmail: u.email,
+        role: u.role || 'user',
+        persona: { ...(u.persona || {}) },
+        email: u.email,
+        telefono: u.persona?.telefono || u.telefono || '',
+        dni: u.persona?.dni || u.dni || '' ,
+        // keep medical info from user or linked patient if exists
+        medicalInfo: u.medicalInfo || (linked ? linked.medicalInfo : undefined),
+        // attach link to patient doc id for navigation/editing
+        linkedPatientId: linked?.id || null,
+        // patient document creation timestamp (for 'fecha de ingreso')
+        patientCreatedAt: linked?.createdAt || linked?.created_at || null,
+        // attach full patient object as nested if needed
+        patientDoc: linked || null,
+        // Preserve active state and human-readable estado from linked patient when available,
+        // otherwise use values from the user object if present, otherwise default to true/'Activo'
+        isActive: (linked && typeof linked.isActive === 'boolean') ? linked.isActive : (typeof u.isActive === 'boolean' ? u.isActive : true),
+        estado: linked?.estado || u.estado || ((linked && typeof linked.isActive === 'boolean' ? (linked.isActive ? 'Activo' : 'Inactivo') : (typeof u.isActive === 'boolean' ? (u.isActive ? 'Activo' : 'Inactivo') : 'Activo')))
+      }
+
+      // copy more detailed contact if patient doc exists
+      if (linked) {
+        mergedItem.telefono = mergedItem.telefono || linked.telefono || linked.persona?.telefono || ''
+        mergedItem.email = mergedItem.email || linked.email || linked.persona?.correo || ''
+        mergedItem.persona = { ...mergedItem.persona, ...(linked.persona || {}) }
+        mergedItem.dni = mergedItem.dni || linked.dni || linked.persona?.dni || ''
+      }
+
+      return mergedItem
+    })
+
+    patients.value = merged
+    console.log(`✅ Usuarios cargados y mergeados: ${patients.value.length}`)
+  } catch (err) {
+    console.error("❌ Error cargando usuarios/pacientes:", err)
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
+// Backwards-compatible loader kept (not used) if needed
 const loadPatients = async () => {
   try {
     loading.value = true
     error.value = null
-    console.log("🔄 Cargando pacientes desde Firebase...")
     const list = await AdminPatientService.listPatients()
-    console.log("📦 Datos recibidos de Firebase:", list)
-    console.log("📊 Cantidad de pacientes:", list?.length || 0)
-    // Normalizamos los estados: forzar 'Activo' y isActive true en todos los registros
-    const normalized = (list || []).map(p => ({ ...p, isActive: true, estado: 'Activo', medicalStatus: 'Activo' }))
-    patients.value = normalized
-    console.log("✅ Pacientes asignados al state (normalizados a Activo):", patients.value)
+    patients.value = (list || []).map(p => ({ ...p, isActive: true }))
   } catch (err) {
-    console.error("❌ Error cargando pacientes:", err)
     error.value = err.message
   } finally {
     loading.value = false
@@ -576,7 +673,7 @@ const loadPatients = async () => {
 }
 
 const refreshData = async () => {
-  await loadPatients()
+  await loadUsersAndMergePatients()
 }
 
 const updateSearch = () => {
@@ -601,9 +698,11 @@ const toggleSortOrder = () => {
 
 // Action handlers
 const viewPatient = (user) => {
-  if (!user || !user.id) return
-  // Navigate to perfil route with query id
-  router.push({ name: 'admin-patient-perfil', query: { id: user.id } }).catch(()=>{})
+  if (!user) return
+  // Prefer navigating to linked patient doc if present
+  const targetId = user.linkedPatientId || user.userId || user.id
+  if (!targetId) return
+  router.push({ name: 'admin-patient-perfil', query: { id: targetId } }).catch(()=>{})
 }
 
 const editPatient = (user) => {
@@ -634,8 +733,8 @@ const savePatientEdits = async () => {
       medicalInfo: editForm.value.medicalInfo,
       medicalStatus: editForm.value.medicalStatus
     })
-    console.log("✅ Paciente actualizado en Firebase")
-    await loadPatients() // Recargar lista
+  console.log("✅ Paciente actualizado en Firebase")
+  await loadUsersAndMergePatients() // Recargar lista desde users
   } catch (e) {
     console.error('Error guardando paciente:', e)
   } finally {
@@ -657,24 +756,127 @@ const deactivatePatient = async (user) => {
     alert('No se encontró el paciente en la lista')
     return
   }
-  const willDeactivate = !!stored.isActive
+  // Determine current state: prefer stored.isActive, fallback to stored.estado
+  const isCurrentlyActive = typeof stored.isActive === 'boolean' ? stored.isActive : (String(stored.estado || 'Activo').toLowerCase() === 'activo')
+  const willDeactivate = !!isCurrentlyActive
   const confirmMsg = willDeactivate ? `Marcar al paciente ${getUserFullName(stored)} como Inactivo?` : `Reactivar al paciente ${getUserFullName(stored)}?`
   const ok = confirm(confirmMsg)
   if (!ok) return
   try {
-    await AdminPatientService.updatePatient(stored.id, { isActive: !willDeactivate })
-    console.log("✅ Estado del paciente actualizado en Firebase")
-    await loadPatients()
-    alert(`Paciente ${getUserFullName(stored)} actualizado: ${!willDeactivate ? 'Activo' : 'Inactivo'}`)
+    const newIsActive = !willDeactivate
+    const newEstado = newIsActive ? 'Activo' : 'Inactivo'
+
+    // Intenta encontrar un documento en la colección 'patients' en este orden:
+    // 1) stored.linkedPatientId
+    // 2) stored.patientDoc?.id
+    // 3) búsqueda entre patientDocs cargados por email/dni/uid
+    let targetPatientId = null
+
+    // 1) linkedPatientId
+    if (stored.linkedPatientId) targetPatientId = stored.linkedPatientId
+
+    // 2) patientDoc.id
+    if (!targetPatientId && stored.patientDoc?.id) targetPatientId = stored.patientDoc.id
+
+    // 3) intentar buscar coincidencias consultando la colección 'patients' si no tenemos id directo
+    if (!targetPatientId) {
+      try {
+        const allPatientDocs = await AdminPatientService.listPatients()
+        const maybe = allPatientDocs.find(p => {
+          try {
+            const emails = [(p.email||'').toLowerCase(), (p.userEmail||'').toLowerCase()]
+            const dnis = [(p.dni||''), (p.persona?.dni||'')]
+            const uids = [(p.userUid||''), (p.userDocId||''), (p.userUid||'')]
+            const storedEmail = (stored.email||'').toLowerCase()
+            const storedDni = stored.dni || stored.persona?.dni || ''
+            const storedUid = stored.userUid || stored.userUid || ''
+
+            const matchesEmail = storedEmail && emails.includes(storedEmail)
+            const matchesDni = storedDni && dnis.includes(storedDni)
+            const matchesUid = storedUid && uids.includes(storedUid)
+
+            return matchesEmail || matchesDni || matchesUid
+          } catch (e) {
+            return false
+          }
+        })
+        if (maybe) targetPatientId = maybe.id
+      } catch (e) {
+        console.warn('No se pudo listar patients para búsqueda:', e)
+      }
+    }
+
+    if (!targetPatientId) {
+      const createOk = confirm('No existe un documento en la colección patients para este usuario. ¿Deseas crear uno y aplicar el cambio de estado allí?')
+      if (!createOk) {
+        alert('Operación cancelada: no se modificó ningún documento en patients.')
+        return
+      }
+
+      // Crear documento patients mínimo a partir del usuario 'stored'
+      const payload = {
+        persona: stored.persona || { nombres: stored.persona?.nombres || '', apellidos: stored.persona?.apellidos || '' },
+        email: stored.email || '',
+        telefono: stored.telefono || '',
+        dni: stored.dni || stored.persona?.dni || '',
+        userUid: stored.userUid || stored.userUid || null,
+        userDocId: stored.userId || stored.id || null,
+        estado: newEstado,
+        isActive: newIsActive,
+        role: stored.role || 'user'
+      }
+
+      const newId = await AdminPatientService.createPatient(payload)
+      targetPatientId = newId
+      console.log(`🆕 Documento patients/${newId} creado a partir del usuario; aplicando estado.`)
+    }
+
+    // Verificar existencia real antes de actualizar
+    let patientDoc = await AdminPatientService.getPatient(targetPatientId).catch(() => null)
+    if (!patientDoc) {
+      const createMissingOk = confirm(`El documento patients/${targetPatientId} no existe. ¿Deseas crear un nuevo paciente a partir del usuario y aplicar el cambio?`)
+      if (!createMissingOk) {
+        alert('Operación cancelada: no se modificó ningún documento en patients.')
+        return
+      }
+
+      // Crear documento patients mínimo a partir del usuario 'stored'
+      const payloadMissing = {
+        persona: stored.persona || { nombres: stored.persona?.nombres || '', apellidos: stored.persona?.apellidos || '' },
+        email: stored.email || '',
+        telefono: stored.telefono || '',
+        dni: stored.dni || stored.persona?.dni || '',
+        userUid: stored.userUid || stored.userUid || null,
+        userDocId: stored.userId || stored.id || null,
+        estado: newEstado,
+        isActive: newIsActive,
+        role: stored.role || 'user'
+      }
+
+      const newId = await AdminPatientService.createPatient(payloadMissing)
+      targetPatientId = newId
+      console.log(`🆕 Documento patients/${newId} creado (fallback)`) 
+      patientDoc = await AdminPatientService.getPatient(targetPatientId).catch(() => null)
+      if (!patientDoc) throw new Error(`No se pudo crear o recuperar el documento patients/${targetPatientId}`)
+    }
+
+    await AdminPatientService.updatePatient(targetPatientId, { isActive: newIsActive, estado: newEstado, updatedAt: new Date().toISOString() })
+    console.log(`✅ Estado del paciente (patients/${targetPatientId}) actualizado en Firebase`)
+
+    await loadUsersAndMergePatients()
+    alert(`Paciente ${getUserFullName(stored)} actualizado: ${newEstado}`)
   } catch (e) {
     console.error('Error actualizando estado del paciente:', e)
-    alert('Error actualizando estado. Revisa la consola.')
+    // Mostrar mensaje más informativo
+    alert('Error actualizando estado. Revisa la consola o verifica que el documento exista en Firestore.')
   }
 }
 
 const goToEdit = (user) => {
-  if (!user || !user.id) return
-  router.push({ name: 'admin-patient-edit', query: { editId: user.id } }).catch(()=>{})
+  if (!user) return
+  const editId = user.linkedPatientId || user.userId || user.id
+  if (!editId) return
+  router.push({ name: 'admin-patient-edit', query: { editId } }).catch(()=>{})
 }
 
 // Add patient
@@ -703,8 +905,8 @@ const addPatient = async () => {
     }
     console.log("💾 [PatientList] Creando paciente con estado:", payload.estado, "- isActive:", payload.isActive)
     await AdminPatientService.createPatient(payload)
-    console.log("✅ Paciente creado en Firebase")
-    await loadPatients()
+  console.log("✅ Paciente creado en Firebase")
+  await loadUsersAndMergePatients()
   } catch (e) {
     console.error('Error agregando paciente:', e)
   } finally {
@@ -762,7 +964,8 @@ const statusClass = (status) => 'active'
 
 const calculateAge = (patient) => {
   try {
-    const fechaNac = patient.persona?.fecha_nacimiento || patient.fecha_nacimiento
+    // Prefer fecha_nacimiento from linked patient doc if available
+    const fechaNac = patient.patientDoc?.persona?.fecha_nacimiento || patient.patientDoc?.fechaNacimiento || patient.persona?.fecha_nacimiento || patient.fecha_nacimiento
     if (!fechaNac) return 'N/A'
     
     let birthDate
@@ -800,6 +1003,16 @@ const getResponsableName = (patient) => {
   return fullName || patient.responsable.nombre || 'N/D'
 }
 
+const formatResponsableSexo = (sexo) => {
+  if (!sexo) return 'N/D'
+  const s = String(sexo).trim()
+  if (!s) return 'N/D'
+  if (/^m(asc)?/i.test(s) || s.toUpperCase() === 'M') return 'Masculino'
+  if (/^f(em)?/i.test(s) || s.toUpperCase() === 'F') return 'Femenino'
+  // fallback: capitalize first letter
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
+}
+
 const formatDate = (timestamp) => {
   if (!timestamp) return 'No disponible'
   
@@ -819,7 +1032,7 @@ const formatDate = (timestamp) => {
 
 
 onMounted(async () => {
-  await loadPatients()
+  await loadUsersAndMergePatients()
 })
 
 
@@ -1319,8 +1532,8 @@ onMounted(async () => {
   box-shadow: 0 6px 18px rgba(17,24,39,0.04);
   width: 100%;
   min-width: 1000px;
-  /* More balanced columns: user (wide), contact (narrow), responsible, date, status, actions */
-  --grid-cols: minmax(320px, 1.6fr) minmax(160px, 0.8fr) minmax(220px, 1fr) 140px 120px 120px;
+  /* More balanced columns: user (wide), contact (narrow), gender, department, date, status, actions */
+  --grid-cols: minmax(320px, 1.6fr) minmax(160px, 0.8fr) minmax(120px, 0.7fr) minmax(160px, 0.9fr) 140px 120px 120px;
 }
 
 .grid-header,
@@ -1815,7 +2028,8 @@ onMounted(async () => {
   
   .cell.user::before { content: none; }
   .cell.contact::before { content: "Información de Contacto"; }
-  .cell.role::before { content: "Rol"; }
+  .cell.gender::before { content: "Género"; }
+  .cell.department::before { content: "Departamento"; }
   .cell.date::before { content: "Fecha de Registro"; }
   .cell.status::before { content: "Estado"; }
   .cell.actions::before { content: "Acciones"; }

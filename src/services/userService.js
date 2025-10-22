@@ -94,7 +94,30 @@ export const userService = {
   async updateUser(userId, userData) {
     try {
       const docRef = doc(db, 'users', userId)
-      await updateDoc(docRef, userData)
+      const clean = (obj) => {
+        if (obj === null || obj === undefined) return obj
+        if (Array.isArray(obj)) return obj.map(v => (v && typeof v === 'object') ? clean(v) : v).filter(v => v !== undefined)
+        if (typeof obj === 'object') {
+          const out = {}
+          Object.keys(obj).forEach(k => {
+            const val = obj[k]
+            if (val === undefined) return
+            if (val && typeof val === 'object') {
+              const c = clean(val)
+              if (c !== undefined && !(typeof c === 'object' && Object.keys(c).length === 0 && !Array.isArray(c))) {
+                out[k] = c
+              }
+            } else {
+              out[k] = val
+            }
+          })
+          return out
+        }
+        return obj
+      }
+
+      const sanitized = clean(userData)
+      await updateDoc(docRef, sanitized)
       
       // Devolver usuario actualizado
       return await this.getUserById(userId)

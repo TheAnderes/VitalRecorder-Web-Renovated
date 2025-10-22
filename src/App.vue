@@ -6,6 +6,7 @@
       <RouterView />
     </main>
     <AppFooter v-if="!isAdminRoute" />
+    <LoadingOverlay />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import AppHeader from './components/shared/AppHeader.vue';
 import AppFooter from './components/shared/AppFooter.vue';
+import LoadingOverlay from './components/shared/LoadingOverlay.vue'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 const route = useRoute()

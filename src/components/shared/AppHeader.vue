@@ -10,31 +10,44 @@
         </button>
       </div>
 
-      <!-- Sección centro: Marca -->
+      <!-- Marca / centro -->
       <div class="header-center">
-        <router-link to="/" class="brand" @click="closeMenu">
-          <img
-            class="brand-mark"
-            src="/Logo.png"
-            alt="VITALSYSTEMS"
-            onerror="this.src='/favicon.ico'; this.classList.add('fallback')"
-          />
-          <div class="brand-text">VITALSYSTEMS</div>
+        <router-link to="/" class="brand">
+          <img src="/Logo.png" alt="Logo" />
+          <span class="brand-text">VITALSYSTEMS</span>
         </router-link>
       </div>
 
-      <!-- Sección derecha: Auth y Links -->
+      <!-- Sección derecha: links y auth -->
       <div class="header-right">
-        <!-- Auth: DERECHA en móvil -->
+        <!-- Links de escritorio (ocultos en móvil) -->
+        <ul class="links desktop-only" v-if="showPublicLinks">
+          <li>
+            <router-link to="/">Inicio</router-link>
+          </li>
+          <li>
+            <router-link to="/about-us">Sobre Nosotros</router-link>
+          </li>
+          <li 
+            class="dropdown-container" 
+            @mouseenter="openProductsDropdown" 
+            @mouseleave="closeProductsDropdown"
+          >
+            <router-link to="/product" class="dropdown-trigger">Productos</router-link>
+            <ul class="dropdown-menu" :class="{ 'show': showProductsDropdown }">
+              <li><router-link to="/product1">Vital Recorder</router-link></li>
+              <li><router-link to="/product2">Vital Connect</router-link></li>
+            </ul>
+          </li>
+          <li>
+            <router-link to="/contact-us">Contáctanos</router-link>
+          </li>
+        </ul>
+
+        <!-- Auth / User menu -->
         <div class="auth-slot">
-          <!-- Menú de usuario cuando está logueado -->
-          <div v-if="user" class="user-menu-container" @click.stop>
-            <button 
-              class="user-menu-trigger"
-              @click="toggleUserMenu"
-              :class="{ 'active': showUserMenu }"
-              aria-label="Menú de usuario"
-            >
+          <div v-if="user" class="user-menu-container">
+            <button class="user-menu-trigger" @click.stop="toggleUserMenu">
               <div class="user-avatar">
                 <span class="user-initial">{{ getUserInitial() }}</span>
               </div>
@@ -46,7 +59,7 @@
                 <path fill="currentColor" d="M6 9L1.5 4.5h9L6 9z"/>
               </svg>
             </button>
-            
+
             <div class="user-dropdown" :class="{ 'show': showUserMenu }">
               <router-link to="/dashboard" class="user-dropdown-item" @click="closeUserMenu">
                 <svg class="item-icon" width="16" height="16" viewBox="0 0 16 16">
@@ -63,28 +76,13 @@
               </button>
             </div>
           </div>
-          
-          <!-- Botón de iniciar sesión cuando no está logueado -->
-          <router-link v-else to="/login" class="btn">Iniciar Sesión</router-link>
-        </div>
 
-        <!-- Links de escritorio (ocultos en móvil) -->
-        <ul class="links desktop-only">
-          <li><router-link to="/">Inicio</router-link></li>
-          <li><router-link to="/about-us">Sobre Nosotros</router-link></li>
-          <li 
-            class="dropdown-container" 
-            @mouseenter="openProductsDropdown" 
-            @mouseleave="closeProductsDropdown"
-          >
-            <a href="#" class="dropdown-trigger" @click.prevent>Productos</a>
-            <ul class="dropdown-menu" :class="{ 'show': showProductsDropdown }">
-              <li><router-link to="/product1">Vital Recorder</router-link></li>
-              <li><router-link to="/product2">Vital Connect</router-link></li>
-            </ul>
-          </li>
-          <li><router-link to="/contact-us">Contáctanos</router-link></li>
-        </ul>
+          <!-- Botones de iniciar sesión y registrarse cuando no está logueado -->
+          <div v-else class="auth-actions">
+            <router-link to="/login" class="btn btn-login">Iniciar Sesión</router-link>
+            
+          </div>
+        </div>
       </div>
     </div>
 
@@ -94,17 +92,20 @@
         <div class="overlay-header">
           <button class="close" @click="closeMenu" aria-label="Cerrar menú">×</button>
         </div>
-        <ul class="overlay-links" @click="closeMenu">
+        <ul class="overlay-links" v-if="showPublicLinks" @click="closeMenu">
           <li><router-link to="/">Inicio</router-link></li>
           <li><router-link to="/about-us">Sobre Nosotros</router-link></li>
           <li class="mobile-dropdown-container">
-            <button 
-              class="mobile-dropdown-trigger" 
-              @click.stop="toggleMobileProductsDropdown"
-            >
-              Productos
-              <span class="dropdown-arrow" :class="{ 'open': showMobileProductsDropdown }">▼</span>
-            </button>
+            <div class="mobile-dropdown-row">
+              <router-link to="/product" class="mobile-dropdown-link" @click="closeMenu">Productos</router-link>
+              <button 
+                class="mobile-dropdown-trigger" 
+                @click.stop="toggleMobileProductsDropdown"
+                aria-label="Abrir submenu productos"
+              >
+                <span class="dropdown-arrow" :class="{ 'open': showMobileProductsDropdown }">▼</span>
+              </button>
+            </div>
             <ul class="mobile-dropdown-menu" :class="{ 'show': showMobileProductsDropdown }">
               <li><router-link to="/product1">Vital Recorder</router-link></li>
               <li><router-link to="/product2">Vital Connect</router-link></li>
@@ -113,7 +114,10 @@
           <li><router-link to="/contact-us">Contáctanos</router-link></li>
           <li class="overlay-auth">
             <button v-if="user" @click.stop="handleLogout" class="btn full">Cerrar Sesión</button>
-            <router-link v-else to="/login" class="btn full">Iniciar Sesión</router-link>
+            <div v-else class="mobile-auth-actions">
+              <router-link to="/login" class="btn full">Iniciar Sesión</router-link>
+              <router-link to="/register" class="btn full">Registrarse</router-link>
+            </div>
           </li>
         </ul>
       </div>
@@ -122,12 +126,24 @@
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, signOut } from '@/firebase'
 import { useAuth } from '@/composables/useAuth'
+import { useAdmin } from '@/composables/useAdmin'
 
 const { user, getUserName, getUserInitial } = useAuth()
+const { userRole } = useAdmin()
+
+// Mostrar enlaces públicos solo si no hay usuario, o si el usuario es admin
+const showPublicLinks = computed(() => {
+  // si no hay usuario, mostrar enlaces públicos
+  if (!user.value) return true
+  // si el rol aún no se ha resuelto, mostrar enlaces para evitar un parpadeo
+  if (!userRole.value) return true
+  // mostrar solo para admins
+  return userRole.value === 'admin' || userRole.value === 'super_admin'
+})
 const isOpen = ref(false)
 const showProductsDropdown = ref(false)
 const showMobileProductsDropdown = ref(false)
@@ -200,12 +216,13 @@ router.afterEach(() => {
   width: 100%;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
+  height: 10vh;
 }
 
 .shell {
   width: clamp(320px, 92vw, 1440px);
   margin: 0 auto;
-  height: clamp(56px, 7vh, 72px);
+  height: clamp(64px, 8vh, 84px);
   padding: 0 clamp(12px, 2vw, 28px);
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -438,10 +455,61 @@ router.afterEach(() => {
   color: #fff;
 }
 
+/* Estilo específico para el botón de registrarse (más prominente) */
+.btn-register {
+  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
+  color: #06202a;
+  font-weight: 700;
+  padding: .6em 1.1em;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(45,212,191,0.12);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.btn-register:hover {
+  filter: brightness(0.95);
+  color: #06121a;
+}
+
+/* Espaciado entre botones de auth y centrado vertical */
+.auth-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Asegurar que los enlaces del header estén centrados verticalmente */
+.links li a,
+.links a {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: .6rem .4rem;
+}
+
+/* Mejor resaltado de enlace activo: subrayado y color para links del header */
+.links a.router-link-active {
+  color: #fff;
+  position: relative;
+  font-weight: 700;
+}
+
+.links a.router-link-active::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(90deg,#2dd4bf,#60a5fa);
+  bottom: -10px;
+  border-radius: 3px;
+}
+
 @media (min-width: 1024px) {
   .shell {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    /* Colocar: marca a la izquierda, links en el centro, auth a la derecha */
+    grid-template-columns: auto 1fr auto;
     justify-content: start;
   }
 
@@ -470,8 +538,9 @@ router.afterEach(() => {
   .links {
     display: flex;
     order: 2;
-    margin-left: auto;
-    margin-right: 16px;
+    /* Centrar las links dentro de la columna central */
+    justify-self: center;
+    margin: 0 16px;
   }
 
   .brand-text {
@@ -489,10 +558,33 @@ a.router-link-active {
   color: #fff;
 }
 
+/* Mobile overlay active link more visible */
+.mobile-overlay .overlay-links a.router-link-active {
+  background: linear-gradient(90deg,#2dd4bf,#60a5fa);
+  color: #06202a;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
 /* === ESTILOS DEL DROPDOWN === */
 .dropdown-container {
   position: relative;
 }
+
+.header-ico {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.02);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.header-ico svg { width: 18px; height: 18px; display: block; }
 
 .dropdown-trigger {
   cursor: pointer;
@@ -500,6 +592,8 @@ a.router-link-active {
   align-items: center;
   transition: color 0.3s ease;
 }
+
+/* icon placeholders removed from header - footer keeps SVG icons */
 
 .dropdown-trigger:hover {
   color: #fff;
@@ -515,7 +609,7 @@ a.router-link-active {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   padding: 8px 0;
   margin: 8px 0 0;
-  min-width: 160px;
+  min-width: 135px;
   list-style: none;
   z-index: 10000;
   opacity: 0;
@@ -562,6 +656,19 @@ a.router-link-active {
 /* === ESTILOS DEL DROPDOWN MÓVIL === */
 .mobile-dropdown-container {
   margin: 0;
+}
+
+.mobile-dropdown-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-dropdown-link {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 1.05rem;
+  padding: 6px 0;
 }
 
 .mobile-dropdown-trigger {

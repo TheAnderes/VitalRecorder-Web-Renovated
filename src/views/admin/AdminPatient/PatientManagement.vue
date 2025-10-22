@@ -16,12 +16,19 @@
       </div>
       
       <div class="header-actions">
-        <button @click="goToRegister" class="btn-primary">
+            <button @click="goToRegister" class="btn-primary">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
           Nuevo Paciente
         </button>
+            <button @click="exportPatientsPdf" class="btn-secondary" :disabled="loading">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Exportar Lista (PDF)
+            </button>
         <button @click="refreshData" class="btn-secondary" :disabled="loading">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" :class="{ 'spin': loading }">
             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" stroke="currentColor" stroke-width="2"/>
@@ -91,6 +98,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
+import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 
 const router = useRouter()
 const loading = ref(false)
@@ -104,6 +113,124 @@ const refreshData = () => {
 
 const goToRegister = () => {
   router.push({ name: 'admin-patient-registro' })
+}
+
+// Export patients list to print-friendly HTML (user can save as PDF from print dialog)
+const exportPatientsPdf = async () => {
+  try {
+  loading.value = true
+  // Fetch users and export only those with role === 'user'
+  const allUsers = await userService.getAllUsers()
+  const list = (allUsers || []).filter(u => (u.role || 'user') === 'user')
+
+    // Build rows using a layout similar to PatientList (avatar + meta, contact, gender, dept, date, estado)
+    const rows = list.map(p => {
+      const nombre = (p.persona && (p.persona.nombres || p.persona.apellidos)) ? `${p.persona.nombres || ''} ${p.persona.apellidos || ''}`.trim() : (p.dni || p.id || '')
+      const dni = p.dni || ''
+      const telefono = p.telefono || 'N/D'
+      const email = p.email || 'N/D'
+      const sexoRaw = (p.persona && p.persona.sexo) ? p.persona.sexo.toString() : ''
+      const sexo = sexoRaw ? (sexoRaw.toLowerCase().includes('mascul') ? 'Masculino' : sexoRaw.toLowerCase().includes('femen') ? 'Femenino' : sexoRaw) : 'N/D'
+      const dept = p.direccion?.provincia || p.direccion?.ciudad || 'N/D'
+      const created = (p.createdAt && p.createdAt.toDate) ? p.createdAt.toDate() : new Date(p.createdAt || Date.now())
+      const fecha = new Date(created).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+      const estado = p.estado ? p.estado : (p.isActive === false ? 'Inactivo' : 'Activo')
+      const estadoClass = (estado && estado.toLowerCase().includes('inact')) ? 'badge-inactive' : 'badge-active'
+      // initials
+      const initials = (p.persona && (p.persona.nombres || p.persona.apellidos)) ? ((p.persona.nombres ? p.persona.nombres[0] : '') + (p.persona.apellidos ? p.persona.apellidos[0] : '')).toUpperCase() : (dni ? dni.toString().slice(0,2) : 'P')
+
+      return `
+        <tr>
+          <td style="padding:14px 12px; vertical-align:middle;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:46px; height:46px; border-radius:50%; background:#2563eb; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;">${initials}</div>
+              <div>
+                <div style="font-weight:700; font-size:14px; color:#0f172a">${nombre}</div>
+                <div style="font-size:12px; color:#6b7280; margin-top:4px">ID ${dni || 'N/D'} • ${'N/A años'}</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:14px 12px; vertical-align:middle; font-size:13px; color:#0f172a">
+            <div style="font-weight:700">${telefono}</div>
+            <div style="font-size:12px; color:#6b7280; margin-top:6px">${email}</div>
+          </td>
+          <td style="padding:14px 12px; vertical-align:middle; text-align:left">
+            <div style="font-weight:700">${sexo}</div>
+            <div style="font-size:12px;color:#6b7280">${sexo}</div>
+          </td>
+          <td style="padding:14px 12px; vertical-align:middle">${dept}</td>
+          <td style="padding:14px 12px; vertical-align:middle">${fecha}</td>
+          <td style="padding:14px 12px; vertical-align:middle"><span class="estado ${estadoClass}">${estado}</span></td>
+        </tr>
+      `
+    }).join('\n')
+
+    const html = `<!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Listado de Usuarios</title>
+      <style>
+        body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #0f172a; padding: 24px; }
+        header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px }
+        h1 { margin:0; font-size:20px }
+        table { width:100%; border-collapse: collapse; font-size:13px }
+        thead th { text-align:left; padding:12px; color:#475569; font-weight:700; border-bottom:1px solid #e6eef7 }
+        tbody tr { border-bottom:1px solid #f1f5f9 }
+        .estado { padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px }
+        .badge-active { background:#dcfce7; color:#065f46 }
+        .badge-inactive { background:#fee2e2; color:#9b1c1c }
+        @media print {
+          body { padding: 10mm }
+          header { display:block }
+        }
+      </style>
+    </head>
+    <body>
+      <header>
+        <div>
+          <h1>Listado de Pacientes</h1>
+          <div style="color:#6b7280; margin-top:6px; font-size:12px">Generado: ${new Date().toLocaleString('es-ES')}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:700">VitalRecorder</div>
+        </div>
+      </header>
+      <main>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36%">Usuario</th>
+              <th style="width:18%">Información de Contacto</th>
+              <th style="width:12%">Género</th>
+              <th style="width:12%">Departamento</th>
+              <th style="width:14%">Fecha de registro</th>
+              <th style="width:8%">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </main>
+    </body>
+    </html>`
+
+    const w = window.open('', '_blank')
+    if (!w) {
+      alert('No se pudo abrir la ventana para imprimir. Revisa bloqueadores de popups.')
+      return
+    }
+    w.document.write(html)
+    w.document.close()
+    // Wait for render then trigger print
+    setTimeout(()=> { w.print() }, 300)
+  } catch (err) {
+    console.error('Error exportando pacientes a PDF', err)
+    alert('Error exportando pacientes. Revisa la consola.')
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 

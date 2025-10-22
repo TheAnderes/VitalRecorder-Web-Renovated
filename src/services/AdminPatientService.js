@@ -29,8 +29,32 @@ export async function getPatient(id) {
 export async function createPatient(data) {
   try {
     console.log("🔥 [AdminPatientService] Creando paciente en Firestore...", data)
+    // Clean data to remove undefined fields (Firestore rejects undefined)
+    const clean = (obj) => {
+      if (obj === null || obj === undefined) return obj
+      if (Array.isArray(obj)) return obj.map(v => (v && typeof v === 'object') ? clean(v) : v).filter(v => v !== undefined)
+      if (typeof obj === 'object') {
+        const out = {}
+        Object.keys(obj).forEach(k => {
+          const val = obj[k]
+          if (val === undefined) return
+          if (val && typeof val === 'object') {
+            const c = clean(val)
+            if (c !== undefined && !(typeof c === 'object' && Object.keys(c).length === 0 && !Array.isArray(c))) {
+              out[k] = c
+            }
+          } else {
+            out[k] = val
+          }
+        })
+        return out
+      }
+      return obj
+    }
+
+    const payload = clean(data) || {}
     const ref = await addDoc(collection(db, COLLECTION), {
-      ...data,
+      ...payload,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     })
@@ -45,7 +69,32 @@ export async function createPatient(data) {
 }
 
 export async function updatePatient(id, updates) {
-  await updateDoc(doc(db, COLLECTION, id), updates)
+  // Remove undefined fields recursively because Firestore rejects undefined
+  const clean = (obj) => {
+    if (obj === null || obj === undefined) return obj
+    if (Array.isArray(obj)) return obj.map(v => (v && typeof v === 'object') ? clean(v) : v).filter(v => v !== undefined)
+    if (typeof obj === 'object') {
+      const out = {}
+      Object.keys(obj).forEach(k => {
+        const val = obj[k]
+        if (val === undefined) return
+        if (val && typeof val === 'object') {
+          const c = clean(val)
+          // Only set if not undefined/null/empty object/empty array
+          if (c !== undefined && !(typeof c === 'object' && Object.keys(c).length === 0 && !Array.isArray(c))) {
+            out[k] = c
+          }
+        } else {
+          out[k] = val
+        }
+      })
+      return out
+    }
+    return obj
+  }
+
+  const sanitized = clean(updates)
+  await updateDoc(doc(db, COLLECTION, id), sanitized)
 }
 
 export async function deletePatient(id) {

@@ -3,6 +3,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
 import { clientRoutes } from './clientRoutes'
 import { adminRoutes } from './adminRoutes'
+import { useLoading } from '@/stores/loading'
 
 // Combinar todas las rutas
 const routes = [
@@ -26,6 +27,13 @@ const router = createRouter({
 
 // Navigation guards
 router.beforeEach(async (to, from, next) => {
+  // Mostrar overlay de carga en navegación
+  try {
+    const loading = useLoading()
+    loading.show()
+  } catch (e) {
+    // ignore
+  }
   const { user, isLoading } = useAuth()
   const { getUserRole, checkAdminPermissions } = useAdmin()
   
@@ -91,6 +99,15 @@ router.beforeEach(async (to, from, next) => {
   }
 
   next()
+})
+
+// Ocultar overlay en todos los casos (éxito o fallo)
+router.afterEach(() => {
+  try { const loading = useLoading(); loading.hide() } catch (e) {}
+})
+
+router.onError(() => {
+  try { const loading = useLoading(); loading.hide() } catch (e) {}
 })
 
 export default router

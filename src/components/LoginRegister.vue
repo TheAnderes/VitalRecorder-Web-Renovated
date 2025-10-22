@@ -200,7 +200,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -232,6 +232,26 @@ onMounted(() => {
     activePanel.value = "register";
   }
 });
+
+// Observar cambios en la ruta (query / path / name) para actualizar el panel
+watch(
+  () => route.fullPath,
+  () => {
+    if (
+      route.query.mode === "register" ||
+      (route.path && route.path.includes("register")) ||
+      route.name === "register"
+    ) {
+      activePanel.value = "register";
+    } else if (
+      route.query.mode === "login" ||
+      (route.path && route.path.includes("login")) ||
+      route.name === "login"
+    ) {
+      activePanel.value = "login";
+    }
+  }
+);
 
 // Datos de login
 const loginData = ref({
@@ -297,10 +317,15 @@ const handleLogin = async () => {
 
       console.log("Rol obtenido:", userRole);
 
+      // Mapeo explícito de roles → rutas
       if (userRole === "admin" || userRole === "super_admin") {
         redirectPath = "/admin/dashboard";
         welcomeText = "Bienvenido al panel de administración.";
         console.log("Redirigiendo a admin dashboard");
+      } else if (userRole === "user" || userRole === "cuidador" || !userRole) {
+        redirectPath = "/dashboard";
+        welcomeText = "Bienvenido a tu dashboard de usuario.";
+        console.log("Redirigiendo a user dashboard");
       }
 
       // TEMPORAL: Forzar redirección si el email contiene "admin"
@@ -381,6 +406,32 @@ const handleRegister = async () => {
   registerLoading.value = true;
 
   try {
+    // Preguntar al usuario qué rol desea al registrarse
+    const { value: selectedRole } = await Swal.fire({
+      title: '¿Eres cuidador o paciente?',
+      input: 'radio',
+      inputOptions: {
+        paciente: 'Paciente (usuario)',
+        cuidador: 'Cuidador'
+      },
+      inputValidator: (value) => {
+        if (!value) return 'Por favor selecciona una opción';
+        return null;
+      },
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      reverseButtons: true
+    });
+
+    if (!selectedRole) {
+      // Usuario canceló la selección
+      registerLoading.value = false;
+      return;
+    }
+
+    const roleToSave = selectedRole === 'cuidador' ? 'cuidador' : 'user';
+
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       registerData.value.email.trim(),
@@ -413,7 +464,7 @@ const handleRegister = async () => {
         nombres: nombres,
         sexo: null,
       },
-      role: "user", // Rol automático
+      role: roleToSave, // Guardar el rol elegido (user o cuidador)
       settings: {
         familiar_email: null,
         intensidad_vibracion: 2,
@@ -447,17 +498,31 @@ const handleRegister = async () => {
         confirmButton: "vital-systems-button",
         icon: "vital-systems-icon",
       },
-    }).then(() => {
-      // Cambiar al panel de login después del registro exitoso
-      switchToLogin();
-      // Limpiar el formulario de registro
-      registerData.value = {
-        fullName: "",
-        email: "",
-        password: "",
-        phone: "",
-        dob: "",
-      };
+    }).then(async () => {
+      // Después del registro exitoso, redirigir según rol (user/cuidador → dashboard, admin → admin/dashboard)
+      try {
+        const { getUserRole } = useAdmin();
+        const newRole = await getUserRole(user.uid);
+        if (newRole === 'admin' || newRole === 'super_admin') {
+          router.push('/admin/dashboard');
+        } else {
+          // usuarios por defecto y cuidadores van al dashboard de usuario
+          router.push('/dashboard');
+        }
+      } catch (e) {
+        // Fallback: ir al dashboard de usuario
+        console.error('Error al obtener rol después del registro:', e);
+        router.push('/dashboard');
+      } finally {
+        // Limpiar el formulario de registro
+        registerData.value = {
+          fullName: "",
+          email: "",
+          password: "",
+          phone: "",
+          dob: "",
+        };
+      }
     });
   } catch (error) {
     console.error("Error al registrarse:", error);

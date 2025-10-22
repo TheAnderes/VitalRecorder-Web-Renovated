@@ -37,20 +37,23 @@ onUnmounted(() => {
 </script>
 <template>
   <div class="product-view">
-    <!-- BLOQUE PRINCIPAL -->
-    <section class="product-intro">
-      <div class="product-view-image"></div>
-      <div class="product-content-wrapper">
-        <h1 class="product-hero-title">Productos</h1>
-        <div class="product-container">
-          <div class="product-intro-text">
-            <p class="product-intro-lead">
-              Soluciones <br />
-              tecnológicas para una vida más autónoma y saludable.
+    <!-- BLOQUE PRINCIPAL (HERO IMPORTADO DESDE SOLICITUD DEL USUARIO) -->
+    <section class="hero-section">
+      <div class="hero-background-image"></div>
+      <div class="hero-content-wrapper">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <h1 class="hero-main-title">Productos</h1>
+
+            <h2 class="hero-subline">Descubre <span class="hero-highlight">nuestras soluciones</span></h2>
+
+            <p class="hero-subtitle">
+              Soluciones tecnológicas pensadas para mejorar la autonomía y la
+              calidad de vida en el hogar: recordatorios inteligentes y sistemas
+              de monitoreo no invasivos, fáciles de usar y respetuosos con la privacidad.
             </p>
-            <div class="product-intro-actions">
-              <PrimaryButton root="contact-us" name="Contactanos" />
-            </div>
+
+            <!-- botones removidos a petición del usuario -->
           </div>
         </div>
       </div>
@@ -187,7 +190,7 @@ onUnmounted(() => {
 }
 
 .product-intro-text {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   padding: 2.5rem 4.5rem;
   border-radius: 1.5rem;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
@@ -206,6 +209,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  
 }
 
 .product-one, .product-two {
@@ -316,5 +320,95 @@ onUnmounted(() => {
   .product-one-text {
       font-size: 1.5rem;
   }
+}
+
+/* ===== HERO SECTION STYLES (copiado/añadido) ===== */
+.hero-section {
+  position: relative;
+  min-height: 90vh; /* ocupar casi toda la pantalla para el efecto grande */
+  display: flex;
+  align-items: center;
+  color: #0f2147;
+  overflow: hidden;
+  padding-top: 2rem;
+}
+
+.hero-background-image {
+  position: absolute;
+  inset: 0;
+  background-image: url('@/components/icons/ImageProductPrincipal.jpg');
+  background-size: cover;
+  background-position: center;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.45) blur(2px);
+  z-index: 0;
+  z-index: 1;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  padding: 5rem;
+}
+
+.hero-inner {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.hero-left {
+  flex: 1;
+}
+
+.hero-main-title {
+  /* usar clamp para que escale bien entre dispositivos */
+  font-size: 180px;
+  margin: 0 0 1rem 0;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.7);
+  line-height: 0.95;
+}
+
+.hero-subline {
+  font-size: 50px;
+  margin: 0 0 1rem 0;
+  color: rgba(255,255,255,0.95);
+  font-weight: 700;
+}
+
+.hero-highlight {
+  color: #16aaff;
+  font-weight: 800;
+}
+
+.hero-subtitle {
+  font-weight: 600;
+  font-size: 25px;
+  color: rgba(238, 246, 255, 0.92);
+  margin: 0 0 1.25rem 0;
+  max-width: 850px;
+  line-height: 1.6;
+  opacity: 0.95;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: left;
+}
+
+@media (max-width: 1024px) {
+  .hero-section { min-height: 80vh; }
+}
+
+@media (max-width: 768px) {
+  .hero-section { min-height: auto; padding: 2rem 0; }
+  .hero-main-title { font-size: 3rem; }
+  .hero-subline { font-size: 1.4rem; }
+  .hero-subtitle { font-size: 1rem; }
 }
 </style>

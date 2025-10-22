@@ -81,71 +81,9 @@
               <input v-model="form.ocupacion" placeholder="Profesión u ocupación" />
             </div>
 
-            <!-- Fotografía del paciente -->
-            <div class="field full">
-              <label class="photo-label">📷 Fotografía del paciente</label>
-              <div class="photo-upload-container">
-                <input 
-                  ref="photoInput" 
-                  type="file" 
-                  accept="image/*" 
-                  capture="environment" 
-                  @change="onPhotoSelected" 
-                  class="photo-input"
-                  id="photo-paciente"
-                />
-                <label for="photo-paciente" class="photo-upload-btn" v-if="!photoDataUrl">
-                  <div class="upload-icon">📸</div>
-                  <div class="upload-text">
-                    <strong>Click para subir foto</strong>
-                    <small>o arrastra una imagen aquí</small>
-                  </div>
-                </label>
-                <div class="photo-preview-enhanced" v-if="photoDataUrl">
-                  <img :src="photoDataUrl" alt="Foto del paciente" />
-                  <div class="photo-overlay">
-                    <button type="button" class="btn-remove-photo" @click="removePhoto">
-                      <span>🗑️</span> Eliminar foto
-                    </button>
-                    <button type="button" class="btn-change-photo" @click="$refs.photoInput.click()">
-                      <span>🔄</span> Cambiar foto
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Fotografía del paciente (removida) -->
 
-            <!-- Foto del CI -->
-            <div class="field full">
-              <label class="photo-label">🆔 Foto del Carnet de Identidad (CI)</label>
-              <div class="photo-upload-container">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  @change="onCIPhotoSelected" 
-                  class="photo-input"
-                  id="photo-ci"
-                />
-                <label for="photo-ci" class="photo-upload-btn" v-if="!ciPhotoDataUrl">
-                  <div class="upload-icon">🆔</div>
-                  <div class="upload-text">
-                    <strong>Click para subir foto del CI</strong>
-                    <small>Ambos lados del carnet</small>
-                  </div>
-                </label>
-                <div class="photo-preview-enhanced" v-if="ciPhotoDataUrl">
-                  <img :src="ciPhotoDataUrl" alt="Foto del CI" />
-                  <div class="photo-overlay">
-                    <button type="button" class="btn-remove-photo" @click="removeCIPhoto">
-                      <span>🗑️</span> Eliminar
-                    </button>
-                    <button type="button" class="btn-change-photo" @click="document.getElementById('photo-ci').click()">
-                      <span>🔄</span> Cambiar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Foto del CI (removida) -->
           </div>
         </section>
 
@@ -168,6 +106,12 @@
               <label>Correo electrónico</label>
               <input v-model="form.email" @input="validateField('email')" :class="{'invalid': errors.email}" placeholder="correo@ejemplo.com" />
               <small v-if="errors.email" class="error-msg">{{ errors.email }}</small>
+            </div>
+
+            <div class="field">
+              <label>Contraseña (opcional)</label>
+              <input type="password" v-model="form.password" placeholder="Dejar vacío si no crear cuenta" />
+              <small class="hint">Si proporciona correo y contraseña se intentará crear un usuario en Auth</small>
             </div>
 
             <div class="field">
@@ -406,173 +350,7 @@
           </div>
         </section>
 
-        <!-- Toggle para Tutor/Responsable -->
-        <div class="toggle-section">
-          <label class="toggle-label">
-            <input type="checkbox" v-model="showResponsable" class="toggle-checkbox" />
-            <span class="toggle-switch"></span>
-            <span class="toggle-text">
-              <span class="toggle-icon">👨‍👩‍👧‍👦</span>
-              <strong>Agregar Tutor / Familiar Responsable</strong>
-              <span class="toggle-hint">(Opcional - para menores o personas dependientes)</span>
-            </span>
-          </label>
-        </div>
-
-        <!-- Tutor / Familiar Responsable -->
-        <section class="section" v-if="showResponsable">
-          <h3>Tutor / Familiar Responsable</h3>
-          <div class="form-grid">
-            <div class="field">
-              <label>Parentesco *</label>
-              <select v-model="form.responsable.parentesco">
-                <option value="">Seleccione...</option>
-                <option>Padre</option>
-                <option>Madre</option>
-                <option>Hijo/a</option>
-                <option>Hermano/a</option>
-                <option>Cónyuge</option>
-                <option>Abuelo/a</option>
-                <option>Tío/a</option>
-                <option>Primo/a</option>
-                <option>Otro</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Nombres *</label>
-              <input v-model="form.responsable.nombres" placeholder="Nombres" />
-            </div>
-
-            <div class="field">
-              <label>Apellidos *</label>
-              <input v-model="form.responsable.apellidos" placeholder="Apellidos" />
-            </div>
-
-            <div class="field">
-              <label>Fecha de nacimiento *</label>
-              <input type="date" v-model="form.responsable.fecha_nacimiento" :max="maxDate" />
-            </div>
-
-            <div class="field">
-              <label>Edad</label>
-              <input :value="edadResponsable" readonly />
-            </div>
-
-            <div class="field">
-              <label>Categoría de edad</label>
-              <input :value="ageCategoryResponsable" readonly />
-            </div>
-
-            <div class="field">
-              <label>Carnet de identidad (CI) *</label>
-              <input v-model="form.responsable.ci" placeholder="CI" />
-            </div>
-
-            <div class="field full">
-              <label>Domicilio *</label>
-              <input v-model="form.responsable.domicilio" placeholder="Dirección completa" />
-            </div>
-
-            <div class="field">
-              <label>Ocupación</label>
-              <input v-model="form.responsable.ocupacion" placeholder="Ocupación" />
-            </div>
-
-            <div class="field">
-              <label>Estado civil</label>
-              <select v-model="form.responsable.estado_civil">
-                <option value="">Seleccione...</option>
-                <option>Soltero/a</option>
-                <option>Casado/a</option>
-                <option>Divorciado/a</option>
-                <option>Viudo/a</option>
-                <option>Unión libre</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Teléfono *</label>
-              <input v-model="form.responsable.telefono" placeholder="Teléfono" />
-            </div>
-
-            <div class="field">
-              <label>Correo electrónico</label>
-              <input v-model="form.responsable.email" type="email" placeholder="correo@ejemplo.com" />
-            </div>
-
-            <!-- Fotografía del responsable -->
-            <div class="field full">
-              <label class="photo-label">📷 Fotografía del responsable</label>
-              <div class="photo-upload-container">
-                <input 
-                  ref="responsableFotoInput"
-                  type="file" 
-                  accept="image/*" 
-                  @change="onResponsableFotoSelected"
-                  class="photo-input"
-                  id="photo-responsable"
-                />
-                <label for="photo-responsable" class="photo-upload-btn" v-if="!responsableFotoDataUrl">
-                  <div class="upload-icon">👤</div>
-                  <div class="upload-text">
-                    <strong>Click para subir foto del responsable</strong>
-                    <small>Foto reciente y clara</small>
-                  </div>
-                </label>
-                <div class="photo-preview-enhanced" v-if="responsableFotoDataUrl">
-                  <img :src="responsableFotoDataUrl" alt="Foto del responsable" />
-                  <div class="photo-overlay">
-                    <button type="button" class="btn-remove-photo" @click="removeResponsableFoto">
-                      <span>🗑️</span> Eliminar
-                    </button>
-                    <button type="button" class="btn-change-photo" @click="$refs.responsableFotoInput.click()">
-                      <span>🔄</span> Cambiar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Foto del CI del responsable -->
-            <div class="field full">
-              <label class="photo-label">🆔 Foto del CI del responsable</label>
-              <div class="photo-upload-container">
-                <input 
-                  ref="responsableCIInput"
-                  type="file" 
-                  accept="image/*" 
-                  @change="onResponsableCISelected"
-                  class="photo-input"
-                  id="photo-ci-responsable"
-                />
-                <label for="photo-ci-responsable" class="photo-upload-btn" v-if="!responsableCIDataUrl">
-                  <div class="upload-icon">🆔</div>
-                  <div class="upload-text">
-                    <strong>Click para subir CI del responsable</strong>
-                    <small>Foto clara y legible</small>
-                  </div>
-                </label>
-                <div class="photo-preview-enhanced" v-if="responsableCIDataUrl">
-                  <img :src="responsableCIDataUrl" alt="CI del responsable" />
-                  <div class="photo-overlay">
-                    <button type="button" class="btn-remove-photo" @click="removeResponsableCI">
-                      <span>🗑️</span> Eliminar
-                    </button>
-                    <button type="button" class="btn-change-photo" @click="$refs.responsableCIInput.click()">
-                      <span>🔄</span> Cambiar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="field">
-              <label>Autorización legal</label>
-              <label class="checkbox-inline"><input type="checkbox" v-model="form.responsable.autorizacion" /> Autorización firmada</label>
-            </div>
-          </div>
-        </section>
+        <!-- Tutor/Responsable removed as requested -->
 
         <!-- Datos administrativos -->
         <section class="section">
@@ -784,35 +562,7 @@
             </div>
           </div>
 
-          <!-- Sección: Responsable -->
-          <div class="preview-section" v-if="showResponsable && form.responsable.nombres">
-            <div class="section-header">
-              <span class="section-icon">👨‍👩‍👧‍👦</span>
-              <h4>Tutor / Familiar Responsable</h4>
-            </div>
-            <div class="preview-grid-3">
-              <div class="preview-field">
-                <label>Nombre</label>
-                <div class="value">{{ form.responsable.nombres }} {{ form.responsable.apellidos }}</div>
-              </div>
-              <div class="preview-field">
-                <label>Parentesco</label>
-                <span class="badge badge-primary">{{ form.responsable.parentesco }}</span>
-              </div>
-              <div class="preview-field">
-                <label>Teléfono</label>
-                <div class="value">📱 {{ form.responsable.telefono }}</div>
-              </div>
-              <div class="preview-field" v-if="form.responsable.ci">
-                <label>CI</label>
-                <div class="value">{{ form.responsable.ci }}</div>
-              </div>
-              <div class="preview-field" v-if="form.responsable.email">
-                <label>Email</label>
-                <div class="value">{{ form.responsable.email }}</div>
-              </div>
-            </div>
-          </div>
+          <!-- Responsable preview removed -->
 
           <!-- Expediente y Estado -->
           <div class="preview-section preview-footer">
@@ -858,6 +608,11 @@ import { useRouter } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
+// Firebase auth + firestore helpers to create an actual user when email+password provided
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { setDoc, doc, Timestamp } from 'firebase/firestore'
+import { auth, db } from '@/firebase.js'
 
 const { canManageUsers } = useAdmin()
 const { user, getUserName } = useAuth()
@@ -884,6 +639,7 @@ const form = reactive({
   telefono: '',
   telefono2: '',
   email: '',
+  password: '',
   preferenciaContacto: 'telefono',
   direccion: { calle: '', numero: '', zona: '', ciudad: '', provincia: '' },
   medicalInfo: { 
@@ -902,19 +658,6 @@ const form = reactive({
     observaciones: '' 
   },
   observaciones: '',
-  responsable: { 
-    parentesco: '', 
-    nombres: '', 
-    apellidos: '', 
-    fecha_nacimiento: '', 
-    ci: '', 
-    domicilio: '', 
-    ocupacion: '', 
-    estado_civil: '', 
-    telefono: '', 
-    email: '', 
-    autorizacion: false 
-  },
   seguro: { nombre: '', polid: '' },
   createdAt: new Date().toISOString()
 })
@@ -927,17 +670,12 @@ const photoFile = ref(null)
 const photoDataUrl = ref('')
 const ciPhotoFile = ref(null)
 const ciPhotoDataUrl = ref('')
-const responsableFotoFile = ref(null)
-const responsableFotoDataUrl = ref('')
-const responsableCIFile = ref(null)
-const responsableCIDataUrl = ref('')
 const recetaFotoFile = ref(null)
 const recetaFotoDataUrl = ref('')
 const showPreview = ref(false)
 const duplicateWarning = ref(false)
 const duplicateWarningMessages = ref([])
 const showMedicalInfo = ref(false)
-const showResponsable = ref(false)
 
 const currentUserName = computed(() => getUserName() || user.value?.email || 'Sistema')
 
@@ -976,22 +714,6 @@ const ageCategory = computed(() => {
   return 'Adulto'
 })
 
-const edadResponsable = computed(() => {
-  if (!form.responsable.fecha_nacimiento) return ''
-  const b = new Date(form.responsable.fecha_nacimiento)
-  const now = new Date()
-  let years = now.getFullYear() - b.getFullYear()
-  const m = now.getMonth() - b.getMonth()
-  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) years--
-  return years
-})
-
-const ageCategoryResponsable = computed(() => {
-  if (!edadResponsable.value) return ''
-  if (edadResponsable.value < 12) return 'Niño'
-  if (edadResponsable.value < 18) return 'Joven'
-  return 'Adulto'
-})
 
 const validateField = (field) => {
   switch (field) {
@@ -1011,7 +733,12 @@ const validateField = (field) => {
       errors.telefono = form.telefono && /^\+?\d{7,15}$/.test(form.telefono.replace(/\s+/g, '')) ? '' : 'Teléfono inválido (ej: +51 9xxxxxxx)'
       break
     case 'email':
-      errors.email = form.email && /^\S+@\S+\.\S+$/.test(form.email) ? '' : ''
+      // email optional for patient, but validate format if provided
+      errors.email = form.email ? (/^\S+@\S+\.\S+$/.test(form.email) ? '' : 'Correo inválido') : ''
+      break
+    case 'password':
+      // password is optional; if provided must be >=6
+      errors.password = form.password ? (form.password.length >= 6 ? '' : 'La contraseña debe tener al menos 6 caracteres') : ''
       break
   }
 }
@@ -1082,27 +809,7 @@ const onCIPhotoSelected = (e) => {
 
 const removeCIPhoto = () => { ciPhotoFile.value = null; ciPhotoDataUrl.value = '' }
 
-const onResponsableFotoSelected = (e) => {
-  const f = e.target.files && e.target.files[0]
-  if (!f) return
-  responsableFotoFile.value = f
-  const reader = new FileReader()
-  reader.onload = () => { responsableFotoDataUrl.value = reader.result }
-  reader.readAsDataURL(f)
-}
-
-const removeResponsableFoto = () => { responsableFotoFile.value = null; responsableFotoDataUrl.value = '' }
-
-const onResponsableCISelected = (e) => {
-  const f = e.target.files && e.target.files[0]
-  if (!f) return
-  responsableCIFile.value = f
-  const reader = new FileReader()
-  reader.onload = () => { responsableCIDataUrl.value = reader.result }
-  reader.readAsDataURL(f)
-}
-
-const removeResponsableCI = () => { responsableCIFile.value = null; responsableCIDataUrl.value = '' }
+// Responsable (tutor/familiar) handlers removed — no-op kept out on purpose
 
 const onRecetaFotoSelected = (e) => {
   const f = e.target.files && e.target.files[0]
@@ -1199,7 +906,141 @@ const confirmSave = async (viewAfterSave = false) => {
 
   try {
     console.log("💾 [PatientRegistro] Guardando paciente en Firebase:", payload)
-    const createdId = await AdminPatientService.createPatient(payload)
+  // Prepare patient payload: remove fields we don't want in patients collection
+  const patientPayload = JSON.parse(JSON.stringify(payload))
+  // Removed tutor/responsable per request; also strip seguro from stored patient record
+  delete patientPayload.seguro
+
+    // Create or update users collection entry with desired structure
+    try {
+      // We'll capture a reference to the created user (uid or users doc id)
+      let createdUserRef = null
+      let createdUid = null
+
+      // If email + password provided attempt to create Auth user
+      if (payload.email && payload.password) {
+        try {
+          console.log('🔐 [PatientRegistro] Intentando crear usuario en Firebase Auth para', payload.email)
+          const cred = await createUserWithEmailAndPassword(auth, payload.email.trim(), payload.password)
+          const uid = cred.user.uid
+          createdUid = uid
+          console.log('✅ [PatientRegistro] Auth user creado UID:', uid)
+
+          // create users/{uid} doc in Firestore with expected shape
+          const nameParts = (payload.persona?.nombres || '').toString().trim().split(' ')
+          const nombres = nameParts[0] || ''
+          const apellidos = (payload.persona?.apellidos || '') || nameParts.slice(1).join(' ')
+
+          const userDoc = {
+            createdAt: Timestamp.now(),
+            email: payload.email.trim().toLowerCase(),
+            persona: {
+              apellidos: apellidos,
+              fecha_nac: payload.fechaNacimiento || null,
+              nombres: nombres,
+              sexo: payload.persona?.sexo || null
+            },
+            role: payload.role || 'user',
+            settings: {
+              familiar_email: null,
+              intensidad_vibracion: 2,
+              modo_silencio: false,
+              notificar_a_familiar: false
+            },
+            telefono: payload.telefono || ''
+          }
+
+          await setDoc(doc(db, 'users', uid), userDoc)
+          createdUserRef = { id: uid, ...userDoc }
+          console.log('✅ [PatientRegistro] users/{uid} doc creado en Firestore')
+        } catch (authErr) {
+          console.error('❌ [PatientRegistro] Error creando Auth user:', authErr)
+          // If email already in use, fallback to creating a users doc (non-auth) to keep record
+          if (authErr.code === 'auth/email-already-in-use') {
+            try {
+              const userDocFallback = {
+                createdAt: new Date(),
+                email: payload.email || '',
+                persona: {
+                  nombres: payload.persona?.nombres || '',
+                  apellidos: payload.persona?.apellidos || '',
+                  fecha_nac: payload.fechaNacimiento || '',
+                  sexo: payload.persona?.sexo || null
+                },
+                role: payload.role || 'user',
+                settings: {
+                  familiar_email: null,
+                  intensidad_vibracion: 2,
+                  modo_silencio: false,
+                  notificar_a_familiar: false
+                },
+                telefono: payload.telefono || ''
+              }
+              const createdUser = await userService.createUser(userDocFallback)
+              createdUserRef = createdUser
+              console.log('ℹ️ [PatientRegistro] users doc creado (fallback):', createdUser)
+            } catch (uErr) {
+              console.error('❌ [PatientRegistro] Error creando users doc fallback:', uErr)
+            }
+          } else {
+            // for other auth errors, log and continue
+            console.warn('⚠️ [PatientRegistro] No se pudo crear Auth user, continuando con paciente:', authErr.message || authErr)
+          }
+        }
+      } else {
+        // No email+password provided: create a simple users document to keep contact info
+        const userDoc = {
+          createdAt: new Date(),
+          email: payload.email || '',
+          persona: {
+            nombres: payload.persona?.nombres || '',
+            apellidos: payload.persona?.apellidos || '',
+            fecha_nac: payload.fechaNacimiento || '',
+            sexo: payload.persona?.sexo || null
+          },
+          role: payload.role || 'user',
+          settings: {
+            familiar_email: null,
+            intensidad_vibracion: 2,
+            modo_silencio: false,
+            notificar_a_familiar: false
+          },
+          telefono: payload.telefono || ''
+        }
+        try {
+          const createdUser = await userService.createUser(userDoc)
+          createdUserRef = createdUser
+          console.log('✅ [PatientRegistro] users doc creado (sin auth):', createdUser)
+        } catch (uErr) {
+          console.error('❌ [PatientRegistro] Error creando users doc (sin auth):', uErr)
+        }
+      }
+
+      // Attach linking info to patientPayload so paciente y usuario queden vinculados por correo/uid
+      try {
+        patientPayload.userEmail = payload.email || ''
+        if (createdUid) {
+          patientPayload.userUid = createdUid
+        } else if (createdUserRef && createdUserRef.id) {
+          patientPayload.userDocId = createdUserRef.id
+        }
+
+        // Mirror persona names into patient record to ensure they are the same
+        if (createdUserRef && createdUserRef.persona) {
+          patientPayload.persona = patientPayload.persona || {}
+          patientPayload.persona.nombres = createdUserRef.persona.nombres || patientPayload.persona.nombres
+          patientPayload.persona.apellidos = createdUserRef.persona.apellidos || patientPayload.persona.apellidos
+          // also sync fecha_nac if present
+          if (createdUserRef.persona.fecha_nac) patientPayload.fechaNacimiento = createdUserRef.persona.fecha_nac
+        }
+      } catch (linkErr) {
+        console.warn('⚠️ [PatientRegistro] No se pudo vincular completamente paciente<->usuario:', linkErr)
+      }
+    } catch (uErrOuter) {
+      console.error('❌ [PatientRegistro] Error en flujo de creación de usuario:', uErrOuter)
+    }
+
+    const createdId = await AdminPatientService.createPatient(patientPayload)
     console.log("✅ [PatientRegistro] Paciente creado con ID:", createdId)
     
     // Success feedback
@@ -1256,32 +1097,16 @@ const resetForm = () => {
     condicionToma: '', 
     observaciones: '' 
   }
-  form.responsable = { 
-    parentesco: '', 
-    nombres: '', 
-    apellidos: '', 
-    fecha_nacimiento: '', 
-    ci: '', 
-    domicilio: '', 
-    ocupacion: '', 
-    estado_civil: '', 
-    telefono: '', 
-    email: '', 
-    autorizacion: false 
-  }
   form.direccion = { calle: '', numero: '', zona: '', ciudad: '', provincia: '' }
   form.seguro = { nombre: '', polid: '' }
   form.telefono = ''
   form.email = ''
+  form.password = ''
   form.createdAt = new Date().toISOString()
   photoFile.value = null
   photoDataUrl.value = ''
   ciPhotoFile.value = null
   ciPhotoDataUrl.value = ''
-  responsableFotoFile.value = null
-  responsableFotoDataUrl.value = ''
-  responsableCIFile.value = null
-  responsableCIDataUrl.value = ''
   recetaFotoFile.value = null
   recetaFotoDataUrl.value = ''
   Object.keys(errors).forEach(k => delete errors[k])
@@ -1785,45 +1610,7 @@ const printPreview = () => {
       </div>
       ` : ''}
       
-      ${showResponsable.value && form.responsable.nombres ? `
-      <!-- Tutor/Responsable -->
-      <div class="section">
-        <div class="section-title">
-          <span class="section-icon">👨‍👩‍👧‍👦</span>
-          Tutor / Familiar Responsable
-        </div>
-        <div class="info-grid">
-          <div class="info-item full-width">
-            <div class="info-label">Nombre Completo</div>
-            <div class="info-value-highlight">${form.responsable.nombres} ${form.responsable.apellidos}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Parentesco</div>
-            <div class="info-value"><span class="badge badge-primary">${form.responsable.parentesco}</span></div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">CI</div>
-            <div class="info-value">🆔 ${form.responsable.ci || 'N/A'}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Teléfono</div>
-            <div class="info-value">📱 ${form.responsable.telefono || 'N/A'}</div>
-          </div>
-          ${form.responsable.email ? `
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">📧 ${form.responsable.email}</div>
-          </div>
-          ` : ''}
-          ${form.responsable.domicilio ? `
-          <div class="info-item full-width">
-            <div class="info-label">Domicilio</div>
-            <div class="info-value">🏠 ${form.responsable.domicilio}</div>
-          </div>
-          ` : ''}
-        </div>
-      </div>
-      ` : ''}
+      
       
       ${form.observaciones ? `
       <!-- Observaciones Generales -->

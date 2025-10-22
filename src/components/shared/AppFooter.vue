@@ -2,25 +2,84 @@
   <footer class="footer" role="contentinfo">
     <div class="shell row">
       <!-- Marca -->
-      <div class="brand">
-        <img class="brand-mark" src="/Logo.png" alt="VITALSYSTEMS"
-          onerror="this.src='/favicon.ico'; this.classList.add('fallback')" />
-        <div class="brand-text">VITALSYSTEMS</div>
-      </div>
+
 
       <!-- Navegación -->
       <nav class="navigation" aria-label="Navegación del sitio">
         
         <ul class="nav-links">
-          <li><router-link to="/">Inicio</router-link></li>
-          <li><router-link to="/about-us">Sobre Nosotros</router-link></li>
-          <li><router-link to="/product">Producto</router-link></li>
-          <li><router-link to="/contact-us">Contáctanos</router-link></li>
+          <li>
+            <router-link to="/">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="g-nav1" x1="0" x2="1">
+                      <stop offset="0" stop-color="#2dd4bf"/>
+                      <stop offset="1" stop-color="#60a5fa"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="9" fill="none" stroke="url(#g-nav1)" stroke-width="1.6" />
+                  <path d="M10 14l4-4" fill="none" stroke="url(#g-nav1)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              Inicio
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/about-us">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="g-nav2" x1="0" x2="1">
+                      <stop offset="0" stop-color="#2dd4bf"/>
+                      <stop offset="1" stop-color="#60a5fa"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="9" fill="none" stroke="url(#g-nav2)" stroke-width="1.6" />
+                  <path d="M12 8v.01M11.3 11h1.4v4.5h-1.4z" fill="none" stroke="url(#g-nav2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              Sobre Nosotros
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/product">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="g-nav3" x1="0" x2="1">
+                      <stop offset="0" stop-color="#2dd4bf"/>
+                      <stop offset="1" stop-color="#60a5fa"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="url(#g-nav3)" stroke-width="1.6"/>
+                </svg>
+              </span>
+              Producto
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/contact-us">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="g-nav4" x1="0" x2="1">
+                      <stop offset="0" stop-color="#2dd4bf"/>
+                      <stop offset="1" stop-color="#60a5fa"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#g-nav4)" stroke-width="1.6" />
+                  <path d="M4 7l8 6 8-6" fill="none" stroke="url(#g-nav4)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              Contáctanos
+            </router-link>
+          </li>
         </ul>
       </nav>
 
-      <!-- Redes -->
-<ul class="social" aria-label="Redes sociales">
+  <!-- Redes -->
+  <ul class="social" aria-label="Redes sociales">
   <li>
     <a href="https://www.facebook.com/share/1BAv4qKUap/"
        target="_blank" rel="noopener noreferrer"
@@ -89,8 +148,19 @@
   </li>
 </ul>
 
-      <!-- Contacto -->
-      <ul class="contact" aria-label="Información de contacto">
+      <!-- Horarios de atención -->
+      <div class="hours" aria-label="Horarios de atención">
+        <h3 class="nav-title">Horarios de atención</h3>
+        <ul class="hours-list">
+          <li><strong>Lun – Vie:</strong> 09:00 – 18:30</li>
+          <li><strong>Dirección:</strong> 12 de Calacoto, La Paz - Bolivia</li>
+          <li><strong>Tel:</strong> +591 73577561</li>
+          <li><strong>Email:</strong> contacto@vitalsystems.com</li>
+        </ul>
+      </div>
+
+  <!-- Contacto -->
+  <ul class="contact" aria-label="Información de contacto">
         <li>
           <span class="ico" aria-hidden="true">
             <!-- Pin -->
@@ -143,8 +213,8 @@
           </span>
           <a href="tel:+59173577561">+591 73577561</a>
         </li>
-      </ul>
-    </div>
+  </ul>
+  </div>
 
     <div class="legal">© 2025 VitalSystems. Todos los derechos reservados.</div>
   </footer>
@@ -167,26 +237,26 @@
 }
 
 .row {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
-  gap: clamp(24px, 4vw, 64px);
-  align-items: start;
-  justify-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(28px, 4.5vw, 80px);
 }
 
 .brand {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-self: center;
-  gap: clamp(12px, 1.5vw, 18px);
+  align-items: flex-start;
+  text-align: left;
+  justify-self: flex-start;
+
 }
 
 .brand-mark {
   display: block;
   margin: 0 auto;
-  width: clamp(90px, 12vw, 140px);
+  width: clamp(150px, 15vw, 200px);
   height: auto;
 }
 
@@ -204,9 +274,9 @@
 .navigation {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: clamp(16px, 2vw, 24px);
+  align-items: flex-start;
+  text-align: left;
+  gap: clamp(12px, 1.6vw, 20px);
 }
 
 .nav-title {
@@ -237,8 +307,8 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  align-items: center;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .nav-links li {
@@ -246,12 +316,14 @@
 }
 
 .nav-links a {
-  display: block;
-  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
   border-radius: 6px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  transition: all 0.22s ease;
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1vw, 1.02rem);
   color: #cbd5e1;
   text-decoration: none;
 }
@@ -267,6 +339,24 @@
   background: linear-gradient(135deg, rgba(45, 212, 191, 0.2), rgba(96, 165, 250, 0.2));
   color: #2dd4bf;
   border: 1px solid rgba(45, 212, 191, 0.3);
+}
+
+.hours {
+  text-align: left;
+  color: #cbd5e1;
+}
+
+.hours-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hours-list li {
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
 }
 
 .social,
@@ -304,15 +394,15 @@ a:hover {
 }
 
 .ico {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .05);
+  background: rgba(255, 255, 255, .04);
   display: grid;
   place-items: center;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
-  transition: background-color 0.3s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+  transition: background-color 0.22s ease, transform 0.22s ease;
 }
 
 a:hover .ico {
@@ -320,10 +410,16 @@ a:hover .ico {
 }
 
 .ico svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   display: block;
 }
+
+/* Layout tuning: give nav column a comfortable width and keep hours prominent */
+.navigation { flex: 0 0 220px; }
+.hours { flex: 1 1 420px; }
+.social { flex: 0 0 160px; }
+.contact { flex: 0 0 200px; }
 
 .legal {
   text-align: center;
@@ -336,15 +432,17 @@ a:hover .ico {
 
 @media (max-width: 980px) {
   .row {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+    flex-direction: column;
+    gap: 2.2rem;
     text-align: center;
   }
 
   .brand, .navigation, .social, .contact {
-    justify-self: center;
+    align-self: center;
   }
 
+  .navigation { flex: none; }
+  .hours { flex: none; }
   .social, .contact {
     display: grid;
     justify-items: center;

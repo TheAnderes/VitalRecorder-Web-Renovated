@@ -12,10 +12,27 @@ export function useAdmin() {
   // Obtener rol del usuario desde Firestore
   const getUserRole = async (userId) => {
     try {
-      // En desarrollo, evitar llamadas a Firestore y devolver rol seguro
-      if (import.meta.env.DEV || !navigator.onLine) {
-        return 'admin'
+      // Si estamos offline, usar fallback local (localStorage / placeholderUsers)
+      if (!navigator.onLine) {
+        try {
+          const raw = localStorage.getItem('vr_users')
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            const found = parsed.find(u => u.id === userId)
+            if (found && found.role) return found.role
+          }
+        } catch (err) {
+          console.warn('No se pudo leer vr_users desde localStorage en getUserRole:', err)
+        }
+
+        // Buscar en placeholderUsers
+        const local = placeholderUsers.find(u => u.id === userId)
+        if (local && local.role) return local.role
+
+        // Fallback razonable en DEV: 'user'
+        return 'user'
       }
+      // Nota: en modo desarrollo (import.meta.env.DEV) permitimos leer Firestore cuando estemos online
       const userDoc = await getDoc(doc(db, 'users', userId))
       if (userDoc.exists()) {
         return userDoc.data().role || 'user'

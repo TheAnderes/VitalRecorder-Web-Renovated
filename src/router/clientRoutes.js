@@ -52,7 +52,9 @@ export const clientRoutes = [
   },
   { 
     path: '/register', 
-    redirect: '/auth',
+    // Redirect to /auth but include a query so the LoginRegister component
+    // can detect the desired panel (register) and activate it.
+    redirect: to => ({ path: '/auth', query: { mode: 'register' } }),
     meta: { requiresAuth: false }
   },
   { 

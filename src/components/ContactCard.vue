@@ -18,6 +18,7 @@ L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl });
 const name = ref("");
 const email = ref("");
 const message = ref("");
+const sending = ref(false);
 const center = [-16.5, -68.1193]; // Coordenadas de La Paz
 let mapInstance = null;
 let marker = null;
@@ -53,14 +54,20 @@ function invalidate() {
 
 function submit() {
   if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
-    alert("Por favor, completa todos los campos.");
+    // Mejor feedback visual en vez de alert crudo
+    window.alert("Por favor, completa todos los campos.");
     return;
   }
-  console.log({ name: name.value, email: email.value, message: message.value });
-  alert("Mensaje enviado. Gracias.");
-  name.value = "";
-  email.value = "";
-  message.value = "";
+  // Simular envío con estado
+  sending.value = true;
+  setTimeout(() => {
+    console.log({ name: name.value, email: email.value, message: message.value });
+    window.alert("Mensaje enviado. Gracias.");
+    name.value = "";
+    email.value = "";
+    message.value = "";
+    sending.value = false;
+  }, 900);
 }
 </script>
 
@@ -73,42 +80,57 @@ function submit() {
         productos, ponte en contacto con nosotros. Estamos aquí para ayudarte.
       </p>
 
-      <BaseCard class="contact-card">
-        <form class="form" @submit.prevent="submit">
-          <BaseInput
-            label="Nombre completo"
-            id="contact-name"
-            type="text"
-            v-model="name"
-            placeholder="Juan Miguel..."
-            required
-          />
+      <BaseCard class="contact-card glass">
+        <div class="left">
+          <form class="form" @submit.prevent="submit" aria-labelledby="contact-title">
+            <h2 id="contact-title" class="sr-only">Formulario de contacto</h2>
 
-          <BaseInput
-            label="Correo electrónico"
-            id="contact-email"
-            type="email"
-            v-model="email"
-            placeholder="tucorreo@gmail.com"
-            required
-          />
+            <BaseInput
+              label="Nombre completo"
+              id="contact-name"
+              type="text"
+              v-model="name"
+              placeholder="Juan Miguel..."
+              required
+            />
 
-          <BaseInput
-            label="Mensaje"
-            id="contact-message"
-            type="textarea"
-            v-model="message"
-            placeholder="Escribe tu mensaje..."
-            required
-            rows="5"
-          />
+            <BaseInput
+              label="Correo electrónico"
+              id="contact-email"
+              type="email"
+              v-model="email"
+              placeholder="tucorreo@gmail.com"
+              required
+            />
 
-          <!-- CORRECCIÓN: Usamos el componente de botón del proyecto -->
-          <PrimaryButton name="Enviar Mensaje" type="submit" />
-        </form>
+            <BaseInput
+              label="Mensaje"
+              id="contact-message"
+              type="textarea"
+              v-model="message"
+              placeholder="Escribe tu mensaje..."
+              required
+              rows="5"
+            />
 
-        <div class="map-media">
-          <div ref="mapEl" class="map"></div>
+            <div class="actions">
+              <PrimaryButton name="Enviar Mensaje" type="submit" :disabled="sending" />
+            </div>
+          </form>
+        </div>
+
+        <div class="right">
+          <div class="map-media">
+            <div ref="mapEl" class="map" role="region" aria-label="Mapa con ubicación de VitalSystems"></div>
+            <div v-if="sending" class="sending-overlay" aria-hidden="true">
+              <div class="spinner"></div>
+              <div class="sending-text">Enviando...</div>
+            </div>
+          </div>
+          <div class="contact-info">
+            <strong>VITALSYSTEMS</strong>
+            <p class="muted">La Paz, Bolivia · soporte@vitalsystems.example</p>
+          </div>
         </div>
       </BaseCard>
     </div>
@@ -120,7 +142,7 @@ function submit() {
 .contact-view {
   font-family: 'Poppins', sans-serif;
   color: #0f2147;
-  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+  background: linear-gradient(170deg, #eef2ff, #f0f9ff);
   min-height: 100vh;
   padding: clamp(1rem, 4vw, 2rem) 0;
   margin: 0;
@@ -172,13 +194,17 @@ function submit() {
 .contact-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  gap: clamp(2rem, 5vw, 3rem);
   align-items: start;
-  background: white;
-  border-radius: 1.5rem;
-  padding: clamp(2rem, 5vw, 3rem);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(250,250,255,0.7));
+  border-radius: 1rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow: 0 12px 40px rgba(29,78,216,0.08);
+  border: 1px solid rgba(29,78,216,0.06);
+}
+
+.contact-card.glass {
+  backdrop-filter: blur(6px) saturate(110%);
 }
 
 /* --- FORMULARIO --- */
@@ -188,6 +214,14 @@ function submit() {
   gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
 }
+
+.left { padding-right: 0.25rem; }
+.right { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.contact-info { padding: 0.5rem 0 0; color: #475569; }
+.contact-info .muted { color: #94a3b8; margin: 0; font-size: 0.95rem }
+
+.actions { display:flex; justify-content:flex-start; }
 
 /* --- MAPA --- */
 .map-media {
@@ -211,6 +245,27 @@ function submit() {
   border-radius: 1rem;
   overflow: hidden;
 }
+
+/* Sending overlay */
+.sending-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
+  backdrop-filter: blur(3px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  z-index: 40;
+}
+.spinner {
+  width:40px; height:40px; border-radius:50%;
+  border:4px solid rgba(59,130,246,0.15);
+  border-top-color: #3b82f6; animation: spin 1s linear infinite;
+}
+.sending-text { color:#1e293b; font-weight:600 }
+@keyframes spin { to { transform: rotate(360deg) } }
 
 /* Asegura que los controles del mapa sean visibles */
 :deep(.leaflet-container) {

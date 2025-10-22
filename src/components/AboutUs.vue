@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted } from "vue";
+import IconFamili from "@/components/icons/IconFamili.svg";
 
 let observer = null;
 onMounted(() => {
@@ -26,15 +27,20 @@ onUnmounted(() => {
     <section class="hero-section">
       <div class="hero-background-image"></div>
       <div class="hero-content-wrapper">
-        <h1 class="hero-main-title">Sobre Nosotros</h1>
-        <div class="hero-content-box">
-          <h2>Acerca de Nosotros</h2>
-          <p>
-            Somos una empresa que busca soluciones tecnológicas innovadoras, que
-            puedan mejorar la calidad de vida de las personas, ofreciendo
-            productos como soluciones a problemas del día a día a personas de
-            todas las edades.
-          </p>
+        <div class="hero-inner">
+          <div class="hero-left">
+            <h1 class="hero-main-title">Sobre Nosotros</h1>
+
+            <h2 class="hero-subline">Acerca de <span class="hero-highlight">Nosotros</span></h2>
+
+            <p class="hero-subtitle">
+              Somos una empresa que busca soluciones tecnológicas innovadoras y
+              accesibles para mejorar la calidad de vida y la autonomía de las
+              personas.
+            </p>
+
+            <!-- botones removidos a petición del usuario -->
+          </div>
         </div>
       </div>
     </section>
@@ -134,27 +140,28 @@ section {
   background-image: url("/Seccion 1(1).png");
   background-size: cover;
   background-position: center;
-  filter: brightness(0.8) blur(2px);
-  z-index: 1;
+  filter: brightness(0.45) blur(2px);
+  z-index: 0;
 }
 .hero-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
 }
 .hero-main-title {
-  font-size: 6.2rem;
+  font-size: clamp(4rem, 10vw, 8.5rem);
   font-weight: 900;
-  line-height: 1.2;
+  line-height: 0.98;
   color: #ffffff;
-  text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-  margin: 0;
-  text-decoration: underline;
-  text-underline-offset: 10px;
-  margin: 0;
+  text-shadow: 0 14px 30px rgba(0, 0, 0, 0.72);
+  margin: 0 0 0.5rem 0;
+  text-align: left;
+  letter-spacing: -1px;
 }
 .hero-content-box {
   background: rgba(255, 255, 255, 0.2);
@@ -182,6 +189,84 @@ section {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Shared hero styles (replicated from HomeView) */
+.hero-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.hero-left {
+  max-width: min(820px, 68%);
+  padding: 0 clamp(20px, 6vw, 80px);
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.hero-subline {
+  font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+  font-weight: 800;
+  margin: 0.2rem 0 0.6rem 0;
+  color: rgba(255,255,255,0.95);
+  text-align: left;
+}
+
+.hero-highlight {
+  background: linear-gradient(90deg,#00c2ff,#08aeea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  text-shadow: 0 6px 18px rgba(3, 169, 244, 0.18);
+}
+
+.hero-subtitle {
+  font-weight: 600;
+  font-size: 25px;
+  color: rgba(238, 246, 255, 0.92);
+  margin: 0 0 1.25rem 0;
+  max-width: 850px;
+  line-height: 1.6;
+  opacity: 0.95;
+  color: rgba(0,0,0,0.85);
+  text-align: left;
+}
+
+.hero-actions { display:flex; gap:1rem; align-items:center; }
+.hero-actions-left { margin-top: 0.25rem; }
+
+.hero-right {
+  margin-left: auto;
+  padding-right: clamp(12px, 4vw, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.hero-logo { width: clamp(200px, 40vw, 260px); height:auto; display:block; background:transparent; border:none; border-radius:16px; padding:12px; animation: pulse 2s ease-in-out infinite; }
+
+.hero-logo-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; height: 100%; width: auto; padding: 8px; }
+
+.hero-logo-wrap::before { content: ''; position: absolute; top: 6px; bottom: 6px; left: -8px; right: -8px; border-radius: 18px; filter: blur(14px); opacity: 0.9; animation: spin 6s linear infinite; z-index: 1; }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes pulse { 0% { transform: scale(1); } 45% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+.boton-primary { display:none; }
+.boton-secondary { display:none; }
+
+.hero-icon {
+  width: clamp(240px, 36vw, 420px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45));
 }
 .mission-grid {
   display: grid;

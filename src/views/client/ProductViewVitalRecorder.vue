@@ -69,7 +69,7 @@ onUnmounted(() => {
     <section class="product-intro">
       <div class="product-view-vital-recorder-image"></div>
       <div class="product-view-content-wrapper">
-        <h1 class="product-hero-title">Vital Recorder</h1>
+        <h1 class="product-hero-title">VITAL RECORDER</h1>
         <div class="product-container product-intro-grid">
           <div class="product-intro-text">
             <h2 class="product-intro-heading">
@@ -306,8 +306,7 @@ export default {
   font-size: 80px;
   font-weight: black;
   color: #ffffff;
-  text-decoration: underline 4px #ffffff;
-  text-underline-offset: 9px;
+
   margin: 0;
   margin-left: 0;
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
@@ -357,7 +356,7 @@ export default {
 .product-intro-lead {
   text-align: center;
   padding: 10px;
-  font-size: 27px;
+  font-size: 25px;
   font-weight: var(--semibold);
   line-height: 1.6;
   color: #f2f6ff;
