@@ -163,7 +163,7 @@ onUnmounted(() => {
           </div>
           <div class="stat">
             <div class="stat-number">100%</div>
-            <div class="stat-label">Enfoque en La Paz</div>
+            <div class="stat-label">Enfoque</div>
           </div>
         </div>
       </div>
