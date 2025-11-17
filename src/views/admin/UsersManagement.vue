@@ -35,14 +35,9 @@
             <option value="all">Todos los roles</option>
             <option value="user">Usuarios</option>
             <option value="admin">Administradores</option>
+            <option value="cuidador">Cuidadores</option>
           </select>
-          
-          <select v-model="sortBy" @change="updateSort" class="sort-select">
-            <option value="createdAt">Fecha de registro</option>
-            <option value="nombres">Nombre</option>
-            <option value="email">Email</option>
-            <option value="role">Rol</option>
-          </select>
+        
           
           <button @click="toggleSortOrder" class="sort-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -462,7 +457,8 @@ const getUserFullName = (user) => {
 const getRoleDisplayName = (role) => {
   const roleNames = {
     'user': 'Usuario',
-    'admin': 'Administrador'
+    'admin': 'Administrador',
+    'cuidador': 'Cuidador'
   }
   return roleNames[role] || role
 }
@@ -545,7 +541,7 @@ onMounted(async () => {
 
 .filter-row {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) repeat(3, minmax(140px, max-content));
+  grid-template-columns: minmax(280px, 1fr) repeat(2, minmax(140px, max-content));
   gap: 0.75rem 1rem;
   align-items: center;
 }
@@ -554,7 +550,7 @@ onMounted(async () => {
   position: relative;
   flex: 1 1 320px;
   min-width: 260px;
-  max-width: 600px;
+  max-width: 520px;
 }
 
 .search-box svg {
@@ -797,6 +793,13 @@ onMounted(async () => {
 .role-badge.admin {
   background: #fed7aa;
   color: #c2410c;
+}
+
+/* Cuidador: look consistent with other role badges but use a pink border */
+.role-badge.cuidador {
+  background: #f7cfe5; /* very light pink */
+  color: #be185d; /* rose-700 */
+  border: 1px solid #fda4af; /* pink border */
 }
 
 

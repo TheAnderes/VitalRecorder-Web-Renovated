@@ -119,8 +119,8 @@ const loadDashboardData = async () => {
     // Cargar estadísticas básicas
     await adminStore.fetchStats()
     
-    // Cargar actividad reciente
-    recentActivity.value = getRecentActivity()
+    // Cargar actividad reciente (excluir entradas de "Configuraciones del sistema actualizadas")
+    recentActivity.value = getRecentActivity().filter(a => a.type !== 'settings_updated' && a.message !== 'Configuraciones del sistema actualizadas')
     
     // Calcular usuarios online (simulado)
     onlineUsers.value = Math.floor(stats.value.totalUsers * 0.15) || 3

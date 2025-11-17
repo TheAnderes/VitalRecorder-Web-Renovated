@@ -11,6 +11,7 @@
     <AdminSidebar 
       :is-collapsed="sidebarCollapsed"
       @toggle="toggleSidebar"
+      @logout="handleLogout"
     />
     
     <!-- Main Content -->
@@ -52,7 +53,9 @@ import AdminHeader from './AdminHeader.vue'
 const router = useRouter()
 const { user } = useAuth()
 
-const sidebarCollapsed = ref(true) // Start collapsed on mobile
+// Keep the admin sidebar expanded by default so the main content
+// is already shifted to the right and accommodates the static sidebar.
+const sidebarCollapsed = ref(false)
 
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value

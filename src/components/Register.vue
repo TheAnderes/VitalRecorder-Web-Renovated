@@ -263,7 +263,14 @@ const goHome = () => {
   justify-content: center;
   min-height: 100vh;
   padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1rem);
-  background: linear-gradient(170deg, #e0f2f1, #b2dfdb);
+    /* Preferencia: imagen situada en `public/` con nombre exacto "fondo inicio.png".
+      Si no existe, se usará el degradado como respaldo. */
+    background-image: linear-gradient(rgba(6,12,20,0.45), rgba(6,12,20,0.45)), url('/src/components/icons/fondoinicio.png');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    /* Fallback degradado si la imagen no está disponible */
+    background-color: transparent;
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
 }

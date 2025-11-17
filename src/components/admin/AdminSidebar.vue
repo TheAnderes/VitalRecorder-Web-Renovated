@@ -108,7 +108,14 @@
     <!-- User Info Section -->
     <div class="sidebar-footer">
       <div class="user-info" v-show="!isCollapsed">
-        <div class="user-role-badge">{{ (userRole || 'user').toUpperCase() }}</div>
+        <button
+          class="user-role-badge logout-button logout-danger"
+          @click="$emit('logout')"
+          title="Cerrar sesión"
+          aria-label="Cerrar sesión"
+        >
+          Cerrar sesión
+        </button>
       </div>
     </div>
   </aside>
@@ -125,6 +132,9 @@ const props = defineProps({
     default: false
   }
 })
+
+// Forzar el sidebar siempre abierto independientemente de props entrantes
+const isCollapsed = ref(false)
 
 const route = useRoute()
 const { userRole, canEditUserRoles } = useAdmin()
@@ -143,7 +153,7 @@ const patientSubmodules = [
 
 ]
 
-defineEmits(['toggle'])
+defineEmits(['toggle','logout'])
 </script>
 
 <style scoped>
@@ -257,11 +267,41 @@ defineEmits(['toggle'])
 .user-role-badge {
   background: #059669;
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
   text-align: center;
+  display: inline-block;
+  line-height: 1;
+}
+
+.logout-button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: transform 0.06s ease, background-color 0.15s ease, box-shadow 0.12s ease;
+}
+
+.logout-danger {
+  background: #ef4444; /* red-500 */
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.12);
+}
+
+.logout-danger:hover {
+  background: #dc2626; /* red-600 */
+  transform: translateY(-1px);
+}
+
+.logout-button:focus {
+  outline: 2px solid rgba(255,255,255,0.12);
+  outline-offset: 2px;
 }
 
 /* Patient submenu styles */

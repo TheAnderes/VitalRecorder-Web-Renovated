@@ -2,10 +2,80 @@
   <footer class="footer" role="contentinfo">
     <div class="shell row">
       <!-- Marca -->
-
-
       <!-- Navegación -->
+       
+      <!-- Horarios de atención (ahora primera columna) -->
+      <div class="hours" aria-label="Horarios de atención">
+        <h3 class="nav-title">Datos Generales</h3>
+        <ul class="hours-list">
+          <li>
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g-h1" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="12" cy="12" r="9" fill="none" stroke="url(#g-h1)" stroke-width="1.2" />
+                <path d="M12 8v4l3 3" fill="none" stroke="url(#g-h1)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <strong>Lun – Vie:</strong> 09:00 – 18:00
+          </li>
+
+          <li>
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g-h2" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" fill="none" stroke="url(#g-h2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="10" r="2.5" fill="none" stroke="url(#g-h2)" stroke-width="1.8"/>
+              </svg>
+            </span>
+            <strong>Dirección:</strong> 12 de Calacoto, La Paz - Bolivia
+          </li>
+
+          <li>
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g-h3" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <path d="M6 3l3 3-2 2a12 12 0 0 0 8 8l2-2 3 3-2 3c-8 1-15-6-14-14L6 3Z" fill="none" stroke="url(#g-h3)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <strong>Tel:</strong> <a href="tel:+59173577561">+591 73577561</a>
+          </li>
+
+          <li>
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="g-h4" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2dd4bf"/>
+                    <stop offset="1" stop-color="#60a5fa"/>
+                  </linearGradient>
+                </defs>
+                <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#g-h4)" stroke-width="1.8"/>
+                <path d="M4 7l8 6 8-6" fill="none" stroke="url(#g-h4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <strong>Email:</strong> <a href="mailto:contacto@vitalsystems.com">contacto@vitalsystems.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Navegación (Nuestra Web) -->
       <nav class="navigation" aria-label="Navegación del sitio">
+        <h3 class="nav-title">Nuestra Web</h3>
         
         <ul class="nav-links">
           <li>
@@ -80,6 +150,7 @@
 
   <!-- Redes -->
   <ul class="social" aria-label="Redes sociales">
+    <h3 class="nav-title">Nuestras Redes</h3>
   <li>
     <a href="https://www.facebook.com/share/1BAv4qKUap/"
        target="_blank" rel="noopener noreferrer"
@@ -147,74 +218,18 @@
     </a>
   </li>
 </ul>
+      <!-- Horarios de atención eliminado (duplicado) -->
+  <!-- Contacto eliminado según solicitud del usuario -->
 
-      <!-- Horarios de atención -->
-      <div class="hours" aria-label="Horarios de atención">
-        <h3 class="nav-title">Horarios de atención</h3>
-        <ul class="hours-list">
-          <li><strong>Lun – Vie:</strong> 09:00 – 18:30</li>
-          <li><strong>Dirección:</strong> 12 de Calacoto, La Paz - Bolivia</li>
-          <li><strong>Tel:</strong> +591 73577561</li>
-          <li><strong>Email:</strong> contacto@vitalsystems.com</li>
-        </ul>
+      <!-- Marca (colocada a la derecha) -->
+      <div class="brand" aria-label="Marca">
+        <router-link to="/" class="brand-link" aria-label="VITALSYSTEMS home">
+          <img src="/Logo1.png" alt="VITALSYSTEMS logo" class="brand-mark" />
+        </router-link>
+        
       </div>
 
-  <!-- Contacto -->
-  <ul class="contact" aria-label="Información de contacto">
-        <li>
-          <span class="ico" aria-hidden="true">
-            <!-- Pin -->
-            <svg viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="g4" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf" />
-                  <stop offset="1" stop-color="#60a5fa" />
-                </linearGradient>
-              </defs>
-              <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" fill="none" stroke="url(#g4)"
-                stroke-width="1.8" />
-              <circle cx="12" cy="10" r="2.5" fill="none" stroke="url(#g4)" stroke-width="1.8" />
-            </svg>
-          </span>
-          <span>12 de Calacoto, La Paz - Bolivia</span>
-        </li>
-
-        <li>
-          <span class="ico" aria-hidden="true">
-            <!-- Sobre -->
-            <svg viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="g5" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf" />
-                  <stop offset="1" stop-color="#60a5fa" />
-                </linearGradient>
-              </defs>
-              <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#g5)" stroke-width="1.8" />
-              <path d="M4 7l8 6 8-6" fill="none" stroke="url(#g5)" stroke-width="1.8" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </span>
-          <a href="mailto:contacto@vitalsystems.com">contacto@vitalsystems.com</a>
-        </li>
-
-        <li>
-          <span class="ico" aria-hidden="true">
-            <!-- Teléfono -->
-            <svg viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="g6" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2dd4bf" />
-                  <stop offset="1" stop-color="#60a5fa" />
-                </linearGradient>
-              </defs>
-              <path d="M6 3l3 3-2 2a12 12 0 0 0 8 8l2-2 3 3-2 3c-8 1-15-6-14-14L6 3Z" fill="none" stroke="url(#g6)"
-                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </span>
-          <a href="tel:+59173577561">+591 73577561</a>
-        </li>
-  </ul>
-  </div>
+    </div>
 
     <div class="legal">© 2025 VitalSystems. Todos los derechos reservados.</div>
   </footer>
@@ -241,16 +256,22 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  gap: clamp(28px, 4.5vw, 80px);
+  gap: clamp(20px, 3.5vw, 60px);
 }
 
 .brand {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  justify-self: flex-start;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 220px; /* ocupa la columna izquierda del footer */
+}
 
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .brand-mark {
@@ -276,7 +297,6 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: clamp(12px, 1.6vw, 20px);
 }
 
 .nav-title {
@@ -290,6 +310,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  
 }
 
 /* Fallback para navegadores que no soportan background-clip */
@@ -307,7 +328,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   align-items: flex-start;
 }
 
@@ -352,11 +373,14 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
 }
 
 .hours-list li {
   font-size: clamp(0.9rem, 1.1vw, 1rem);
+  display: flex;            /* mantiene el icono y el texto en la misma fila */
+  align-items: center;     /* alinea verticalmente */
+  gap: 12px;               /* separación consistente entre icono y texto */
 }
 
 .social,
@@ -415,10 +439,9 @@ a:hover .ico {
   display: block;
 }
 
-/* Layout tuning: give nav column a comfortable width and keep hours prominent */
-.navigation { flex: 0 0 220px; }
-.hours { flex: 1 1 420px; }
-.social { flex: 0 0 160px; }
+.navigation { flex: 0 0 180px; margin-top: -6px; }
+.navigation .nav-title { font-size: clamp(0.95rem, 1.1vw, 1.05rem); font-weight: 600; }
+.social { flex: 0 0 200px; }
 .contact { flex: 0 0 200px; }
 
 .legal {
@@ -441,7 +464,7 @@ a:hover .ico {
     align-self: center;
   }
 
-  .navigation { flex: none; }
+  .navigation { flex: none; margin-top: 0; }
   .hours { flex: none; }
   .social, .contact {
     display: grid;

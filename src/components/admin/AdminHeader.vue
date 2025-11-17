@@ -1,16 +1,6 @@
 <template>
   <header class="admin-header">
     <div class="header-left">
-      <button 
-        @click="$emit('toggle-sidebar')" 
-        class="sidebar-toggle"
-        title="Toggle Sidebar"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-      
       <div class="page-title">
         <h1>{{ pageTitle }}</h1>
       </div>
