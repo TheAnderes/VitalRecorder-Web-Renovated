@@ -34,7 +34,7 @@
         <div class="content-container">
           <div class="admin-footer__top">panel de administracion</div>
           <div class="admin-footer__divider" aria-hidden="true"></div>
-          <div class="admin-footer__bottom">vital sistem</div>
+          <div class="admin-footer__bottom">Vital Recorder</div>
         </div>
       </footer>
     </div>
