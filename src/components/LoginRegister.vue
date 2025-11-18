@@ -72,22 +72,24 @@
           <i class="bx bx-lock-alt"></i>
         </div>
 
-        <div class="input-box">
-          <input
-            type="tel"
-            placeholder="Número de celular"
-            v-model="registerData.phone"
-          />
-          <i class="bx bx-phone"></i>
-        </div>
+              <div class="input-box">
+                <input
+                  type="tel"
+                  placeholder="Número de celular"
+                  v-model="registerData.phone"
+                  required
+                />
+                <i class="bx bx-phone"></i>
+              </div>
 
-        <div class="input-box">
-          <input
-            type="date"
-            v-model="registerData.dob"
-          />
-          <i class="bx bx-calendar"></i>
-        </div>
+              <div class="input-box">
+                <input
+                  type="date"
+                  v-model="registerData.dob"
+                  required
+                />
+                <i class="bx bx-calendar"></i>
+              </div>
 
         <button type="submit" class="btn" :disabled="registerLoading">Registrarse</button>
 
@@ -301,7 +303,9 @@ const handleRegister = async () => {
   if (
     !registerData.value.fullName.trim() ||
     !registerData.value.email.trim() ||
-    !registerData.value.password.trim()
+    !registerData.value.password.trim() ||
+    !registerData.value.phone.trim() ||
+    !registerData.value.dob
   ) {
     Swal.fire({
       icon: "warning",
@@ -323,31 +327,8 @@ const handleRegister = async () => {
   registerLoading.value = true;
 
   try {
-    // Preguntar al usuario qué rol desea al registrarse
-    const { value: selectedRole } = await Swal.fire({
-      title: '¿Eres cuidador o paciente?',
-      input: 'radio',
-      inputOptions: {
-        paciente: 'Paciente (usuario)',
-        cuidador: 'Cuidador'
-      },
-      inputValidator: (value) => {
-        if (!value) return 'Por favor selecciona una opción';
-        return null;
-      },
-      confirmButtonText: 'Continuar',
-      cancelButtonText: 'Cancelar',
-      showCancelButton: true,
-      reverseButtons: true
-    });
-
-    if (!selectedRole) {
-      // Usuario canceló la selección
-      registerLoading.value = false;
-      return;
-    }
-
-    const roleToSave = selectedRole === 'cuidador' ? 'cuidador' : 'user';
+    // Forzar rol 'user' (Paciente)
+    const roleToSave = 'user';
 
     const userCredential = await createUserWithEmailAndPassword(
       auth,

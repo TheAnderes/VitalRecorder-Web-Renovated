@@ -44,15 +44,16 @@
             <span class="ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <defs>
-                  <linearGradient id="g-h3" x1="0" x2="1">
+                  <linearGradient id="g-whatsapp" x1="0" x2="1">
                     <stop offset="0" stop-color="#2dd4bf"/>
                     <stop offset="1" stop-color="#60a5fa"/>
                   </linearGradient>
                 </defs>
-                <path d="M6 3l3 3-2 2a12 12 0 0 0 8 8l2-2 3 3-2 3c-8 1-15-6-14-14L6 3Z" fill="none" stroke="url(#g-h3)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20.52 3.48A11.95 11.95 0 0012 0C5.372 0 .01 4.836.01 11.17c0 1.968.518 3.89 1.5 5.58L0 24l7.6-1.99A11.99 11.99 0 0012 24c6.628 0 11.99-4.836 11.99-11.17 0-3.01-1.2-5.84-3.47-7.64z" fill="none" stroke="url(#g-whatsapp)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17.2 14.5c-.3-.15-1.72-.85-1.98-.95-.26-.1-.45-.15-.64.15-.19.3-.73.95-.9 1.15-.16.2-.33.22-.62.07-1.07-.5-3.5-2.04-4.63-3.52-.28-.34.28-.33.8-1.11.09-.14.06-.25-.01-.35-.07-.09-.64-1.54-.88-2.12-.23-.56-.47-.48-.64-.49-.16 0-.35-.01-.54-.01-.2 0-.52.07-.79.35-.27.28-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.09 3.2 5.06 4.49 3.02 1.3 3.02.86 3.57.8.56-.06 1.82-.74 2.08-1.45.26-.71.26-1.32.18-1.45-.08-.13-.29-.2-.6-.35z" fill="url(#g-whatsapp)"/>
               </svg>
             </span>
-            <strong>Tel:</strong> <a href="tel:+59173577561">+591 73577561</a>
+            <strong>WhatsApp:</strong> <a href="https://wa.me/59168266526" target="_blank" rel="noopener noreferrer">+591 68266526</a>
           </li>
 
           <li>

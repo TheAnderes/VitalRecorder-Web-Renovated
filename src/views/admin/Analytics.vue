@@ -9,12 +9,7 @@
         </div>
         
         <div class="header-actions">
-          <select v-model="selectedPeriod" class="period-selector">
-            <option value="7days">Últimos 7 días</option>
-            <option value="30days">Últimos 30 días</option>
-            <option value="3months">Últimos 3 meses</option>
-            <option value="year">Último año</option>
-          </select>
+
           
           <button @click="exportReport" class="export-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -35,18 +30,18 @@
       <div v-else class="analytics-content">
         <!-- Summary Cards -->
         <div class="summary-cards">
-          <div class="summary-card">
-            <div class="card-icon users">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" fill="currentColor"/>
-              </svg>
+            <div class="summary-card">
+              <div class="card-icon family">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="card-content">
+                <h3>{{ analytics.patientsTotal }}</h3>
+                <p>Pacientes Totales</p>
+                <span class="growth positive">+{{ analytics.recentPatients }} nuevos</span>
+              </div>
             </div>
-            <div class="card-content">
-              <h3>{{ analytics.totalUsers }}</h3>
-              <p>Usuarios Totales</p>
-              <span class="growth positive">+{{ analytics.recentUsers }} nuevos</span>
-            </div>
-          </div>
 
           <div class="summary-card">
             <div class="card-icon active">
@@ -62,29 +57,17 @@
             </div>
           </div>
 
-          <div class="summary-card">
-            <div class="card-icon family">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="card-content">
-              <h3>{{ analytics.usersWithFamily }}</h3>
-              <p>Con Familiar Config.</p>
-              <span class="growth neutral">{{ Math.round((analytics.usersWithFamily / analytics.totalUsers) * 100) }}% del total</span>
-            </div>
-          </div>
 
           <div class="summary-card">
-            <div class="card-icon notifications">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="card-icon caregivers">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM8 11c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zM4 20c0-2.21 1.79-4 4-4h8c2.21 0 4 1.79 4 4v1H4v-1z" fill="currentColor"/>
               </svg>
             </div>
             <div class="card-content">
-              <h3>{{ analytics.notificationsEnabled }}</h3>
-              <p>Notificaciones Activas</p>
-              <span class="growth positive">{{ analytics.silentModeUsers }} en modo silencio</span>
+              <h3>{{ analytics.caregiversTotal }}</h3>
+              <p>Cuidadores Totales</p>
+              <span class="growth positive">+{{ analytics.recentCaregivers }} nuevos</span>
             </div>
           </div>
         </div>
@@ -121,18 +104,6 @@
               subtitle="Grupos etarios de usuarios"
               :height="barHeight"
               :show-legend="false"
-            />
-          </div>
-
-
-          <!-- Settings Analytics -->
-          <div class="chart-section">
-            <BarChart
-              :data="settingsData"
-              title="Configuraciones de Usuario"
-              subtitle="Preferencias más comunes"
-              :height="barHeight"
-              :show-legend="true"
             />
           </div>
         </div>
@@ -206,6 +177,8 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
 import BarChart from '@/components/shared/BarChart.vue'
 import PieChart from '@/components/shared/PieChart.vue'
@@ -213,6 +186,7 @@ import LineChart from '@/components/shared/LineChart.vue'
 import * as AdminPatientService from '@/services/AdminPatientService'
 import { userService } from '@/services/userService'
 import { useAdmin } from '@/composables/useAdmin'
+import { useAuth } from '@/composables/useAuth'
 
 const { getBasicStats, getRecentActivity: getRecentActivityComposable } = useAdmin()
 
@@ -225,7 +199,11 @@ const analytics = ref({
   recentUsers: 0,
   usersWithFamily: 0,
   notificationsEnabled: 0,
-  silentModeUsers: 0
+  silentModeUsers: 0,
+  patientsTotal: 0,
+  caregiversTotal: 0,
+  recentPatients: 0,
+  recentCaregivers: 0
 })
 const recentActivity = ref([])
 const demographicData = ref(null)
@@ -274,27 +252,7 @@ const roleData = computed(() => {
   ]
 })
 
-const settingsData = computed(() => {
-  if (!demographicData.value) return []
-  
-  return [
-    {
-      label: 'Con Familiar',
-      value: demographicData.value.usersWithFamily || analytics.value.usersWithFamily,
-      color: '#3b82f6'
-    },
-    {
-      label: 'Notificaciones',
-      value: demographicData.value.notificationStats?.enabled || analytics.value.notificationsEnabled,
-      color: '#10b981'
-    },
-    {
-      label: 'Modo Silencio',
-      value: demographicData.value.notificationStats?.silentMode || analytics.value.silentModeUsers,
-      color: '#f59e0b'
-    }
-  ]
-})
+// Removed settingsData: 'Configuraciones de Usuario' chart was removed per request
 
 // Responsive sizes
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -343,11 +301,34 @@ const loadAnalytics = async () => {
       // Basic analytics
       analytics.value.totalUsers = usersList.length
       analytics.value.totalAdmins = usersList.filter(u => u.role === 'admin' || u.role === 'super_admin').length
+      analytics.value.patientsTotal = patientsList.length
+      analytics.value.caregiversTotal = usersList.filter(u => u.role === 'cuidador').length
+
+      // Compute cutoff once for recent counts based on selectedPeriod
+      const days = selectedPeriod.value === '7days' ? 7 : selectedPeriod.value === '30days' ? 30 : selectedPeriod.value === '3months' ? 90 : 365
+      const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days)
+
       analytics.value.recentUsers = usersList.filter(u => {
         const createdAt = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
-        const days = selectedPeriod.value === '7days' ? 7 : selectedPeriod.value === '30days' ? 30 : selectedPeriod.value === '3months' ? 90 : 365
-        const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days)
         return createdAt >= cutoff
+      }).length
+
+      // Recent patients (created within the selected period)
+      analytics.value.recentPatients = patientsList.filter(p => {
+        const createdAt = (p.createdAt && p.createdAt.toDate) ? p.createdAt.toDate() : new Date(p.createdAt || p.createdAt || Date.now())
+        return createdAt >= cutoff
+      }).length
+
+      // Recent caregivers (users with role 'cuidador' created within the selected period)
+      analytics.value.recentCaregivers = usersList.filter(u => {
+        try {
+          const isCaregiver = u.role === 'cuidador'
+          if (!isCaregiver) return false
+          const createdAt = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
+          return createdAt >= cutoff
+        } catch (e) {
+          return false
+        }
       }).length
 
       // Active users: prefer patients collection 'isActive' if present
@@ -436,8 +417,8 @@ const loadAnalytics = async () => {
         activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Paciente actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
       })
 
-      // sort activities by timestamp and keep top 12
-      recentActivity.value = activities.sort((a,b)=> b.timestamp - a.timestamp).slice(0,12)
+      // sort activities by timestamp and keep top 5
+      recentActivity.value = activities.sort((a,b)=> b.timestamp - a.timestamp).slice(0,5)
     
   } catch (error) {
     console.error('Error cargando analíticas:', error)
@@ -446,8 +427,8 @@ const loadAnalytics = async () => {
   }
 }
 
-const exportReport = () => {
-  // Crear datos del reporte
+const exportReport = async () => {
+  // Crear datos base del reporte
   const reportData = {
     generatedAt: new Date().toISOString(),
     period: selectedPeriod.value,
@@ -456,15 +437,242 @@ const exportReport = () => {
     growth: growthData.value,
     recentActivity: recentActivity.value
   }
-  
-  // Convertir a JSON y descargar
-  const dataStr = JSON.stringify(reportData, null, 2)
-  const dataBlob = new Blob([dataStr], { type: 'application/json' })
-  
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(dataBlob)
-  link.download = `vitalsystems-analytics-${new Date().toISOString().split('T')[0]}.json`
-  link.click()
+
+  try {
+    // Obtener listas completas para incluir en el informe
+    const [usersList, patientsList] = await Promise.all([
+      userService.getAllUsers(),
+      AdminPatientService.listPatients()
+    ])
+
+    // Contenedor raíz para el PDF (temporal)
+    const container = document.createElement('div')
+    container.className = 'pdf-report'
+    container.style.width = '1200px'
+    container.style.padding = '28px'
+    container.style.boxSizing = 'border-box'
+    container.style.fontFamily = `Inter, Roboto, Arial, Helvetica, sans-serif`
+    container.style.color = '#111'
+    container.style.background = '#fff'
+    container.style.lineHeight = '1.3'
+
+    // Inline styles para tablas, tarjetas y watermark
+    const styleEl = document.createElement('style')
+    styleEl.innerHTML = `
+      .pdf-report h1{font-size:26px;margin:0;color:#0f172a}
+      .pdf-meta{color:#475569;font-size:12px}
+      .pdf-hr{height:1px;background:#e6eef8;margin:14px 0;border-radius:4px}
+      .pdf-summary{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+      .pdf-card{background:#f8fafc;padding:12px;border-radius:10px;flex:1;min-width:200px;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+      .pdf-card h4{margin:0 0 6px 0;font-size:13px;color:#0f172a}
+      .pdf-card .value{font-size:18px;font-weight:700;color:#0b84ff}
+      .pdf-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+      .pdf-table th{background:#f3f4f6;text-align:left;padding:8px;border-bottom:1px solid #e6eef8;font-weight:700}
+      .pdf-table td{padding:8px;border-bottom:1px solid #f1f5f9}
+      .pdf-table tbody tr:nth-child(even){background:#fbfdff}
+      .pdf-section{margin-top:18px}
+      .pdf-watermark{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) rotate(-30deg);color:rgba(15,23,42,0.06);font-size:72px;pointer-events:none}
+    `
+    container.appendChild(styleEl)
+
+    const { getUserName, user: authUser } = useAuth()
+    const adminName = (typeof getUserName === 'function') ? getUserName() : ''
+    const adminEmail = authUser && authUser.value ? authUser.value.email : ''
+
+    // Header con logo simple (inline SVG) y metadatos
+    const header = document.createElement('div')
+    header.style.display = 'flex'
+    header.style.justifyContent = 'space-between'
+    header.style.alignItems = 'center'
+    header.style.marginBottom = '8px'
+
+    const left = document.createElement('div')
+    left.style.display = 'flex'
+    left.style.alignItems = 'center'
+    left.style.gap = '12px'
+
+    // Small inline logo
+    const logo = document.createElement('div')
+    logo.innerHTML = `
+      <svg width="56" height="56" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#2563eb" />
+            <stop offset="1" stop-color="#06b6d4" />
+          </linearGradient>
+        </defs>
+        <rect rx="12" width="64" height="64" fill="url(#g1)" />
+        <text x="50%" y="54%" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#fff" font-weight="700">VR</text>
+      </svg>
+    `
+    left.appendChild(logo)
+
+    const titleWrap = document.createElement('div')
+    titleWrap.innerHTML = `<h1>Informe Administrador — VitalSystems</h1><div class="pdf-meta">Generado: ${new Date(reportData.generatedAt).toLocaleString()} · Periodo: ${reportData.period}</div>`
+    left.appendChild(titleWrap)
+
+    const right = document.createElement('div')
+    right.style.textAlign = 'right'
+    right.innerHTML = `<div class="pdf-meta">Generado por: ${adminName || 'Administrador'}${adminEmail ? ' ('+adminEmail+')' : ''}</div><div style="font-size:11px;color:#94a3b8;margin-top:6px;">VitalRecorder-Web-Renovated</div>`
+
+    header.appendChild(left)
+    header.appendChild(right)
+    container.appendChild(header)
+
+    const hr = document.createElement('div')
+    hr.className = 'pdf-hr'
+    container.appendChild(hr)
+
+    // Summary cards
+    const summaryWrap = document.createElement('div')
+    summaryWrap.className = 'pdf-summary'
+    const cards = [
+      { title: 'Pacientes Totales', value: reportData.summary.patientsTotal ?? patientsList.length ?? 0 },
+      { title: 'Cuidadores Totales', value: reportData.summary.caregiversTotal ?? usersList.filter(u=>u.role==='cuidador').length ?? 0 },
+      { title: 'Usuarios Totales', value: reportData.summary.totalUsers ?? usersList.length ?? 0 },
+      { title: 'Usuarios Activos (%)', value: (reportData.summary.activeUsers ?? 0) + '%' }
+    ]
+    cards.forEach(c => {
+      const card = document.createElement('div')
+      card.className = 'pdf-card'
+      card.innerHTML = `<h4>${c.title}</h4><div class="value">${c.value}</div>`
+      summaryWrap.appendChild(card)
+    })
+    container.appendChild(summaryWrap)
+
+    // Small descriptive section
+    const desc = document.createElement('div')
+    desc.style.marginTop = '8px'
+    desc.style.color = '#475569'
+    desc.style.fontSize = '12px'
+    desc.textContent = 'Resumen ejecutivo y listados importantes. Datos en el momento de la exportación.'
+    container.appendChild(desc)
+
+    // Patients table (styled)
+    const patientsSection = document.createElement('div')
+    patientsSection.className = 'pdf-section'
+    let patientRows = ''
+    patientsList.forEach(p => {
+      const nombre = p.persona?.nombres || p.persona?.nombre || p.id || '—'
+      const dni = p.persona?.dni || p.dni || '—'
+      const estado = p.estado || (p.isActive ? 'Activo' : 'Inactivo') || '—'
+      const created = (p.createdAt && p.createdAt.toDate) ? p.createdAt.toDate().toLocaleDateString() : (p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '—')
+      patientRows += `<tr><td>${p.id || '—'}</td><td>${nombre}</td><td>${dni}</td><td>${estado}</td><td style="text-align:right">${created}</td></tr>`
+    })
+    patientsSection.innerHTML = `
+      <h3 style="margin:0 0 8px 0">Listado de Pacientes (${patientsList.length})</h3>
+      <table class="pdf-table">
+        <thead>
+          <tr><th>ID</th><th>Nombre</th><th>DNI</th><th>Estado</th><th style="text-align:right">Creado</th></tr>
+        </thead>
+        <tbody>
+          ${patientRows}
+        </tbody>
+      </table>
+    `
+    container.appendChild(patientsSection)
+
+    // Caregivers table
+    const caregivers = usersList.filter(u => u.role === 'cuidador' || u.role === 'caregiver')
+    const caregiversSection = document.createElement('div')
+    caregiversSection.className = 'pdf-section'
+    let caregiverRows = ''
+    caregivers.forEach(u => {
+      const nombre = u.persona?.nombres || u.name || u.email || '—'
+      const email = u.email || '—'
+      const created = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate().toLocaleDateString() : (u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—')
+      caregiverRows += `<tr><td>${u.id || '—'}</td><td>${nombre}</td><td>${email}</td><td style="text-align:right">${created}</td></tr>`
+    })
+    caregiversSection.innerHTML = `
+      <h3 style="margin:0 0 8px 0">Listado de Cuidadores (${caregivers.length})</h3>
+      <table class="pdf-table">
+        <thead>
+          <tr><th>ID</th><th>Nombre</th><th>Email</th><th style="text-align:right">Creado</th></tr>
+        </thead>
+        <tbody>
+          ${caregiverRows}
+        </tbody>
+      </table>
+    `
+    container.appendChild(caregiversSection)
+
+    // Watermark
+    const watermark = document.createElement('div')
+    watermark.className = 'pdf-watermark'
+    watermark.textContent = 'VitalSystems'
+    container.appendChild(watermark)
+
+    // Añadir al DOM fuera de la vista
+    container.style.position = 'fixed'
+    container.style.left = '-9999px'
+    document.body.appendChild(container)
+
+    // Renderizar con html2canvas (alta calidad)
+    const canvas = await html2canvas(container, { scale: 2 })
+    const imgData = canvas.toDataURL('image/png')
+
+    // Generar PDF multipágina de forma controlada (primero crear slices si hacen falta)
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = pdf.internal.pageSize.getHeight()
+
+    // Obtener propiedades de la imagen completa (en px)
+    const img = new Image()
+    img.src = imgData
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej })
+    const imgWidthPx = img.width
+    const imgHeightPx = img.height
+
+    // Altura en mm cuando la imagen escala al ancho del PDF
+    const imgHeightInPdf = (imgHeightPx * pdfWidth) / imgWidthPx
+
+    // Convertir dimensiones px->mm ratio
+    const pxPerMm = imgHeightPx / imgHeightInPdf
+
+    const slices = []
+    if (imgHeightInPdf <= pdfHeight) {
+      slices.push({ data: imgData, heightInPdf: imgHeightInPdf })
+    } else {
+      const sliceHeightPx = Math.floor(pdfHeight * pxPerMm)
+      let remainingHeight = imgHeightPx
+      let offsetY = 0
+      while (remainingHeight > 0) {
+        const canvasSlice = document.createElement('canvas')
+        canvasSlice.width = imgWidthPx
+        const h = Math.min(sliceHeightPx, remainingHeight)
+        canvasSlice.height = h
+        const ctx = canvasSlice.getContext('2d')
+        ctx.drawImage(img, 0, offsetY, imgWidthPx, h, 0, 0, imgWidthPx, h)
+        const sliceData = canvasSlice.toDataURL('image/png')
+        const sliceHeightInPdf = (h * pdfWidth) / imgWidthPx
+        slices.push({ data: sliceData, heightInPdf: sliceHeightInPdf })
+        remainingHeight -= h
+        offsetY += h
+      }
+    }
+
+    // Añadir páginas y pies de página (numeración)
+    for (let i = 0; i < slices.length; i++) {
+      const s = slices[i]
+      if (i > 0) pdf.addPage()
+      pdf.addImage(s.data, 'PNG', 0, 0, pdfWidth, s.heightInPdf)
+      // Footer: número de página y marca pequeña a la derecha
+      pdf.setFontSize(9)
+      pdf.setTextColor(120)
+      const pageNumText = `Página ${i + 1} / ${slices.length}`
+      pdf.text(pageNumText, pdfWidth / 2, pdf.internal.pageSize.getHeight() - 6, { align: 'center' })
+      pdf.text('VitalSystems', pdfWidth - 12, pdf.internal.pageSize.getHeight() - 6, { align: 'right' })
+    }
+
+    const filename = `informe-administrador-${new Date().toISOString().split('T')[0]}.pdf`
+    pdf.save(filename)
+
+    // Limpiar
+    document.body.removeChild(container)
+  } catch (err) {
+    console.error('Error generando PDF:', err)
+    alert('Ocurrió un error al generar el PDF. Revisa la consola para más detalles.')
+  }
 }
 
 const formatRelativeTime = (timestamp) => {
@@ -618,6 +826,7 @@ onUnmounted(() => {
 .card-icon.active { background: linear-gradient(135deg, #10b981, #059669); }
 .card-icon.family { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 .card-icon.notifications { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.card-icon.caregivers { background: linear-gradient(135deg, #f97316, #fb923c); }
 
 .card-content h3 {
   margin: 0 0 0.25rem 0;
