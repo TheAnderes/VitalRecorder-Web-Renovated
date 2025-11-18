@@ -195,6 +195,8 @@ const handleLogout = async () => {
     closeMenu()
     closeUserMenu() // Cerrar el menú de usuario
     // Redirigir a la página de inicio en lugar de login
+    // Limpiar rol cacheado
+    try { if (user.value && user.value.uid) localStorage.removeItem(`vr_role_${user.value.uid}`) } catch(e) {}
     router.push('/') 
   } catch (error) {
     console.error('Error al cerrar sesión:', error.message)

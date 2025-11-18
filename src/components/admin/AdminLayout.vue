@@ -64,6 +64,7 @@ const toggleSidebar = () => {
 const handleLogout = async () => {
   try {
     await signOut(auth)
+    try { if (user.value && user.value.uid) localStorage.removeItem(`vr_role_${user.value.uid}`) } catch(e) {}
     router.push('/')
   } catch (error) {
     console.error('Error al cerrar sesión:', error)
