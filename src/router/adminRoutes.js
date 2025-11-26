@@ -85,4 +85,11 @@ export const adminRoutes = [
       requiredRole: ['admin', 'super_admin']
     }
   }
+  ,
+  {
+    path: '/admin/profile',
+    name: 'admin-profile',
+    component: () => import('@/views/admin/AdminProfile.vue'),
+    meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
+  }
 ]

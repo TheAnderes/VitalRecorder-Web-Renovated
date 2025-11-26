@@ -1,16 +1,6 @@
 <template>
   <header class="admin-header">
     <div class="header-left">
-      <button 
-        @click="$emit('toggle-sidebar')" 
-        class="sidebar-toggle"
-        title="Toggle Sidebar"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-      
       <div class="page-title">
         <h1>{{ pageTitle }}</h1>
       </div>
@@ -26,7 +16,7 @@
         </div>
         <div class="user-info">
           <span class="user-name">{{ userName }}</span>
-          <span class="user-role">{{ userRole || 'user' }}</span>
+          <span class="user-role">{{ userRoleLabel }}</span>
         </div>
         <div class="dropdown-arrow">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -42,6 +32,13 @@
               <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
             Dashboard Usuario
+          </router-link>
+          <div class="dropdown-divider"></div>
+          <router-link to="/admin/profile" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM6 20c0-2.21 3.58-4 6-4s6 1.79 6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ver Perfil
           </router-link>
           <div class="dropdown-divider"></div>
           <button @click="$emit('logout')" class="dropdown-item logout-btn">
@@ -74,6 +71,14 @@ const emit = defineEmits(['toggle-sidebar', 'logout'])
 const route = useRoute()
 const { getUserName, getUserInitial } = useAuth()
 const { userRole } = useAdmin()
+
+const userRoleLabel = computed(() => {
+  const r = userRole && userRole.value ? userRole.value : null
+  if (!r) return 'Usuario'
+  if (r === 'admin' || r === 'super_admin') return 'Administrador'
+  if (r === 'cuidador' || r === 'caregiver') return 'Cuidador'
+  return String(r).charAt(0).toUpperCase() + String(r).slice(1)
+})
 
 const showUserMenu = ref(false)
 const userMenuRef = ref(null)

@@ -20,8 +20,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(to, from, savedPosition) {
+    // Si venimos con posición guardada (back/forward), mantenerla
+    if (savedPosition) {
+      return savedPosition
+    }
+
+    // Si la ruta tiene hash (ancla), navegar al elemento
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
+
+    // Por defecto, siempre scrollear arriba (suave)
+    return { left: 0, top: 0, behavior: 'smooth' }
   }
 })
 
@@ -104,10 +115,80 @@ router.beforeEach(async (to, from, next) => {
 // Ocultar overlay en todos los casos (éxito o fallo)
 router.afterEach(() => {
   try { const loading = useLoading(); loading.hide() } catch (e) {}
+
+  // Además de scrollear la ventana, también scrollear contenedores internos
+  try {
+    // Dejar que Vue renderice el nuevo contenido, luego forzar scroll
+    setTimeout(() => {
+      // 1) Priorizar el contenedor admin-content si existe
+      const adminContent = document.querySelector('.admin-content')
+      if (adminContent && typeof adminContent.scrollTo === 'function') {
+        adminContent.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        return
+      }
+
+      // 2) Si no existe admin-content, buscar todos los elementos desplazables
+      try {
+        const scrollables = Array.from(document.querySelectorAll('*')).filter(el => {
+          if (!(el instanceof HTMLElement)) return false
+          const style = window.getComputedStyle(el)
+          const overflowY = style.overflowY
+          const isScrollable = (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay')
+          return isScrollable && el.scrollHeight > el.clientHeight
+        })
+
+        if (scrollables.length) {
+          // scrollear cada contenedor encontrado al inicio
+          scrollables.forEach(el => {
+            try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) {}
+          })
+          return
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // 3) Fallback a window
+      if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
+    }, 0)
+  } catch (e) {
+    // ignore
+  }
 })
 
 router.onError(() => {
   try { const loading = useLoading(); loading.hide() } catch (e) {}
+
+  try {
+    const adminContent = document.querySelector('.admin-content')
+    if (adminContent && typeof adminContent.scrollTo === 'function') {
+      adminContent.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      return
+    }
+
+    try {
+      const scrollables = Array.from(document.querySelectorAll('*')).filter(el => {
+        if (!(el instanceof HTMLElement)) return false
+        const style = window.getComputedStyle(el)
+        const overflowY = style.overflowY
+        const isScrollable = (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay')
+        return isScrollable && el.scrollHeight > el.clientHeight
+      })
+
+      if (scrollables.length) {
+        scrollables.forEach(el => {
+          try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) {}
+        })
+        return
+      }
+    } catch (e) {}
+
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  } catch (e) {}
 })
 
 export default router

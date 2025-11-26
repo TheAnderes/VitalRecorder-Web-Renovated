@@ -129,30 +129,19 @@ const handleRegister = async () => {
       displayName: fullName.value.trim(),
     });
 
-    // Preguntar al usuario qué rol desea al registrarse
-    const { value: selectedRole } = await Swal.fire({
-      title: '¿Eres cuidador o paciente?',
-      input: 'radio',
-      inputOptions: {
-        paciente: 'Paciente (usuario)',
-        cuidador: 'Cuidador'
-      },
-      inputValidator: (value) => {
-        if (!value) return 'Por favor selecciona una opción';
-        return null;
-      },
-      confirmButtonText: 'Continuar',
-      cancelButtonText: 'Cancelar',
-      showCancelButton: true,
-      reverseButtons: true
-    });
+    // Forzar rol 'user' (Paciente) y validar campos obligatorios
+    const roleToSave = 'user';
 
-    if (!selectedRole) {
+    // Validar campos adicionales (teléfono y fecha de nacimiento)
+    if (!phone.value.trim() || !dob.value) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos requeridos',
+        text: 'Por favor, completa el número de celular y la fecha de nacimiento.'
+      });
       isLoading.value = false;
-      return; // usuario canceló
+      return;
     }
-
-    const roleToSave = selectedRole === 'cuidador' ? 'cuidador' : 'user';
 
     // Separar nombres y apellidos del fullName
     const nameParts = fullName.value.trim().split(' ');

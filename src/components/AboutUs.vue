@@ -233,7 +233,6 @@ section {
   max-width: 850px;
   line-height: 1.6;
   opacity: 0.95;
-  color: rgba(0,0,0,0.85);
   text-align: left;
 }
 

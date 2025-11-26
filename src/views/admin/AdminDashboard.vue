@@ -47,13 +47,12 @@
         <!-- Recent Activity -->
         <div class="recent-activity">
           <div class="activity-header">
-            <h3>Actividad Reciente</h3>
-            <router-link to="/admin/analytics" class="view-all-link">
-              Ver todas →
-            </router-link>
-          </div>
+              <h3>Actividad Reciente</h3>
+            </div>
           
           <div class="activity-list">
+            <div v-if="recentActivity.length === 0" class="no-activity">No hay actividad reciente</div>
+            <div v-else>
             <div 
               v-for="activity in recentActivity.slice(0, 5)" 
               :key="activity.id"
@@ -69,8 +68,9 @@
               </div>
               <div class="activity-content">
                 <p><strong>{{ activity.message }}</strong></p>
-                <span class="activity-time">{{ formatRelativeTime(activity.timestamp) }}</span>
+                <span class="activity-time">{{ formatDate(activity.timestamp) }}</span>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -82,8 +82,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAdminStore } from '@/stores/admin'
-import { getRecentActivity } from '@/data/placeholderUsers'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
+import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 
 const { canEditUserRoles, getRecentActivity: getRecentActivityComposable } = useAdmin()
 const adminStore = useAdminStore()
@@ -102,16 +103,14 @@ const growthPercentage = computed(() => {
 })
 
 // Methods
-const formatRelativeTime = (timestamp) => {
-  const now = new Date()
-  const date = new Date(timestamp)
-  const diffInSeconds = Math.floor((now - date) / 1000)
-  
-  if (diffInSeconds < 60) return 'Hace un momento'
-  if (diffInSeconds < 3600) return `Hace ${Math.floor(diffInSeconds / 60)} minutos`
-  if (diffInSeconds < 86400) return `Hace ${Math.floor(diffInSeconds / 3600)} horas`
-  if (diffInSeconds < 604800) return `Hace ${Math.floor(diffInSeconds / 86400)} días`
-  return date.toLocaleDateString('es-ES')
+// Mostrar fecha en formato corto (ej. 30/9/2024) para coincidir con el diseño
+const formatDate = (timestamp) => {
+  try {
+    const date = new Date(timestamp)
+    return date.toLocaleDateString('es-ES')
+  } catch (e) {
+    return ''
+  }
 }
 
 const loadDashboardData = async () => {
@@ -119,8 +118,50 @@ const loadDashboardData = async () => {
     // Cargar estadísticas básicas
     await adminStore.fetchStats()
     
-    // Cargar actividad reciente
-    recentActivity.value = getRecentActivity()
+    // Cargar actividad reciente usando los mismos orígenes que Analytics (usuarios + pacientes)
+    try {
+      const [usersList, patientsList] = await Promise.all([
+        userService.getAllUsers(),
+        AdminPatientService.listPatients()
+      ])
+
+      const activities = []
+
+      // Usuarios: tomar registros más recientes
+      usersList.slice().sort((a,b)=>{
+        const at = (a.createdAt && a.createdAt.toDate) ? a.createdAt.toDate() : new Date(a.createdAt || 0)
+        const bt = (b.createdAt && b.createdAt.toDate) ? b.createdAt.toDate() : new Date(b.createdAt || 0)
+        return bt - at
+      }).slice(0,8).forEach(u => {
+        const ts = (u.createdAt && u.createdAt.toDate) ? u.createdAt.toDate() : new Date(u.createdAt || Date.now())
+        activities.push({ id: `u-${u.id}`, icon: 'user', message: `Registro: ${u.persona?.nombres || u.email || 'Usuario'}`, timestamp: ts })
+      })
+
+      // Pacientes: cambios/actualizaciones recientes
+      patientsList.slice().sort((a,b)=>{
+        const at = (a.updatedAt && a.updatedAt.toDate) ? a.updatedAt.toDate() : new Date(a.updatedAt || a.createdAt || 0)
+        const bt = (b.updatedAt && b.updatedAt.toDate) ? b.updatedAt.toDate() : new Date(b.updatedAt || b.createdAt || 0)
+        return bt - at
+      }).slice(0,8).forEach(p => {
+        const ts = (p.updatedAt && p.updatedAt.toDate) ? p.updatedAt.toDate() : new Date(p.updatedAt || p.createdAt || Date.now())
+        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Paciente actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
+      })
+
+      // Ordenar y limitar a 5
+      recentActivity.value = activities.sort((a,b)=> b.timestamp - a.timestamp).slice(0,5)
+    } catch (err) {
+      console.warn('No se pudo construir actividad desde servicios (fallback al composable):', err)
+      // Fallback: intentar composable (placeholder)
+      try {
+        const activities = await getRecentActivityComposable()
+        recentActivity.value = (activities || [])
+          .filter(a => a.type !== 'settings_updated' && a.message !== 'Configuraciones del sistema actualizadas')
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      } catch (e) {
+        console.error('Error cargando actividad reciente desde composable:', e)
+        recentActivity.value = []
+      }
+    }
     
     // Calcular usuarios online (simulado)
     onlineUsers.value = Math.floor(stats.value.totalUsers * 0.15) || 3
@@ -306,6 +347,12 @@ onMounted(() => {
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.no-activity {
+  color: #6b7280;
+  padding: 1rem 0;
+  text-align: center;
 }
 
 .activity-item {

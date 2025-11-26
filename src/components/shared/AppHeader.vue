@@ -13,8 +13,11 @@
       <!-- Marca / centro -->
       <div class="header-center">
         <router-link to="/" class="brand">
-          <img src="/Logo.png" alt="Logo" />
-          <span class="brand-text">VITALSYSTEMS</span>
+          <img src="/Logo1.png" alt="Logo" />
+          <div class="brand-content">
+            <span class="brand-text">VITALSYSTEMS</span>
+            <span class="brand-subtitle">CENTRADO EN TI</span>
+          </div>
         </router-link>
       </div>
 
@@ -192,6 +195,8 @@ const handleLogout = async () => {
     closeMenu()
     closeUserMenu() // Cerrar el menú de usuario
     // Redirigir a la página de inicio en lugar de login
+    // Limpiar rol cacheado
+    try { if (user.value && user.value.uid) localStorage.removeItem(`vr_role_${user.value.uid}`) } catch(e) {}
     router.push('/') 
   } catch (error) {
     console.error('Error al cerrar sesión:', error.message)
@@ -206,7 +211,11 @@ router.afterEach(() => {
 })
 </script>
 
+.style-import {
+  /* placeholder class to ensure @import is placed before other rules when scoped is used */
+}
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&display=swap');
 .header {
   background: #0f172a;
   color: #fff;
@@ -283,14 +292,40 @@ router.afterEach(() => {
 }
 
 .brand-text {
-  font-weight: 500;
-  letter-spacing: .2px;
-  font-size: clamp(18px, 5vw, 28px);
-  background: linear-gradient(90deg, #2dd4bf, #60a5fa);
+  /* Use a condensed, display font for the big header title */
+  font-family: 'Bebas Neue', 'Anton', 'Oswald', 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  /* Larger, responsive size to match the provided visual */
+  font-size: clamp(25px, 5.5vw, 45px);
+  background: white;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   transition: transform 0.2s ease;
+}
+
+.brand-content {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand-subtitle {
+  display: inline-block;
+  margin-top: 0px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  font-size: clamp(9.1px, 0.5vw, 10px);
+  background: linear-gradient(90deg, #00e0c9, #2dd4bf, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.95;
+  text-align: center;
 }
 
 .brand:hover .brand-text {
@@ -543,9 +578,7 @@ router.afterEach(() => {
     margin: 0 16px;
   }
 
-  .brand-text {
-    font-size: clamp(22px, 2.6vw, 34px);
-  }
+
 }
 
 a {

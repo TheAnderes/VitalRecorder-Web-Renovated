@@ -121,6 +121,7 @@ const handleLogin = async () => {
     
     if (hasAdminPermissions) {
       // Redirigir al dashboard de admin
+      try { localStorage.setItem(`vr_role_${userCredential.user.uid}`, 'admin') } catch(e) {}
       router.push('/admin/dashboard')
     } else {
       // No tiene permisos, cerrar sesión y mostrar error

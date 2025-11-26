@@ -12,6 +12,13 @@ export function useAdmin() {
   // Obtener rol del usuario desde Firestore
   const getUserRole = async (userId) => {
     try {
+      // Preferir valor guardado en localStorage para mantener sesión de rol rápida
+      try {
+        const cachedRole = localStorage.getItem(`vr_role_${userId}`)
+        if (cachedRole) return cachedRole
+      } catch (err) {
+        // ignore localStorage errors
+      }
       // Si estamos offline, usar fallback local (localStorage / placeholderUsers)
       if (!navigator.onLine) {
         try {
@@ -35,7 +42,10 @@ export function useAdmin() {
       // Nota: en modo desarrollo (import.meta.env.DEV) permitimos leer Firestore cuando estemos online
       const userDoc = await getDoc(doc(db, 'users', userId))
       if (userDoc.exists()) {
-        return userDoc.data().role || 'user'
+        const role = userDoc.data().role || 'user'
+        // Persistir en localStorage para acelerar futuras comprobaciones de sesión
+        try { localStorage.setItem(`vr_role_${userId}`, role) } catch(e) {}
+        return role
       }
       return 'user'
     } catch (error) {

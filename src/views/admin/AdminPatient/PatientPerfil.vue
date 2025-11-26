@@ -705,11 +705,8 @@ const printProfile = () => {
         <div class="subtitle">Sistema de Gestión Médica - VitalRecorder</div>
       </div>
       
-      <!-- Foto del paciente -->
-      ${p.persona?.fotografia ? 
-        `<img src="${p.persona.fotografia}" class="patient-photo" alt="Foto paciente" />` : 
-        '<div class="no-photo">👤</div>'
-      }
+      <!-- Foto del paciente (omitida en impresión) -->
+      ${''}
       
       <!-- Banner de Estado -->
       <div class="status-banner">

@@ -24,6 +24,7 @@ const route = useRoute()
 const isAdminRoute = computed(() => {
   return route.path.startsWith('/admin')
 })
+
 </script>
 
 <style>

@@ -1,200 +1,121 @@
 <template>
-  <div class="auth-container">
-    <!-- Contenedor principal -->
-    <div class="auth-main">
-      <!-- Contenedor de formularios con toggle -->
-      <div class="forms-container">
-        <!-- Desktop Toggle Buttons -->
-        <div class="desktop-toggle">
-          <div
-            class="toggle-buttons"
-            :class="{ 'register-active': activePanel === 'register' }"
-          >
-            <button
-              class="toggle-btn"
-              :class="{ active: activePanel === 'login' }"
-              @click="switchToLogin"
-            >
-              Iniciar Sesión
-            </button>
-            <button
-              class="toggle-btn"
-              :class="{ active: activePanel === 'register' }"
-              @click="switchToRegister"
-            >
-              Registro
-            </button>
-          </div>
-        </div>
-        <!-- Panel de Login -->
-        <div
-          class="auth-panel login-panel"
-          :class="{ active: activePanel === 'login' }"
-        >
-          <BaseCard class="auth-card">
-            <button class="back-button" aria-label="Volver" @click="goBack">
-              &#x2190;
-            </button>
+  <div class="login-wrapper">
+    <div class="container" :class="{ active: activePanel === 'register' }">
+    <!-- Login form -->
+    <div class="form-box login">
+      <form @submit.prevent="handleLogin">
+        <h1>Inicia Sesión</h1>
 
-            <h1 class="title">Iniciar Sesión</h1>
-            <p class="subtitle">
-              ¿Es tu primera vez?
-              <a href="#" @click.prevent="switchToRegister">Regístrate aquí</a>
-            </p>
-
-            <form @submit.prevent="handleLogin" class="auth-form">
-              <BaseInput
-                label="Correo electrónico:"
-                id="login-email"
-                type="email"
-                v-model="loginData.email"
-                placeholder="tucorreo@gmail.com"
-                required
-              />
-
-              <BaseInput
-                label="Contraseña:"
-                id="login-password"
-                type="password"
-                v-model="loginData.password"
-                placeholder="Contraseña"
-                required
-              />
-
-              <a href="/recuperar-contrasena" class="forgot-password"
-                >¿Olvidaste tu contraseña?</a
-              >
-              <div class="spacer">
-                <PrimaryButton
-                  type="submit"
-                  name="Iniciar Sesión"
-                  :disabled="loginLoading"
-                />
-              </div>
-            </form>
-          </BaseCard>
+        <div class="input-box">
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            v-model="loginData.email"
+            required
+          />
+              <i class="bx bx-envelope"></i>
         </div>
 
-        <!-- Panel de Register -->
-        <div
-          class="auth-panel register-panel"
-          :class="{ active: activePanel === 'register' }"
-        >
-          <BaseCard class="auth-card">
-            <button class="back-button" aria-label="Volver" @click="goBack">
-              &#x2190;
-            </button>
+        <div class="input-box">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            v-model="loginData.password"
+            required
+          />
+              <i class="bx bx-lock-alt"></i>
+        </div>
 
-            <h1 class="title">Registrarse</h1>
-            <p class="subtitle">
-              ¿Ya tienes cuenta?
-              <a href="#" @click.prevent="switchToLogin">Inicia sesión aquí</a>
-            </p>
+        <div class="forgot-link">
+          <a href="/recuperar-contrasena">Olvidaste tu contraseña?</a>
+        </div>
 
-            <form
-              @submit.prevent="handleRegister"
-              class="auth-form register-form"
-            >
-              <div class="form-group-group">
-                <BaseInput
-                  label="Nombre completo:"
-                  id="register-fullName"
-                  type="text"
-                  v-model="registerData.fullName"
-                  placeholder="Juan Pérez"
-                  required
-                />
+        <button type="submit" class="btn" :disabled="loginLoading">Inicia Sesión</button>
 
-                <BaseInput
-                  label="Contraseña:"
-                  id="register-password"
-                  type="password"
-                  v-model="registerData.password"
-                  placeholder="••••••••"
-                  required
-                  minlength="6"
-                />
+      
+      </form>
+    </div>
 
-                <BaseInput
-                  label="Correo electrónico:"
-                  id="register-email"
-                  type="email"
-                  v-model="registerData.email"
-                  placeholder="tucorreo@gmail.com"
-                  required
-                />
-              </div>
+    <!-- Register form -->
+    <div class="form-box register">
+      <form @submit.prevent="handleRegister">
+        <h1>Registrarse</h1>
 
-              <div class="form-group-group">
-                <BaseInput
-                  label="Número de celular:"
-                  id="register-phone"
+        <div class="input-box">
+          <input
+            type="text"
+            placeholder="Nombre completo"
+            v-model="registerData.fullName"
+            required
+          />
+          <i class="bx bx-user"></i>
+        </div>
+
+        <div class="input-box">
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            v-model="registerData.email"
+            required
+          />
+          <i class="bx bx-envelope"></i>
+        </div>
+
+        <div class="input-box">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            v-model="registerData.password"
+            required
+            minlength="6"
+          />
+          <i class="bx bx-lock-alt"></i>
+        </div>
+
+              <div class="input-box">
+                <input
                   type="tel"
+                  placeholder="Número de celular"
                   v-model="registerData.phone"
-                  placeholder="(+591) 70000000"
                   required
                 />
+                <i class="bx bx-phone"></i>
+              </div>
 
-                <BaseInput
-                  label="Fecha de nacimiento:"
-                  id="register-dob"
+              <div class="input-box">
+                <input
                   type="date"
                   v-model="registerData.dob"
                   required
                 />
+                <i class="bx bx-calendar"></i>
               </div>
-              <div class="spacer">
-                <PrimaryButton
-                  type="submit"
-                  name="Registrarse"
-                  :disabled="registerLoading"
-                />
-              </div>
-            </form>
-          </BaseCard>
-        </div>
-      </div>
 
-      <!-- Sección informativa -->
-      <div class="info-section">
-        <h2 class="info-title">
-          {{
-            activePanel === "login"
-              ? "¡Bienvenido de nuevo!"
-              : "¡Únete a nosotros!"
-          }}
-        </h2>
-        <div class="info-description-box">
-          <p class="info-description">
-            {{
-              activePanel === "login"
-                ? "Accede a tu cuenta para continuar monitoreando tu salud de manera inteligente y personalizada."
-                : "Crea tu cuenta y comienza a disfrutar de todas las funciones de monitoreo de salud que tenemos para ti."
-            }}
-          </p>
-        </div>
-      </div>
+        <button type="submit" class="btn" :disabled="registerLoading">Registrarse</button>
+
+      </form>
     </div>
 
-    <!-- Indicadores para móvil -->
-    <div
-      class="mobile-tabs"
-      :class="{ 'register-active': activePanel === 'register' }"
-    >
-      <button
-        class="tab-button"
-        :class="{ active: activePanel === 'login' }"
-        @click="switchToLogin"
-      >
-        Iniciar - VitalSystems
-      </button>
-      <button
-        class="tab-button"
-        :class="{ active: activePanel === 'register' }"
-        @click="switchToRegister"
-      >
-        Registro - VitalSystems
-      </button>
+    <!-- Toggle panels -->
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <div class="brand-section">
+          <img src="/Logo.png" alt="VitalRecorder logo" class="brand-logo" />
+          <h1>BIENVENIDO A <br>VITAL RECORDER</h1>
+        </div>
+        <p>Estás iniciando sesión para acceder a tu cuenta y gestionar tus datos en VitalRecorder.</p>
+        <button class="btn register-btn" type="button" @click="switchToRegister">Registrate</button>
+      </div>
+
+      <div class="toggle-panel toggle-right">
+        <div class="brand-section">
+          <img src="/Logo.png" alt="VitalRecorder logo" class="brand-logo" />
+          <h1>BIENVENIDO A <br>VITAL RECORDER</h1>
+        </div>
+        <p>Regístrate para crear tu cuenta y empezar a usar todas las funciones de VitalRecorder.</p>
+        <button class="btn login-btn" type="button" @click="switchToLogin">Inicia Sesión</button>
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -211,9 +132,7 @@ import { useRouter, useRoute } from "vue-router";
 import { auth, db } from "@/firebase.js";
 import { useAdmin } from "@/composables/useAdmin";
 import Swal from "sweetalert2";
-import PrimaryButton from "./shared/PrimaryButton.vue";
-import BaseCard from "./shared/BaseCard.vue";
-import BaseInput from "./shared/BaseInput.vue";
+// UI components removed — using plain HTML inputs/buttons for this layout
 
 const router = useRouter();
 const route = useRoute();
@@ -384,7 +303,9 @@ const handleRegister = async () => {
   if (
     !registerData.value.fullName.trim() ||
     !registerData.value.email.trim() ||
-    !registerData.value.password.trim()
+    !registerData.value.password.trim() ||
+    !registerData.value.phone.trim() ||
+    !registerData.value.dob
   ) {
     Swal.fire({
       icon: "warning",
@@ -406,31 +327,8 @@ const handleRegister = async () => {
   registerLoading.value = true;
 
   try {
-    // Preguntar al usuario qué rol desea al registrarse
-    const { value: selectedRole } = await Swal.fire({
-      title: '¿Eres cuidador o paciente?',
-      input: 'radio',
-      inputOptions: {
-        paciente: 'Paciente (usuario)',
-        cuidador: 'Cuidador'
-      },
-      inputValidator: (value) => {
-        if (!value) return 'Por favor selecciona una opción';
-        return null;
-      },
-      confirmButtonText: 'Continuar',
-      cancelButtonText: 'Cancelar',
-      showCancelButton: true,
-      reverseButtons: true
-    });
-
-    if (!selectedRole) {
-      // Usuario canceló la selección
-      registerLoading.value = false;
-      return;
-    }
-
-    const roleToSave = selectedRole === 'cuidador' ? 'cuidador' : 'user';
+    // Forzar rol 'user' (Paciente)
+    const roleToSave = 'user';
 
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -559,548 +457,293 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-.auth-container {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  list-style: none;
+}
+
+.login-wrapper{
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   min-height: 100vh;
-  padding: clamp(0.5rem, 2vw, 1rem);
-  background-image: url("@/components/icons/ImageProductVitarRecorner.jpg");
+  padding: 20px;
+  overflow: hidden;
+}
+
+.login-wrapper::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('./icons/FondoRegister.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  filter: brightness(0.6) blur(1px);
+  z-index: 0;
+  transform: translateZ(0);
+}
+
+.container{
   position: relative;
-  font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.auth-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(224, 242, 241, 0.75);
-  backdrop-filter: blur(1px);
-  z-index: 1;
-}
-
-/* Estilos para el toggle de escritorio */
-.desktop-toggle {
-  display: none;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 1.5rem;
-}
-
-.toggle-buttons {
-  display: flex;
-  position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 4px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-}
-
-.spacer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.toggle-buttons::before {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  height: calc(100% - 8px);
-  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
-  border-radius: 12px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
-  z-index: 1;
-}
-
-.toggle-buttons.register-active::before {
-  transform: translateX(calc(100% + 4px));
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
-}
-
-.toggle-btn {
-  position: relative;
-  flex: 1;
-  padding: 0.875rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  color: #64748b;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: "Poppins", sans-serif;
-  font-size: 0.95rem;
-  z-index: 2;
-  white-space: nowrap;
-  text-align: center;
-}
-
-.toggle-btn:hover {
-  color: #475569;
-  background: rgba(100, 116, 139, 0.1);
-}
-
-.toggle-btn.active {
-  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
-  color: white;
-  font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
-}
-
-.toggle-btn.active:hover {
-  color: white;
-  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
-}
-
-/* Contenedor de formularios */
-.forms-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  max-width: 750px;
-  width: 100%;
-}
-
-/* Sección de información */
-.info-section {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  max-width: 350px;
-  height: 100%;
-  min-height: 500px;
-  position: relative;
-  z-index: 2;
-  padding: 0.5rem 1rem 2rem 1rem;
-  gap: 1.5rem;
-}
-
-.info-title {
-  font-size: 4.2rem;
-  font-weight: 900;
-  color: #0f2147;
-  text-align: center;
+  width: 850px;
+  height: 550px;
+  background: #fff;
   margin: 0;
-  line-height: 1.1;
-  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(15, 33, 71, 0.2),
-    0 0 15px rgba(255, 255, 255, 0.8);
-  letter-spacing: -0.5px;
-}
-
-.info-description-box {
-  background: rgba(255, 255, 255, 0.98);
-  padding: 2.5rem;
-  border-radius: 24px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 0 4px 15px rgba(31, 43, 108, 0.1);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  width: 100%;
-  max-width: 380px;
-  position: relative;
-  transform: translateY(0);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.info-description-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22),
-    0 6px 20px rgba(31, 43, 108, 0.15);
-}
-
-.info-description {
-  font-size: 1.15rem;
-  color: #374151;
-  line-height: 1.75;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-}
-
-.auth-main {
-  display: flex;
-  gap: 3rem;
-  width: 100%;
-  max-width: 1400px;
-  justify-content: center;
-  align-items: flex-start;
-  position: relative;
-  z-index: 2;
-}
-
-.auth-panel {
-  flex: 1;
-  max-width: 650px;
-  width: 100%;
-}
-
-.auth-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.98);
-  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2rem);
-  border-radius: 1.25rem;
-  width: 100%;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-  color: #333;
-  box-sizing: border-box;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: #f1f1f1;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.5rem;
-  color: #555;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.back-button:hover {
-  background: #e0e0e0;
-  color: #000;
-}
-
-.title {
-  text-align: center;
-  font-size: clamp(1.4rem, 5vw, 1.9rem);
-  font-weight: 700;
-  margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
-  color: #1f2b6c;
-  line-height: 1.2;
-}
-
-.subtitle {
-  text-align: center;
-  margin-bottom: clamp(1rem, 3vw, 1.5rem);
-  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-  line-height: 1.3;
-}
-
-.subtitle a {
-  color: var(--blue-primary);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.subtitle a:hover {
-  text-decoration: underline;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1rem, 4vw, 1.5rem);
-  width: 100%;
-}
-
-.register-form .form-group-group {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.25rem, 3vw, 1.75rem);
-  width: 100%;
-}
-
-.forgot-password {
-  display: block;
-  text-align: right;
-  margin-top: clamp(-0.75rem, -2vw, -1rem);
-  margin-bottom: clamp(0.75rem, 3vw, 1rem);
-  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-  color: var(--blue-secondary);
-  text-decoration: none;
-}
-
-.mobile-tabs {
-  display: none;
-  position: relative;
-  margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 4px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .2);
   overflow: hidden;
-  z-index: 10;
-}
-
-.mobile-tabs::before {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  height: calc(100% - 8px);
-  background: linear-gradient(135deg, #2dd4bf, #60a5fa);
-  border-radius: 12px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
   z-index: 1;
 }
 
-.mobile-tabs.register-active::before {
-  transform: translateX(calc(100% + 4px));
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
-}
+    .container h1{
+        font-size: 36px;
+        margin: -10px 0;
+    }
 
-.tab-button {
-  position: relative;
-  flex: 1;
-  padding: 0.875rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  color: #64748b;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: "Poppins", sans-serif;
-  font-size: 0.95rem;
-  z-index: 12;
-  white-space: nowrap;
-  pointer-events: auto;
-}
+    .container p{
+        font-size: 14.5px;
+        margin: 15px 0;
+    }
 
-.tab-button:hover {
-  color: #475569;
-  transform: translateY(-1px);
-}
+form{ width: 100%; }
 
-.tab-button.active {
-  color: white;
-  font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  transform: translateY(0);
-}
-
-.tab-button.active:hover {
-  color: white;
-  transform: translateY(0);
-}
-
-/* Desktop view - layout con toggle, formulario e info */
-@media (min-width: 1024px) {
-  .auth-main {
-    gap: 3rem;
+.form-box{
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    display: flex;
     align-items: center;
-    justify-content: space-between;
-  }
-
-  /* Mostrar toggle de escritorio */
-  .desktop-toggle {
-    display: flex;
-  }
-
-  /* Mostrar sección de información */
-  .info-section {
-    display: flex;
-  }
-
-  /* Ajustar contenedor de formularios */
-  .forms-container {
-    max-width: 700px;
-    flex-direction: column;
-  }
-
-  /* Ocultar paneles no activos en desktop también */
-  .auth-panel:not(.active) {
-    display: none;
-  }
-
-  .auth-panel {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .register-form .form-group-group {
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
-  }
-
-  .register-form .form-group-group:first-child .form-group:first-child {
-    grid-column: 1 / -1; /* Nombre completo ocupa todo el ancho */
-  }
+    color: #333;
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+    transition: .6s ease-in-out 1.2s, visibility 0s 1s;
 }
 
-/* Tablet view */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .auth-main {
+    .container.active .form-box{ right: 50%; }
+
+    .form-box.register{ visibility: hidden; }
+        .container.active .form-box.register{ visibility: visible; }
+
+.input-box{
+    position: relative;
+    margin: 18px 0;
+}
+
+    .input-box input{
+      width: 100%;
+      /* dejar espacio a la izquierda para el icono */
+      padding: 10px 20px 13px 50px;
+        background: #eee;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+    }
+
+        .input-box input::placeholder{
+            color: #888;
+            font-weight: 400;
+        }
+    
+    .input-box i{
+      position: absolute;
+      left: 16px; /* icono a la izquierda dentro del input */
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+.forgot-link{ margin: -15px 0 15px; }
+    .forgot-link a{
+        font-size: 14.5px;
+        color: #333;
+    }
+
+.btn{
+    width: 100%;
+    height: 48px;
+    background: #576eaf;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.social-icons{
+    display: flex;
+    justify-content: center;
+}
+
+    .social-icons a{
+        display: inline-flex;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        font-size: 24px;
+        color: #333;
+        margin: 0 8px;
+    }
+
+.toggle-box{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+    .toggle-box::before{
+        content: '';
+        position: absolute;
+        left: -250%;
+        width: 300%;
+        height: 100%;
+        background: #111f43;
+        /* border: 2px solid red; */
+        border-radius: 150px;
+        z-index: 2;
+        transition: 1.8s ease-in-out;
+    }
+
+        .container.active .toggle-box::before{ left: 50%; }
+
+.toggle-panel{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    /* background: seagreen; */
+    color: #fff;
+    display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    width: 95%;
-  }
-
-  .auth-panel {
-    max-width: 90%;
-    width: 100%;
-  }
-
-  .auth-panel:not(.active) {
-    display: none;
-  }
-
-  .mobile-tabs {
-    display: flex;
-    order: -1;
-    width: 100%;
-    max-width: 500px;
-  }
-
-  .register-form .form-group-group {
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1rem, 3vw, 1.5rem);
-  }
-
-  .register-form .form-group-group:first-child .form-group:first-child {
-    grid-column: 1 / -1;
-  }
+    z-index: 2;
+    transition: .6s ease-in-out;
 }
 
-/* Mobile view */
-@media (max-width: 767px) {
-  .auth-main {
-    flex-direction: column;
-    align-items: center;
-  }
+    .toggle-panel.toggle-left{ 
+        left: 0;
+        transition-delay: 1.2s; 
+    }
+        .container.active .toggle-panel.toggle-left{
+            left: -50%;
+            transition-delay: .6s;
+        }
 
-  .auth-panel:not(.active) {
-    display: none;
-  }
+    .toggle-panel.toggle-right{ 
+        right: -50%;
+        transition-delay: .6s;
+    }
+        .container.active .toggle-panel.toggle-right{
+            right: 0;
+            transition-delay: 1.2s;
+        }
 
-  .mobile-tabs {
-    display: flex;
-    order: -1;
-  }
+    .toggle-panel p{ margin-bottom: 20px; }
 
-  .auth-card {
-    margin: 0;
-    border-radius: 1rem;
-  }
+    .toggle-panel .btn{
+        width: 160px;
+        height: 46px;
+        background: transparent;
+        border: 2px solid #fff;
+        box-shadow: none;
+    }
+
+    .toggle-panel .brand-section{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .toggle-panel .brand-logo{
+      width: 64px;
+      height: auto;
+      display: block;
+    }
+
+    .toggle-panel h1{
+      font-size: 28px;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .toggle-panel p{
+      max-width: 300px;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.95);
+    }
+
+@media screen and (max-width: 650px){
+    .container{ height: calc(100vh - 40px); }
+
+    .form-box{
+        bottom: 0;
+        width: 100%;
+        height: 70%;
+    }
+
+        .container.active .form-box{
+            right: 0;
+            bottom: 30%;
+        }
+
+    .toggle-box::before{
+        left: 0;
+        top: -270%;
+        width: 100%;
+        height: 300%;
+        border-radius: 20vw;
+    }
+
+        .container.active .toggle-box::before{
+            left: 0;
+            top: 70%;
+        }
+
+        .container.active .toggle-panel.toggle-left{
+            left: 0;
+            top: -30%;
+        }
+
+    .toggle-panel{ 
+        width: 100%;
+        height: 30%;
+    }
+        .toggle-panel.toggle-left{ top: 0; }
+        .toggle-panel.toggle-right{
+            right: 0;
+            bottom: -30%;
+        }
+
+            .container.active .toggle-panel.toggle-right{ bottom: 0; }
 }
 
-@media (max-width: 480px) {
-  .tab-button {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
+@media screen and (max-width: 400px){
+    .form-box { padding: 20px; }
+
+    .toggle-panel h1{font-size: 30px; }
 }
 
-/* Estilos personalizados para SweetAlert2 - VitalSystems */
-:deep(.vital-systems-popup) {
-  border-radius: 1.5rem !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2),
-    0 8px 25px rgba(45, 212, 191, 0.15) !important;
-  border: 1px solid rgba(45, 212, 191, 0.2) !important;
-  backdrop-filter: blur(15px) !important;
-  font-family: "Poppins", sans-serif !important;
-}
+/* small helper for icons (boxicons) */
+.bx{ font-size:18px; }
 
-:deep(.vital-systems-title) {
-  color: #1f2b6c !important;
-  font-size: 1.8rem !important;
-  font-weight: 700 !important;
-  text-shadow: 0 2px 4px rgba(31, 43, 108, 0.1) !important;
-  margin-bottom: 1rem !important;
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.vital-systems-content) {
-  color: #374151 !important;
-  font-size: 1.1rem !important;
-  line-height: 1.6 !important;
-  font-weight: 500 !important;
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.vital-systems-button) {
-  background: linear-gradient(135deg, #2dd4bf, #60a5fa) !important;
-  border: none !important;
-  border-radius: 12px !important;
-  padding: 0.875rem 2rem !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  text-transform: none !important;
-  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.vital-systems-button:hover) {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4) !important;
-  background: linear-gradient(135deg, #26d0ce, #5ba3f5) !important;
-}
-
-:deep(.vital-systems-button:focus) {
-  outline: none !important;
-  box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3),
-    0 0 0 3px rgba(45, 212, 191, 0.2) !important;
-}
-
-:deep(.vital-systems-icon) {
-  border-color: #2dd4bf !important;
-}
-
-:deep(.vital-systems-icon .swal2-success-line-tip),
-:deep(.vital-systems-icon .swal2-success-line-long) {
-  background-color: #2dd4bf !important;
-}
-
-:deep(.vital-systems-icon .swal2-success-ring) {
-  border-color: #2dd4bf !important;
-}
-
-/* Estilos globales para sobrescribir todas las fuentes de SweetAlert2 */
-:deep(.swal2-popup) {
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.swal2-title) {
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.swal2-html-container) {
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.swal2-confirm) {
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.swal2-cancel) {
-  font-family: "Poppins", sans-serif !important;
-}
-
-:deep(.swal2-deny) {
-  font-family: "Poppins", sans-serif !important;
-}
 </style>

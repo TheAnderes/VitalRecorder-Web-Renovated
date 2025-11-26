@@ -1,53 +1,51 @@
 <template>
   <div class="reset-container">
     <div class="reset-main">
-      <BaseCard class="reset-card">
-        <button class="back-button" aria-label="Volver" @click="goBack">
-          &#x2190;
-        </button>
+        <div class="auth-card">
+          <button class="back-button" aria-label="Volver" @click="goBack">&#x2190;</button>
 
-        <div class="reset-header">
-          <h1 class="reset-title">Recuperar Contraseña</h1>
-          <p class="reset-subtitle">
-            Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
-          </p>
-        </div>
+          <div class="card-left">
+            <div class="left-inner">
+              <div class="logo-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" fill="#60a5fa"/>
+                  <path d="M8 12l2 2 4-4" stroke="white" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <h2 class="welcome-title">BIENVENIDO</h2>
+              <h3 class="welcome-sub">Recupera tu cuenta</h3>
+              <p class="welcome-text">Ingresa tu correo y te enviaremos un enlace seguro para restablecer tu contraseña.</p>
+            </div>
+          </div>
 
-        <form @submit.prevent="handlePasswordReset" class="reset-form">
-          <BaseInput
-            label="Correo electrónico:"
-            id="reset-email"
-            type="email"
-            v-model="resetEmail"
-            placeholder="tucorreo@gmail.com"
-            required
-          />
+          <div class="card-right">
+            <div class="right-inner">
+              <h1 class="reset-title">Recuperar Contraseña</h1>
+              <p class="reset-subtitle">Introduce el correo asociado a tu cuenta y te mandaremos el enlace.</p>
 
-          <PrimaryButton 
-            type="submit" 
-            name="Enviar enlace de recuperación" 
-            :disabled="loading || !resetEmail.trim()" 
-          />
-        </form>
+              <form @submit.prevent="handlePasswordReset" class="reset-form">
+                <BaseInput
+                  id="reset-email"
+                  type="email"
+                  v-model="resetEmail"
+                  placeholder="correo@ejemplo.com"
+                  required
+                />
 
-        <div class="reset-footer">
-          <p>
-            ¿Recordaste tu contraseña? 
-            <router-link to="/login" class="login-link">Volver al inicio de sesión</router-link>
-          </p>
-        </div>
-      </BaseCard>
+                <PrimaryButton 
+                  type="submit" 
+                  name="Enviar enlace" 
+                  :disabled="loading || !resetEmail.trim()" 
+                />
+              </form>
 
-      <!-- Sección informativa -->
-      <div class="info-section">
-        <h2 class="info-title">VitalSystems</h2>
-        <div class="info-description-box">
-          <p class="info-description">
-            No te preocupes, es normal olvidar las contraseñas. Te ayudaremos a recuperar el acceso a tu cuenta de manera segura.
-          </p>
+              <div class="reset-footer">
+                <p>¿Recordaste tu contraseña? <router-link to="/login" class="login-link">Volver al inicio de sesión</router-link></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -126,7 +124,7 @@ const handlePasswordReset = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(224, 242, 241, 0.75);
+  background: rgba(8, 14, 25, 0.45);
   backdrop-filter: blur(1px);
   z-index: 1;
 }
@@ -142,189 +140,102 @@ const handlePasswordReset = async () => {
   z-index: 2;
 }
 
-.reset-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.98);
-  padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 5vw, 2.5rem);
-  border-radius: 1.5rem;
+.auth-card {
   width: 100%;
-  max-width: 500px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  color: #333;
-  box-sizing: border-box;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 1000px;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(2,6,23,0.25);
+  background: #fff;
+  position: relative;
+}
+
+.card-left {
+  width: 48%;
+  background: linear-gradient(180deg,#0f2447 0%, #06132a 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2.5rem;
+}
+
+.left-inner {
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo-placeholder { margin-bottom: 1.25rem }
+.welcome-title { font-size: 1.05rem; letter-spacing: .06em; opacity: .9; margin: 0 }
+.welcome-sub { font-size: 1.6rem; font-weight: 800; margin: .25rem 0 1rem }
+.welcome-text { color: rgba(255,255,255,0.85); line-height: 1.5 }
+
+.card-right { width: 52%; padding: 3rem 2.5rem; display:flex; align-items:center }
+.right-inner { width:100%; max-width:420px; margin:0 auto }
+.reset-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  color: #0f172a;
+}
+
+.reset-subtitle {
+  margin: 0 0 1.4rem 0;
+  color: #475569;
 }
 
 .back-button {
   position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  background: #f1f1f1;
+  top: 18px;
+  left: 18px;
+  background: rgba(255,255,255,0.12);
   border: none;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 1.6rem;
-  color: #555;
+  width: 44px;
+  height: 44px;
+  font-size: 1.35rem;
+  color: #fff;
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: all 0.3s ease;
+  z-index: 5;
 }
 
-.back-button:hover {
-  background: #e0e0e0;
-  color: #000;
-  transform: translateY(-2px);
-}
-
-.reset-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.reset-title {
-  font-size: clamp(1.6rem, 5vw, 2.2rem);
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #1f2b6c;
-  line-height: 1.2;
-}
-
-.reset-subtitle {
-  font-size: clamp(0.9rem, 3vw, 1.1rem);
-  color: #666;
-  line-height: 1.5;
-  margin: 0;
-}
+.back-button:hover { transform: translateY(-2px) }
 
 .reset-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: 1.25rem;
+  margin-bottom: 1.6rem;
 }
 
-.reset-footer {
-  text-align: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
+.reset-footer { text-align:left }
+.reset-footer p { margin:0; color:#475569 }
 
-.reset-footer p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #666;
-}
+.login-link { color: var(--blue-primary, #1f2b6c); font-weight:600 }
 
-.login-link {
-  color: var(--blue-primary, #1f2b6c);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.login-link:hover {
-  text-decoration: underline;
-  color: #2dd4bf;
-}
-
-/* Sección informativa */
-.info-section {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  max-width: 350px;
-  height: 100%;
-  min-height: 500px;
-  position: relative;
-  z-index: 2;
-  padding: 0.5rem 1rem 2rem 1rem;
-  gap: 1.5rem;
-}
-
-.info-title {
-  font-size: 4.2rem;
-  font-weight: 900;
-  color: #0f2147;
-  text-align: center;
-  margin: 0;
-  line-height: 1.1;
-  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3), 
-               0 2px 4px rgba(15, 33, 71, 0.2),
-               0 0 15px rgba(255, 255, 255, 0.8);
-  letter-spacing: -0.5px;
-}
-
-.info-description-box {
-  background: rgba(255, 255, 255, 0.98);
-  padding: 2.5rem;
-  border-radius: 24px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18), 
-              0 4px 15px rgba(31, 43, 108, 0.1);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  width: 100%;
-  max-width: 380px;
-  position: relative;
-  transform: translateY(0);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.info-description-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22),
-              0 6px 20px rgba(31, 43, 108, 0.15);
-}
-
-.info-description {
-  font-size: 1.15rem;
-  color: #374151;
-  line-height: 1.75;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-}
+.welcome-text { margin-top:.6rem }
 
 /* Desktop view */
 @media (min-width: 1024px) {
-  .info-section {
-    display: flex;
-  }
-  
-  .reset-main {
-    justify-content: space-between;
-  }
+  .reset-main { justify-content: space-between }
 }
 
 /* Tablet y móvil */
 @media (max-width: 1023px) {
-  .reset-main {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .reset-card {
-    max-width: 90%;
-  }
+  .reset-main { flex-direction: column; align-items: center }
+  .auth-card { flex-direction: column; border-radius: 16px }
+  .card-left, .card-right { width: 100%; padding: 2rem }
+  .back-button { top: 12px; left: 12px }
 }
 
 @media (max-width: 767px) {
-  .reset-card {
-    margin: 1rem;
-    border-radius: 1.25rem;
-  }
-  
-  .back-button {
-    top: 1rem;
-    left: 1rem;
-    width: 40px;
-    height: 40px;
-    font-size: 1.4rem;
-  }
+  .left-inner { text-align: center }
+  .right-inner { padding-top: 0 }
 }
 </style>
