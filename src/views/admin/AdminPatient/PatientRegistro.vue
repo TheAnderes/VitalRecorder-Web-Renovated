@@ -402,7 +402,6 @@
         <div class="form-actions">
           <button type="button" class="secondary" @click="onCancel">Cancelar</button>
           <button type="button" class="primary" @click="saveAndCreateAnother">Guardar y Crear Otro</button>
-          <button type="button" class="primary" @click="saveAndView">Guardar y Ver Perfil</button>
         </div>
       </form>
     </div>
@@ -435,10 +434,6 @@
               <div class="preview-item">
                 <div class="preview-photo" v-if="photoDataUrl">
                   <img :src="photoDataUrl" alt="Foto paciente" />
-                </div>
-                <div class="preview-photo-placeholder" v-else>
-                  <span>📷</span>
-                  <small>Sin foto</small>
                 </div>
               </div>
               <div class="preview-details">
@@ -587,14 +582,8 @@
           <button class="btn-secondary" @click="showPreview = false">
             <span>✏️</span> Editar
           </button>
-          <button class="btn-print" @click="printPreview">
-            <span>🖨️</span> Imprimir
-          </button>
           <button class="btn-primary" @click="confirmSave(false)">
             <span>💾</span> Guardar
-          </button>
-          <button class="btn-success" @click="confirmSave(true)">
-            <span>✅</span> Guardar y Ver Perfil
           </button>
         </div>
       </div>

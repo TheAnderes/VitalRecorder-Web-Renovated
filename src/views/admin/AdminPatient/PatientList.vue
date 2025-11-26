@@ -281,7 +281,6 @@
             <div class="cell user">Paciente</div>
             <div class="cell contact">Información de Contacto</div>
             <div class="cell gender">Género</div>
-            <div class="cell department">Departamento</div>
             <div class="cell date center">Fecha de ingreso</div>
             <div class="cell status center">Estado</div>
             <div class="cell actions center">Acciones</div>
@@ -316,9 +315,6 @@
                 <div style="font-size:0.82rem; color:#6b7280;">{{ patient.persona?.sexo || patient.persona?.gender || patient.sexo || 'N/D' }}</div>
               </div>
 
-              <div class="cell department">
-                <div style="font-weight:600; color:#111827;">{{ patient.persona?.departamento || patient.departamento || patient.patientDoc?.persona?.departamento || 'N/D' }}</div>
-              </div>
 
                   <div class="cell date center">
                     <span>{{ formatDate(patient.patientCreatedAt || patient.createdAt || patient.patientDoc?.createdAt) }}</span>
