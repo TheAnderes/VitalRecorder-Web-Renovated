@@ -54,32 +54,9 @@
               </select>
             </div>
 
-            <div class="field">
-              <label>🆔 Carnet de Identidad (CI) *</label>
-              <input v-model="form.dni" @input="validateField('dni'); checkDuplicates()" :class="{'invalid': errors.dni}" placeholder="Número de CI" />
-              <small v-if="errors.dni" class="error-msg">{{ errors.dni }}</small>
-            </div>
+            <!-- Carnet de identidad removido por requerimiento -->
 
-            <div class="field">
-              <label>Lugar de Nacimiento</label>
-              <input v-model="form.lugarNacimiento" placeholder="Ciudad, País" />
-            </div>
-
-            <div class="field">
-              <label>Estado Civil</label>
-              <select v-model="form.estadoCivil">
-                <option value="">Seleccione...</option>
-                <option>Soltero</option>
-                <option>Casado</option>
-                <option>Divorciado</option>
-                <option>Viudo</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Ocupación / Profesión</label>
-              <input v-model="form.ocupacion" placeholder="Profesión u ocupación" />
-            </div>
+            <!-- Lugar de nacimiento / estado civil / ocupación eliminados según esquema de la base de datos -->
 
             <!-- Fotografía del paciente (removida) -->
 
@@ -87,7 +64,7 @@
           </div>
         </section>
 
-        <!-- Datos de Contacto -->
+        <!-- Datos de Contacto (simplificado: solo teléfono principal) -->
         <section class="section">
           <h3>Datos de Contacto</h3>
           <div class="form-grid">
@@ -96,259 +73,22 @@
               <input v-model="form.telefono" @input="validateField('telefono')" :class="{'invalid': errors.telefono}" placeholder="+51 9xxxxxxxx" />
               <small v-if="errors.telefono" class="error-msg">{{ errors.telefono }}</small>
             </div>
-
             <div class="field">
-              <label>Teléfono alternativo</label>
-              <input v-model="form.telefono2" placeholder="Teléfono alternativo" />
-            </div>
-
-            <div class="field">
-              <label>Correo electrónico</label>
-              <input v-model="form.email" @input="validateField('email')" :class="{'invalid': errors.email}" placeholder="correo@ejemplo.com" />
+              <label>Email</label>
+              <input v-model="form.email" @input="validateField('email')" :class="{'invalid': errors.email}" placeholder="usuario@dominio.com" />
               <small v-if="errors.email" class="error-msg">{{ errors.email }}</small>
             </div>
 
             <div class="field">
               <label>Contraseña (opcional)</label>
-              <input type="password" v-model="form.password" placeholder="Dejar vacío si no crear cuenta" />
-              <small class="hint">Si proporciona correo y contraseña se intentará crear un usuario en Auth</small>
-            </div>
-
-            <div class="field">
-              <label>Preferencia de contacto</label>
-              <select v-model="form.preferenciaContacto">
-                <option value="telefono">Teléfono</option>
-                <option value="email">Email</option>
-                <option value="whatsapp">WhatsApp</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Calle / Avenida</label>
-              <input v-model="form.direccion.calle" placeholder="Calle / Avenida" />
-            </div>
-
-            <div class="field">
-              <label>Número</label>
-              <input v-model="form.direccion.numero" placeholder="Número" />
-            </div>
-
-            <div class="field">
-              <label>Zona / Barrio</label>
-              <input v-model="form.direccion.zona" placeholder="Barrio / Zona" />
-            </div>
-
-            <div class="field">
-              <label>Ciudad</label>
-              <input v-model="form.direccion.ciudad" placeholder="Ciudad" />
-            </div>
-
-            <div class="field">
-              <label>Departamento / Provincia</label>
-              <input v-model="form.direccion.provincia" placeholder="Departamento / Provincia" />
+              <input type="password" v-model="form.password" @input="validateField('password')" :class="{'invalid': errors.password}" placeholder="Min. 6 caracteres" />
+              <small class="hint">Proporcione contraseña sólo si desea crear una cuenta de Auth para el paciente.</small>
+              <small v-if="errors.password" class="error-msg">{{ errors.password }}</small>
             </div>
           </div>
         </section>
 
-        <!-- Toggle para Información Médica -->
-        <div class="toggle-section">
-          <label class="toggle-label">
-            <input type="checkbox" v-model="showMedicalInfo" class="toggle-checkbox" />
-            <span class="toggle-switch"></span>
-            <span class="toggle-text">
-              <span class="toggle-icon">🏥</span>
-              <strong>Agregar Información Médica Completa</strong>
-              <span class="toggle-hint">(Opcional)</span>
-            </span>
-          </label>
-        </div>
-
-        <!-- Información Médica Completa -->
-        <section class="section" v-if="showMedicalInfo">
-          <h3>Información Médica Completa</h3>
-          <div class="form-grid">
-            
-            <!-- Estado del paciente respecto a medicamentos -->
-            <div class="field">
-              <label>Estado de adherencia al tratamiento *</label>
-              <select v-model="form.medicalInfo.estadoAdherencia">
-                <option value="">Seleccione...</option>
-                <option>Olvidadizo</option>
-                <option>Dependiente</option>
-                <option>Autónomo</option>
-                <option>Supervisado</option>
-                <option>Irregular</option>
-              </select>
-            </div>
-
-            <!-- Estado actual del paciente -->
-            <div class="field">
-              <label>Estado actual del paciente *</label>
-              <select v-model="form.medicalInfo.estadoActual">
-                <option value="">Seleccione...</option>
-                <option>Recuperación</option>
-                <option>Tratamiento</option>
-                <option>Observación</option>
-                <option>Estable</option>
-                <option>Crítico</option>
-              </select>
-            </div>
-
-            <!-- Alergias -->
-            <div class="field full">
-              <label>⚠️ Alergias conocidas</label>
-              <div class="tag-input">
-                <input v-model="_allergy_temp" placeholder="Ej: Penicilina, Polen, Mariscos..." @keyup.enter.prevent="addAllergy" />
-                <div class="tags">
-                  <span class="tag tag-alergia" v-for="(a, i) in form.medicalInfo.alergias" :key="i">
-                    ⚠️ {{ a }} 
-                    <button type="button" @click="removeAllergy(i)" class="tag-remove">&times;</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Enfermedades -->
-            <div class="field full">
-              <label>🩺 Enfermedades diagnosticadas</label>
-              <div class="tag-input">
-                <input v-model="_enfermedad_temp" placeholder="Ej: Diabetes, Hipertensión..." @keyup.enter.prevent="addEnfermedad" />
-                <div class="tags">
-                  <span class="tag tag-enfermedad" v-for="(e, i) in form.medicalInfo.enfermedades" :key="i">
-                    🩺 {{ e }} 
-                    <button type="button" @click="removeEnfermedad(i)" class="tag-remove">&times;</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Altura y Peso -->
-            <div class="field">
-              <label>Altura (cm)</label>
-              <input type="number" v-model.number="form.medicalInfo.altura" @input="recalculate" placeholder="cm" min="0" step="0.1" />
-            </div>
-
-            <div class="field">
-              <label>Peso (kg)</label>
-              <input type="number" v-model.number="form.medicalInfo.peso" @input="recalculate" placeholder="kg" min="0" step="0.1" />
-            </div>
-
-            <div class="field">
-              <label>IMC</label>
-              <input :value="imcString" readonly />
-            </div>
-
-            <!-- Estado físico -->
-            <div class="field">
-              <label>Estado físico del paciente *</label>
-              <select v-model="form.medicalInfo.estadoFisico">
-                <option value="">Seleccione...</option>
-                <option>Delicado</option>
-                <option>Normal</option>
-                <option>Estable</option>
-                <option>Crítico</option>
-                <option>Requiere atención</option>
-              </select>
-            </div>
-
-            <!-- Medicamentos -->
-            <div class="field full">
-              <label>💊 Medicamentos actuales</label>
-              <div class="tag-input">
-                <input v-model="_medicamento_temp" placeholder="Ej: Ibuprofeno 400mg, Paracetamol..." @keyup.enter.prevent="addMedicamento" />
-                <div class="tags">
-                  <span class="tag tag-medicamento" v-for="(m, i) in form.medicalInfo.medicamentos" :key="i">
-                    💊 {{ m }} 
-                    <button type="button" @click="removeMedicamento(i)" class="tag-remove">&times;</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Recetado por -->
-            <div class="field">
-              <label>Recetado por (médico tratante)</label>
-              <input v-model="form.medicalInfo.recetadoPor" placeholder="Nombre del médico" />
-            </div>
-
-            <!-- Foto de receta médica -->
-            <div class="field full">
-              <label class="photo-label">📄 Fotografía de receta médica</label>
-              <div class="photo-upload-container">
-                <input 
-                  ref="recetaFotoInput"
-                  type="file" 
-                  accept="image/*" 
-                  @change="onRecetaFotoSelected"
-                  class="photo-input"
-                  id="photo-receta"
-                />
-                <label for="photo-receta" class="photo-upload-btn" v-if="!recetaFotoDataUrl">
-                  <div class="upload-icon">📋</div>
-                  <div class="upload-text">
-                    <strong>Click para subir receta médica</strong>
-                    <small>Formato JPG, PNG o PDF</small>
-                  </div>
-                </label>
-                <div class="photo-preview-enhanced" v-if="recetaFotoDataUrl">
-                  <img :src="recetaFotoDataUrl" alt="Receta médica" />
-                  <div class="photo-overlay">
-                    <button type="button" class="btn-remove-photo" @click="removeRecetaFoto">
-                      <span>🗑️</span> Eliminar
-                    </button>
-                    <button type="button" class="btn-change-photo" @click="$refs.recetaFotoInput.click()">
-                      <span>🔄</span> Cambiar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Frecuencia de tratamiento -->
-            <div class="field">
-              <label>Frecuencia de tratamiento</label>
-              <select v-model="form.medicalInfo.frecuenciaTratamiento">
-                <option value="">Seleccione...</option>
-                <option>Cada 4 horas</option>
-                <option>Cada 5 horas</option>
-                <option>Cada 6 horas</option>
-                <option>Cada 8 horas</option>
-                <option>Cada 12 horas</option>
-                <option>Cada 24 horas (diario)</option>
-                <option>Cada 2 días</option>
-                <option>Semanal</option>
-                <option>Quincenal</option>
-                <option>Mensual</option>
-                <option>Según necesidad</option>
-              </select>
-            </div>
-
-            <!-- Condiciones para tomar medicamento -->
-            <div class="field">
-              <label>Condición para tomar medicamento</label>
-              <select v-model="form.medicalInfo.condicionToma">
-                <option value="">Seleccione...</option>
-                <option>Antes del desayuno</option>
-                <option>Después del desayuno</option>
-                <option>Antes del almuerzo</option>
-                <option>Después del almuerzo</option>
-                <option>Antes de la cena</option>
-                <option>Después de la cena</option>
-                <option>Con las comidas</option>
-                <option>Entre comidas</option>
-                <option>En ayunas</option>
-                <option>Antes de dormir</option>
-              </select>
-            </div>
-
-            <!-- Observaciones adicionales -->
-            <div class="field full">
-              <label>Observaciones médicas adicionales</label>
-              <textarea v-model="form.medicalInfo.observaciones" rows="3" placeholder="Información adicional relevante"></textarea>
-            </div>
-
-          </div>
-        </section>
+        <!-- Información Médica completa removida por requerimiento: el registro sólo guardará datos básicos -->
 
         <!-- Tutor/Responsable removed as requested -->
 
@@ -386,15 +126,7 @@
               <input :value="form.estado" readonly />
             </div>
 
-            <div class="field">
-              <label>Seguro médico</label>
-              <input v-model="form.seguro.nombre" placeholder="Aseguradora" />
-            </div>
-
-            <div class="field">
-              <label>Número de póliza</label>
-              <input v-model="form.seguro.polid" placeholder="Número de póliza" />
-            </div>
+            <!-- Seguro médico removed per spec -->
           </div>
         </section>
 
@@ -448,7 +180,7 @@
                 </div>
                 <div class="preview-field">
                   <label>CI</label>
-                  <div class="value">{{ form.dni }}</div>
+                  <div class="value">—</div>
                 </div>
                 <div class="preview-field">
                   <label>Sexo</label>
@@ -477,90 +209,10 @@
                 <label>Teléfono</label>
                 <div class="value">📱 {{ form.telefono || 'N/A' }}</div>
               </div>
-              <div class="preview-field">
-                <label>Email</label>
-                <div class="value">📧 {{ form.email || 'N/A' }}</div>
-              </div>
-              <div class="preview-field">
-                <label>Dirección</label>
-                <div class="value">🏠 {{ form.direccion.calle }} {{ form.direccion.numero }}, {{ form.direccion.ciudad || 'N/A' }}</div>
-              </div>
             </div>
           </div>
 
-          <!-- Sección: Información Médica -->
-          <div class="preview-section" v-if="showMedicalInfo">
-            <div class="section-header">
-              <span class="section-icon">🏥</span>
-              <h4>Información Médica</h4>
-            </div>
-            <div class="preview-grid-2">
-              <div class="preview-field" v-if="form.medicalInfo.estadoAdherencia">
-                <label>Estado de adherencia</label>
-                <span class="badge badge-info">{{ form.medicalInfo.estadoAdherencia }}</span>
-              </div>
-              <div class="preview-field" v-if="form.medicalInfo.estadoActual">
-                <label>Estado actual</label>
-                <span class="badge badge-success">{{ form.medicalInfo.estadoActual }}</span>
-              </div>
-              <div class="preview-field" v-if="form.medicalInfo.estadoFisico">
-                <label>Estado físico</label>
-                <span class="badge badge-warning">{{ form.medicalInfo.estadoFisico }}</span>
-              </div>
-              <div class="preview-field" v-if="imcString">
-                <label>IMC</label>
-                <div class="value">{{ imcString }}</div>
-              </div>
-            </div>
-
-            <!-- Alergias -->
-            <div class="preview-field-full" v-if="form.medicalInfo.alergias.length > 0">
-              <label>⚠️ Alergias</label>
-              <div class="tags-preview">
-                <span class="tag-preview tag-danger" v-for="(a, i) in form.medicalInfo.alergias" :key="i">{{ a }}</span>
-              </div>
-            </div>
-
-            <!-- Enfermedades -->
-            <div class="preview-field-full" v-if="form.medicalInfo.enfermedades.length > 0">
-              <label>🩺 Enfermedades</label>
-              <div class="tags-preview">
-                <span class="tag-preview tag-purple" v-for="(e, i) in form.medicalInfo.enfermedades" :key="i">{{ e }}</span>
-              </div>
-            </div>
-
-            <!-- Medicamentos -->
-            <div class="preview-field-full" v-if="form.medicalInfo.medicamentos.length > 0">
-              <label>💊 Medicamentos</label>
-              <div class="tags-preview">
-                <span class="tag-preview tag-blue" v-for="(m, i) in form.medicalInfo.medicamentos" :key="i">{{ m }}</span>
-              </div>
-            </div>
-
-            <!-- Tratamiento -->
-            <div class="preview-grid-2" v-if="form.medicalInfo.frecuenciaTratamiento">
-              <div class="preview-field">
-                <label>Frecuencia de tratamiento</label>
-                <div class="value">⏰ {{ form.medicalInfo.frecuenciaTratamiento }}</div>
-              </div>
-              <div class="preview-field" v-if="form.medicalInfo.condicionToma">
-                <label>Condición de toma</label>
-                <div class="value">🍽️ {{ form.medicalInfo.condicionToma }}</div>
-              </div>
-            </div>
-
-            <!-- Fotos médicas -->
-            <div class="preview-photos" v-if="ciPhotoDataUrl || recetaFotoDataUrl">
-              <div class="photo-item" v-if="ciPhotoDataUrl">
-                <label>🆔 Foto CI</label>
-                <img :src="ciPhotoDataUrl" alt="CI" />
-              </div>
-              <div class="photo-item" v-if="recetaFotoDataUrl">
-                <label>📄 Receta médica</label>
-                <img :src="recetaFotoDataUrl" alt="Receta" />
-              </div>
-            </div>
-          </div>
+          <!-- Información médica y fotos asociadas removidas del preview -->
 
           <!-- Responsable preview removed -->
 
@@ -630,42 +282,29 @@ const form = reactive({
   expediente: generateExpediente(),
   estado: 'Activo',
   usuarioRegistro: '',
+  role: 'user',
+  settings: {
+    familiar_email: null,
+    intensidad_vibracion: 2,
+    modo_silencio: false,
+    notificar_a_familiar: false
+  },
   persona: { nombres: '', apellidos: '', sexo: '' },
   fechaNacimiento: '',
-  dni: '',
-  lugarNacimiento: '',
-  estadoCivil: '',
-  ocupacion: '',
   telefono: '',
   telefono2: '',
   email: '',
   password: '',
   preferenciaContacto: 'telefono',
   direccion: { calle: '', numero: '', zona: '', ciudad: '', provincia: '' },
-  medicalInfo: { 
-    estadoAdherencia: '', 
-    estadoActual: '', 
-    alergias: [], 
-    enfermedades: [], 
-    altura: null, 
-    peso: null, 
-    imc: null, 
-    estadoFisico: '', 
-    medicamentos: [], 
-    recetadoPor: '', 
-    frecuenciaTratamiento: '', 
-    condicionToma: '', 
-    observaciones: '' 
-  },
+  // medicalInfo removed per spec: only store basic contact and persona data
   observaciones: '',
-  seguro: { nombre: '', polid: '' },
+  // seguro removed: insurance fields not used
   createdAt: new Date().toISOString()
 })
 
 const errors = reactive({})
-const _allergy_temp = ref('')
-const _enfermedad_temp = ref('')
-const _medicamento_temp = ref('')
+// medical info inputs removed; temp refs not needed
 const photoFile = ref(null)
 const photoDataUrl = ref('')
 const ciPhotoFile = ref(null)
@@ -675,7 +314,6 @@ const recetaFotoDataUrl = ref('')
 const showPreview = ref(false)
 const duplicateWarning = ref(false)
 const duplicateWarningMessages = ref([])
-const showMedicalInfo = ref(false)
 
 const currentUserName = computed(() => getUserName() || user.value?.email || 'Sistema')
 
@@ -694,16 +332,7 @@ const age = computed(() => {
 
 const ageString = computed(() => age.value === null ? '' : `${age.value} años`)
 
-const imc = computed(() => {
-  const peso = Number(form.medicalInfo.peso)
-  const alturaCm = Number(form.medicalInfo.altura)
-  if (!peso || !alturaCm) return null
-  const alturaM = alturaCm / 100
-  const val = peso / (alturaM * alturaM)
-  return Math.round(val * 10) / 10
-})
-
-const imcString = computed(() => imc.value ? `${imc.value} kg/m²` : '')
+// IMC and medical info removed
 
 const maxDate = computed(() => new Date().toISOString().split('T')[0])
 
@@ -713,6 +342,75 @@ const ageCategory = computed(() => {
   if (age.value < 18) return 'Joven'
   return 'Adulto'
 })
+
+// Parse dates flexibly: accepts Date, Firestore Timestamp, ISO (YYYY-MM-DD), DD/MM/YYYY,
+// and Spanish textual forms like "26 de noviembre de 1983, 12:00:00 a.m. UTC-4".
+const parseFlexibleDate = (input) => {
+  if (!input && input !== 0) return null
+  // Firestore Timestamp
+  if (typeof input === 'object') {
+    if (typeof input.toDate === 'function') return input.toDate()
+    if (input instanceof Date) return input
+    return null
+  }
+  if (typeof input === 'string') {
+    const s = input.trim()
+    if (!s) return null
+    // ISO-ish (YYYY-MM-DD...) — Date can parse safely
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      const d = new Date(s)
+      return isNaN(d.getTime()) ? null : d
+    }
+    // DD/MM/YYYY or DD-MM-YYYY
+    const dmy = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/.exec(s)
+    if (dmy) {
+      const day = parseInt(dmy[1], 10)
+      const month = parseInt(dmy[2], 10) - 1
+      const year = parseInt(dmy[3], 10)
+      return new Date(year, month, day)
+    }
+
+    // Spanish textual month parsing
+    const months = { enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5, julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11 }
+    const txt = /^(\d{1,2})\s+de\s+([a-zñ]+)\s+de\s+(\d{4})(?:[\,\s]+(.+))?/i.exec(s)
+    if (txt) {
+      const day = parseInt(txt[1], 10)
+      const monthName = (txt[2] || '').toLowerCase()
+      const year = parseInt(txt[3], 10)
+      const monthIdx = months[monthName]
+      if (monthIdx !== undefined) {
+        let date = new Date(year, monthIdx, day)
+        const timePart = txt[4] || ''
+        if (timePart) {
+          const timeMatch = /(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(timePart)
+          if (timeMatch) {
+            let hours = parseInt(timeMatch[1], 10)
+            const minutes = parseInt(timeMatch[2], 10)
+            const seconds = parseInt(timeMatch[3] || '0', 10)
+            if (/a\.?m\.?|am/i.test(timePart)) {
+              if (hours === 12) hours = 0
+            } else if (/p\.?m\.?|pm/i.test(timePart)) {
+              if (hours < 12) hours += 12
+            }
+            date = new Date(year, monthIdx, day, hours, minutes, seconds)
+          }
+          const tzMatch = /UTC(?:\s*|)([+\-]\d{1,2})/.exec(timePart)
+          if (tzMatch) {
+            const offset = parseInt(tzMatch[1], 10)
+            // Normalize by subtracting offset (so that stored value represents the absolute instant)
+            date = new Date(date.getTime() - offset * 3600 * 1000)
+          }
+        }
+        return date
+      }
+    }
+
+    // fallback to Date parse
+    const fallback = new Date(s)
+    return isNaN(fallback.getTime()) ? null : fallback
+  }
+  return null
+}
 
 
 const validateField = (field) => {
@@ -726,14 +424,11 @@ const validateField = (field) => {
     case 'fechaNacimiento':
       errors.fechaNacimiento = form.fechaNacimiento ? '' : 'Fecha de nacimiento requerida'
       break
-    case 'dni':
-      errors.dni = form.dni && form.dni.trim().length >= 5 ? '' : 'CI inválido o muy corto (mínimo 5 dígitos)'
-      break
     case 'telefono':
       errors.telefono = form.telefono && /^\+?\d{7,15}$/.test(form.telefono.replace(/\s+/g, '')) ? '' : 'Teléfono inválido (ej: +51 9xxxxxxx)'
       break
     case 'email':
-      // email optional for patient, but validate format if provided
+      // email optional for patient, but we removed email from contact — keep validation logic in case reused elsewhere
       errors.email = form.email ? (/^\S+@\S+\.\S+$/.test(form.email) ? '' : 'Correo inválido') : ''
       break
     case 'password':
@@ -744,48 +439,10 @@ const validateField = (field) => {
 }
 
 const recalculate = () => {
-  // Re-evaluate age and imc
-  form.medicalInfo.imc = imc.value
+  // Re-evaluate age (IMC removed)
 }
 
-const addAllergy = () => {
-  if (!_allergy_temp.value && !form.medicalInfo.alergias.length) return
-  const v = _allergy_temp.value.trim()
-  if (v && !form.medicalInfo.alergias.includes(v)) {
-    form.medicalInfo.alergias.push(v)
-  }
-  _allergy_temp.value = ''
-}
-
-const removeAllergy = (i) => {
-  form.medicalInfo.alergias.splice(i,1)
-}
-
-const addEnfermedad = () => {
-  if (!_enfermedad_temp.value && !form.medicalInfo.enfermedades.length) return
-  const v = _enfermedad_temp.value.trim()
-  if (v && !form.medicalInfo.enfermedades.includes(v)) {
-    form.medicalInfo.enfermedades.push(v)
-  }
-  _enfermedad_temp.value = ''
-}
-
-const removeEnfermedad = (i) => {
-  form.medicalInfo.enfermedades.splice(i,1)
-}
-
-const addMedicamento = () => {
-  if (!_medicamento_temp.value && !form.medicalInfo.medicamentos.length) return
-  const v = _medicamento_temp.value.trim()
-  if (v && !form.medicalInfo.medicamentos.includes(v)) {
-    form.medicalInfo.medicamentos.push(v)
-  }
-  _medicamento_temp.value = ''
-}
-
-const removeMedicamento = (i) => {
-  form.medicalInfo.medicamentos.splice(i,1)
-}
+// medicalInfo tag handlers removed
 
 const onPhotoSelected = (e) => {
   const f = e.target.files && e.target.files[0]
@@ -827,13 +484,7 @@ const usersList = computed(() => patients.value)
 const checkDuplicates = () => {
   duplicateWarningMessages.value = []
   duplicateWarning.value = false
-  if (form.dni) {
-    const match = usersList.value.find(u => (u.dni && u.dni.toString() === form.dni.toString()))
-    if (match) {
-      duplicateWarningMessages.value.push(`⚠️ CI duplicado: Ya existe un paciente con CI ${form.dni}`)
-      duplicateWarning.value = true
-    }
-  }
+  // DNI no se usa para duplicados (campo eliminado)
 
   if (form.persona.nombres && form.persona.apellidos && form.fechaNacimiento) {
     const nameDobMatch = usersList.value.find(u => {
@@ -855,7 +506,6 @@ const openPreview = () => {
   validateField('nombres')
   validateField('apellidos')
   validateField('fechaNacimiento')
-  validateField('dni')
   validateField('telefono')
   checkDuplicates()
   showPreview.value = true
@@ -868,7 +518,6 @@ const confirmSave = async (viewAfterSave = false) => {
   validateField('nombres')
   validateField('apellidos')
   validateField('fechaNacimiento')
-  validateField('dni')
   validateField('telefono')
   checkDuplicates()
 
@@ -881,18 +530,52 @@ const confirmSave = async (viewAfterSave = false) => {
     return
   }
 
-  // Prepare payload
-  const payload = JSON.parse(JSON.stringify(form))
-  if (photoFile.value) {
-    // store a data URL for demo / preview - in real app upload to storage
-    payload.photo = photoDataUrl.value
+  // Build explicit payload containing only the fields allowed in the `users` collection
+  const defaultsSettings = form.settings || {
+    familiar_email: null,
+    intensidad_vibracion: 2,
+    modo_silencio: false,
+    notificar_a_familiar: false
   }
 
-  // Asegurar estado activo por defecto
-  payload.estado = 'Activo'
-  payload.isActive = true
-  payload.role = 'user'
-  payload.usuarioRegistro = currentUserName.value
+  const payload = {
+    persona: {
+      nombres: form.persona?.nombres || '',
+      apellidos: form.persona?.apellidos || '',
+      fecha_nac: form.fechaNacimiento || form.persona?.fecha_nac || null,
+      sexo: form.persona?.sexo || null
+    },
+    telefono: form.telefono || '',
+    email: form.email ? form.email.trim().toLowerCase() : '',
+    password: form.password || '',
+    role: form.role || 'user',
+    settings: defaultsSettings,
+    estado: 'Activo',
+    isActive: true,
+    createdAt: Timestamp.now(),
+    usuarioRegistro: currentUserName.value
+  }
+
+  // Normalize fecha_nac: parse flexible input and convert to Firestore Timestamp when possible
+  try {
+    const rawDob = form.fechaNacimiento || form.persona?.fecha_nac || null
+    const parsed = parseFlexibleDate(rawDob)
+    if (parsed instanceof Date && !isNaN(parsed.getTime())) {
+      payload.persona.fecha_nac = Timestamp.fromDate(parsed)
+    } else if (parsed && typeof parsed.toDate === 'function') {
+      // Already a Firestore Timestamp-like object
+      payload.persona.fecha_nac = parsed
+    } else {
+      payload.persona.fecha_nac = null
+    }
+  } catch (pfErr) {
+    console.warn('⚠️ [PatientRegistro] No se pudo normalizar fecha_nac, se guarda null:', pfErr)
+    payload.persona.fecha_nac = null
+  }
+
+  if (photoFile.value) payload.photo = photoDataUrl.value
+
+  // medicalInfo intentionally omitted from payload
   
   console.log("📋 [PatientRegistro] Usuario registro:", payload.usuarioRegistro)
   console.log("👤 [PatientRegistro] Usuario autenticado:", user.value)
@@ -905,157 +588,134 @@ const confirmSave = async (viewAfterSave = false) => {
   }
 
   try {
-    console.log("💾 [PatientRegistro] Guardando paciente en Firebase:", payload)
-  // Prepare patient payload: remove fields we don't want in patients collection
-  const patientPayload = JSON.parse(JSON.stringify(payload))
-  // Removed tutor/responsable per request; also strip seguro from stored patient record
-  delete patientPayload.seguro
+    console.log("💾 [PatientRegistro] Guardando en colección 'users' con payload:", payload)
 
-    // Create or update users collection entry with desired structure
-    try {
-      // We'll capture a reference to the created user (uid or users doc id)
-      let createdUserRef = null
-      let createdUid = null
+    // We'll capture the created user reference/info
+    let createdUserRef = null
+    let createdUid = null
 
-      // If email + password provided attempt to create Auth user
-      if (payload.email && payload.password) {
-        try {
-          console.log('🔐 [PatientRegistro] Intentando crear usuario en Firebase Auth para', payload.email)
-          const cred = await createUserWithEmailAndPassword(auth, payload.email.trim(), payload.password)
-          const uid = cred.user.uid
-          createdUid = uid
-          console.log('✅ [PatientRegistro] Auth user creado UID:', uid)
+    // If email + password provided attempt to create Auth user and corresponding users/{uid} doc
+    if (payload.email && payload.password) {
+      try {
+        console.log('🔐 [PatientRegistro] Intentando crear usuario en Firebase Auth para', payload.email)
+        const cred = await createUserWithEmailAndPassword(auth, payload.email.trim(), payload.password)
+        const uid = cred.user.uid
+        createdUid = uid
+        console.log('✅ [PatientRegistro] Auth user creado UID:', uid)
 
-          // create users/{uid} doc in Firestore with expected shape
-          const nameParts = (payload.persona?.nombres || '').toString().trim().split(' ')
-          const nombres = nameParts[0] || ''
-          const apellidos = (payload.persona?.apellidos || '') || nameParts.slice(1).join(' ')
+        const nameParts = (payload.persona?.nombres || '').toString().trim().split(' ')
+        const nombres = nameParts[0] || ''
+        const apellidos = (payload.persona?.apellidos || '') || nameParts.slice(1).join(' ')
 
-          const userDoc = {
-            createdAt: Timestamp.now(),
-            email: payload.email.trim().toLowerCase(),
-            persona: {
-              apellidos: apellidos,
-              fecha_nac: payload.fechaNacimiento || null,
-              nombres: nombres,
-              sexo: payload.persona?.sexo || null
-            },
-            role: payload.role || 'user',
-            settings: {
-              familiar_email: null,
-              intensidad_vibracion: 2,
-              modo_silencio: false,
-              notificar_a_familiar: false
-            },
-            telefono: payload.telefono || ''
-          }
-
-          await setDoc(doc(db, 'users', uid), userDoc)
-          createdUserRef = { id: uid, ...userDoc }
-          console.log('✅ [PatientRegistro] users/{uid} doc creado en Firestore')
-        } catch (authErr) {
-          console.error('❌ [PatientRegistro] Error creando Auth user:', authErr)
-          // If email already in use, fallback to creating a users doc (non-auth) to keep record
-          if (authErr.code === 'auth/email-already-in-use') {
-            try {
-              const userDocFallback = {
-                createdAt: new Date(),
-                email: payload.email || '',
-                persona: {
-                  nombres: payload.persona?.nombres || '',
-                  apellidos: payload.persona?.apellidos || '',
-                  fecha_nac: payload.fechaNacimiento || '',
-                  sexo: payload.persona?.sexo || null
-                },
-                role: payload.role || 'user',
-                settings: {
-                  familiar_email: null,
-                  intensidad_vibracion: 2,
-                  modo_silencio: false,
-                  notificar_a_familiar: false
-                },
-                telefono: payload.telefono || ''
-              }
-              const createdUser = await userService.createUser(userDocFallback)
-              createdUserRef = createdUser
-              console.log('ℹ️ [PatientRegistro] users doc creado (fallback):', createdUser)
-            } catch (uErr) {
-              console.error('❌ [PatientRegistro] Error creando users doc fallback:', uErr)
-            }
-          } else {
-            // for other auth errors, log and continue
-            console.warn('⚠️ [PatientRegistro] No se pudo crear Auth user, continuando con paciente:', authErr.message || authErr)
-          }
-        }
-      } else {
-        // No email+password provided: create a simple users document to keep contact info
         const userDoc = {
-          createdAt: new Date(),
-          email: payload.email || '',
+          createdAt: Timestamp.now(),
+          email: payload.email.trim().toLowerCase(),
           persona: {
-            nombres: payload.persona?.nombres || '',
-            apellidos: payload.persona?.apellidos || '',
-            fecha_nac: payload.fechaNacimiento || '',
+            apellidos: apellidos,
+            fecha_nac: payload.persona?.fecha_nac || null,
+            nombres: nombres,
             sexo: payload.persona?.sexo || null
           },
           role: payload.role || 'user',
-          settings: {
+          settings: payload.settings || {
             familiar_email: null,
             intensidad_vibracion: 2,
             modo_silencio: false,
             notificar_a_familiar: false
           },
           telefono: payload.telefono || ''
-        }
-        try {
-          const createdUser = await userService.createUser(userDoc)
-          createdUserRef = createdUser
-          console.log('✅ [PatientRegistro] users doc creado (sin auth):', createdUser)
-        } catch (uErr) {
-          console.error('❌ [PatientRegistro] Error creando users doc (sin auth):', uErr)
-        }
-      }
-
-      // Attach linking info to patientPayload so paciente y usuario queden vinculados por correo/uid
-      try {
-        patientPayload.userEmail = payload.email || ''
-        if (createdUid) {
-          patientPayload.userUid = createdUid
-        } else if (createdUserRef && createdUserRef.id) {
-          patientPayload.userDocId = createdUserRef.id
+          ,estado: 'Activo',
+          isActive: true,
+          usuarioRegistro: currentUserName.value
         }
 
-        // Mirror persona names into patient record to ensure they are the same
-        if (createdUserRef && createdUserRef.persona) {
-          patientPayload.persona = patientPayload.persona || {}
-          patientPayload.persona.nombres = createdUserRef.persona.nombres || patientPayload.persona.nombres
-          patientPayload.persona.apellidos = createdUserRef.persona.apellidos || patientPayload.persona.apellidos
-          // also sync fecha_nac if present
-          if (createdUserRef.persona.fecha_nac) patientPayload.fechaNacimiento = createdUserRef.persona.fecha_nac
+        await setDoc(doc(db, 'users', uid), userDoc)
+        createdUserRef = { id: uid, ...userDoc }
+        console.log('✅ [PatientRegistro] users/{uid} doc creado en Firestore')
+      } catch (authErr) {
+        console.error('❌ [PatientRegistro] Error creando Auth user:', authErr)
+        // If email already in use, fallback to creating a users doc (non-auth) to keep record
+        if (authErr.code === 'auth/email-already-in-use') {
+          try {
+            const userDocFallback = {
+              createdAt: new Date(),
+              email: payload.email || '',
+              persona: {
+                nombres: payload.persona?.nombres || '',
+                apellidos: payload.persona?.apellidos || '',
+                fecha_nac: payload.persona?.fecha_nac || '',
+                sexo: payload.persona?.sexo || null
+              },
+              role: payload.role || 'user',
+              settings: payload.settings || {
+                familiar_email: null,
+                intensidad_vibracion: 2,
+                modo_silencio: false,
+                notificar_a_familiar: false
+              },
+              telefono: payload.telefono || ''
+              ,estado: 'Activo',
+              isActive: true,
+              usuarioRegistro: currentUserName.value
+            }
+            const createdUser = await userService.createUser(userDocFallback)
+            createdUserRef = createdUser
+            console.log('ℹ️ [PatientRegistro] users doc creado (fallback):', createdUser)
+          } catch (uErr) {
+            console.error('❌ [PatientRegistro] Error creando users doc fallback:', uErr)
+            throw uErr
+          }
+        } else {
+          // for other auth errors, rethrow to surface the problem
+          throw authErr
         }
-      } catch (linkErr) {
-        console.warn('⚠️ [PatientRegistro] No se pudo vincular completamente paciente<->usuario:', linkErr)
       }
-    } catch (uErrOuter) {
-      console.error('❌ [PatientRegistro] Error en flujo de creación de usuario:', uErrOuter)
+    } else {
+      // No email+password provided: create a simple users document to keep contact info
+      const userDoc = {
+        createdAt: new Date(),
+        email: payload.email || '',
+        persona: {
+          nombres: payload.persona?.nombres || '',
+          apellidos: payload.persona?.apellidos || '',
+          fecha_nac: payload.persona?.fecha_nac || '',
+          sexo: payload.persona?.sexo || null
+        },
+        role: payload.role || 'user',
+        settings: payload.settings || {
+          familiar_email: null,
+          intensidad_vibracion: 2,
+          modo_silencio: false,
+          notificar_a_familiar: false
+        },
+        telefono: payload.telefono || ''
+        ,estado: 'Activo',
+        isActive: true,
+        usuarioRegistro: currentUserName.value
+      }
+      const createdUser = await userService.createUser(userDoc)
+      createdUserRef = createdUser
+      console.log('✅ [PatientRegistro] users doc creado (sin auth):', createdUser)
     }
 
-    const createdId = await AdminPatientService.createPatient(patientPayload)
-    console.log("✅ [PatientRegistro] Paciente creado con ID:", createdId)
-    
     // Success feedback
-    window.alert('Registro guardado correctamente en Firebase')
+    window.alert('Registro guardado correctamente en Firebase (colección users)')
     showPreview.value = false
+
+    // Si el usuario quiere ver después de guardar, intentamos navegar a la lista de usuarios
     if (viewAfterSave) {
-      // navegar a perfil usando router
-      router.push({ name: 'admin-patient-perfil', query: { id: createdId } }).catch(()=>{})
+      try {
+        router.push({ name: 'UsersManagement' }).catch(()=>{})
+      } catch (navErr) {
+        console.warn('No se pudo navegar a UsersManagement:', navErr)
+      }
     } else {
       // reset form si fue "Guardar y Crear Otro"
       resetForm()
     }
   } catch (e) {
-    console.error('❌ [PatientRegistro] Error guardando paciente:', e)
-    window.alert('Error guardando paciente. Revise la consola.')
+    console.error('❌ [PatientRegistro] Error guardando en users:', e)
+    window.alert('Error guardando usuario. Revise la consola.')
   }
 }
 
@@ -1082,23 +742,7 @@ const resetForm = () => {
   form.expediente = expediente
   form.estado = 'Activo'
   form.persona = { nombres: '', apellidos: '', sexo: '' }
-  form.medicalInfo = { 
-    estadoAdherencia: '', 
-    estadoActual: '', 
-    alergias: [], 
-    enfermedades: [], 
-    altura: null, 
-    peso: null, 
-    imc: null, 
-    estadoFisico: '', 
-    medicamentos: [], 
-    recetadoPor: '', 
-    frecuenciaTratamiento: '', 
-    condicionToma: '', 
-    observaciones: '' 
-  }
   form.direccion = { calle: '', numero: '', zona: '', ciudad: '', provincia: '' }
-  form.seguro = { nombre: '', polid: '' }
   form.telefono = ''
   form.email = ''
   form.password = ''
@@ -1440,22 +1084,7 @@ const printPreview = () => {
             <div class="info-label">Sexo</div>
             <div class="info-value">${form.persona.sexo || 'N/A'}</div>
           </div>
-          <div class="info-item">
-            <div class="info-label">Estado Civil</div>
-            <div class="info-value">${form.estadoCivil || 'N/A'}</div>
-          </div>
-          ${form.lugarNacimiento ? `
-          <div class="info-item">
-            <div class="info-label">Lugar de Nacimiento</div>
-            <div class="info-value">📍 ${form.lugarNacimiento}</div>
-          </div>
-          ` : ''}
-          ${form.ocupacion ? `
-          <div class="info-item">
-            <div class="info-label">Ocupación</div>
-            <div class="info-value">💼 ${form.ocupacion}</div>
-          </div>
-          ` : ''}
+          <!-- Estado civil, lugar de nacimiento y ocupación removidos del preview -->
         </div>
       </div>
       
@@ -1470,145 +1099,9 @@ const printPreview = () => {
             <div class="info-label">Teléfono Principal</div>
             <div class="info-value">📱 ${form.telefono || 'N/A'}</div>
           </div>
-          ${form.telefono2 ? `
-          <div class="info-item">
-            <div class="info-label">Teléfono Secundario</div>
-            <div class="info-value">📱 ${form.telefono2}</div>
-          </div>
-          ` : ''}
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">📧 ${form.email || 'N/A'}</div>
-          </div>
-          <div class="info-item full-width">
-            <div class="info-label">Dirección</div>
-            <div class="info-value">🏠 ${form.direccion.calle} ${form.direccion.numero}, ${form.direccion.zona || ''} ${form.direccion.ciudad || ''}, ${form.direccion.provincia || ''}</div>
-          </div>
         </div>
       </div>
       
-      ${showMedicalInfo.value ? `
-      <!-- Información Médica -->
-      <div class="section">
-        <div class="section-title">
-          <span class="section-icon">🏥</span>
-          Información Médica
-        </div>
-        <div class="info-grid">
-          ${form.medicalInfo.estadoActual ? `
-          <div class="info-item">
-            <div class="info-label">Estado Actual</div>
-            <div class="info-value"><span class="badge badge-success">${form.medicalInfo.estadoActual}</span></div>
-          </div>
-          ` : ''}
-          ${form.medicalInfo.estadoAdherencia ? `
-          <div class="info-item">
-            <div class="info-label">Adherencia al Tratamiento</div>
-            <div class="info-value"><span class="badge badge-primary">${form.medicalInfo.estadoAdherencia}</span></div>
-          </div>
-          ` : ''}
-          ${form.medicalInfo.peso ? `
-          <div class="info-item">
-            <div class="info-label">Peso</div>
-            <div class="info-value">⚖️ ${form.medicalInfo.peso} kg</div>
-          </div>
-          ` : ''}
-          ${form.medicalInfo.altura ? `
-          <div class="info-item">
-            <div class="info-label">Altura</div>
-            <div class="info-value">📏 ${form.medicalInfo.altura} cm</div>
-          </div>
-          ` : ''}
-          ${imcString.value ? `
-          <div class="info-item">
-            <div class="info-label">IMC</div>
-            <div class="info-value"><span class="badge badge-warning">${imcString.value}</span></div>
-          </div>
-          ` : ''}
-          ${form.medicalInfo.estadoFisico ? `
-          <div class="info-item">
-            <div class="info-label">Estado Físico</div>
-            <div class="info-value">${form.medicalInfo.estadoFisico}</div>
-          </div>
-          ` : ''}
-        </div>
-        
-        ${form.medicalInfo.alergias.length > 0 ? `
-        <div class="info-item full-width" style="margin-top: 15px;">
-          <div class="info-label">⚠️ Alergias Registradas</div>
-          <div class="tags-container">
-            ${form.medicalInfo.alergias.map(a => `<span class="tag tag-danger">${a}</span>`).join('')}
-          </div>
-        </div>
-        ` : ''}
-        
-        ${form.medicalInfo.enfermedades.length > 0 ? `
-        <div class="info-item full-width" style="margin-top: 15px;">
-          <div class="info-label">🩺 Enfermedades/Condiciones</div>
-          <div class="tags-container">
-            ${form.medicalInfo.enfermedades.map(e => `<span class="tag tag-purple">${e}</span>`).join('')}
-          </div>
-        </div>
-        ` : ''}
-        
-        ${form.medicalInfo.medicamentos.length > 0 ? `
-        <div class="info-item full-width" style="margin-top: 15px;">
-          <div class="info-label">💊 Medicamentos Actuales</div>
-          <div class="tags-container">
-            ${form.medicalInfo.medicamentos.map(m => `<span class="tag">${m}</span>`).join('')}
-          </div>
-        </div>
-        ` : ''}
-        
-        ${form.medicalInfo.frecuenciaTratamiento || form.medicalInfo.condicionToma ? `
-        <div class="info-grid" style="margin-top: 15px;">
-          ${form.medicalInfo.frecuenciaTratamiento ? `
-          <div class="info-item">
-            <div class="info-label">Frecuencia de Tratamiento</div>
-            <div class="info-value">⏰ ${form.medicalInfo.frecuenciaTratamiento}</div>
-          </div>
-          ` : ''}
-          ${form.medicalInfo.condicionToma ? `
-          <div class="info-item">
-            <div class="info-label">Condición de Toma</div>
-            <div class="info-value">🍽️ ${form.medicalInfo.condicionToma}</div>
-          </div>
-          ` : ''}
-        </div>
-        ` : ''}
-        
-        ${form.medicalInfo.recetadoPor ? `
-        <div class="info-item full-width" style="margin-top: 15px;">
-          <div class="info-label">Recetado por</div>
-          <div class="info-value">👨‍⚕️ Dr./Dra. ${form.medicalInfo.recetadoPor}</div>
-        </div>
-        ` : ''}
-        
-        ${form.medicalInfo.observaciones ? `
-        <div class="info-item full-width" style="margin-top: 15px;">
-          <div class="info-label">Observaciones Médicas</div>
-          <div class="info-value">${form.medicalInfo.observaciones}</div>
-        </div>
-        ` : ''}
-        
-        ${ciPhotoDataUrl.value || recetaFotoDataUrl.value ? `
-        <div class="medical-photos">
-          ${ciPhotoDataUrl.value ? `
-          <div class="medical-photo-item">
-            <div class="medical-photo-label">🆔 Foto CI</div>
-            <img src="${ciPhotoDataUrl.value}" alt="CI" />
-          </div>
-          ` : ''}
-          ${recetaFotoDataUrl.value ? `
-          <div class="medical-photo-item">
-            <div class="medical-photo-label">📄 Receta Médica</div>
-            <img src="${recetaFotoDataUrl.value}" alt="Receta" />
-          </div>
-          ` : ''}
-        </div>
-        ` : ''}
-      </div>
-      ` : ''}
       
       
       

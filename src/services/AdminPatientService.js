@@ -7,6 +7,7 @@ import {   collection,
   getDoc, 
   addDoc, 
   updateDoc, 
+  setDoc, 
   deleteDoc, 
   onSnapshot, 
   serverTimestamp,
@@ -97,6 +98,43 @@ export async function updatePatient(id, updates) {
   await updateDoc(doc(db, COLLECTION, id), sanitized)
 }
 
+export async function setPatient(id, data) {
+  try {
+    // Clean data to remove undefined fields
+    const clean = (obj) => {
+      if (obj === null || obj === undefined) return obj
+      if (Array.isArray(obj)) return obj.map(v => (v && typeof v === 'object') ? clean(v) : v).filter(v => v !== undefined)
+      if (typeof obj === 'object') {
+        const out = {}
+        Object.keys(obj).forEach(k => {
+          const val = obj[k]
+          if (val === undefined) return
+          if (val && typeof val === 'object') {
+            const c = clean(val)
+            if (c !== undefined && !(typeof c === 'object' && Object.keys(c).length === 0 && !Array.isArray(c))) {
+              out[k] = c
+            }
+          } else {
+            out[k] = val
+          }
+        })
+        return out
+      }
+      return obj
+    }
+
+    const payload = clean(data) || {}
+    // Use setDoc to overwrite the document
+    await setDoc(doc(db, COLLECTION, id), {
+      ...payload,
+      updatedAt: serverTimestamp()
+    })
+  } catch (error) {
+    console.error('❌ [AdminPatientService] Error sobrescribiendo paciente:', error)
+    throw error
+  }
+}
+
 export async function deletePatient(id) {
   await deleteDoc(doc(db, COLLECTION, id))
 }
@@ -107,5 +145,6 @@ export default {
   get: getPatient,
   create: createPatient,
   update: updatePatient,
+  set: setPatient,
   delete: deletePatient
 }
