@@ -160,12 +160,12 @@ onUnmounted(() => {
         <h2 class="product-section-title">¿Cómo funciona Vital Connnect?</h2>
 
         <div class="product-how-grid">
-          <HowCard :step="1" title="Configura en la app" text="Descarga la aplicación en Google Play."
+          <HowCard :step="1" title="Descarga la app" text="Descarga la aplicación en Google Play."
             :icon="iconvitalconnect"
-            url="https://drive.google.com/drive/folders/1xhOy2S0IXY5P7qJzHf0Vvlb9rrANfGAg?usp=sharing" />
+            url="https://drive.google.com/drive/folders/1zAMXwSRa1IjRr0uu4xwgzpt-yDdfGl0W?usp=sharing" />
           <HowCard :step="2" title="Configuración Rápida"
             text="Los usuarios pueden actualizar su estado médico directamente desde la aplicación,"
-            :icon="IconConfigureApp" url="https://cuevana.pro/pelicula/las-guerreras-k-pop" />
+            :icon="IconConfigureApp" url="https://drive.google.com/drive/folders/1zAMXwSRa1IjRr0uu4xwgzpt-yDdfGl0W?usp=sharing" />
           <HowCard :step="3" title="Familia en todo momento"
             text="Los familiares pueden acceder a la información del estado de salud del usuario en cualquier momento."
             :icon="IconFamili" />
@@ -232,7 +232,7 @@ onUnmounted(() => {
 export default {
   data() {
     return {
-      url: 'https://drive.google.com/file/d/1FBLtez45J4G_fFIrxSOwskCGbpu0vmK1/view?usp=sharing'
+      url: 'https://drive.google.com/drive/folders/1zAMXwSRa1IjRr0uu4xwgzpt-yDdfGl0W?usp=sharing'
     }
   },
   methods: {

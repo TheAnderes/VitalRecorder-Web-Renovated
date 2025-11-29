@@ -183,7 +183,7 @@ const isSubscriptionActive = computed(() => {
 // Funciones
 const downloadApp = () => {
   // Redireccionar al archivo APK en Google Drive
-  window.open('https://drive.google.com/file/d/1ejgnr03A9f1jFonTJ16_Y4AASaWVALPZ/view?usp=drivesdk', '_blank')
+  window.open('https://drive.google.com/drive/folders/1zAMXwSRa1IjRr0uu4xwgzpt-yDdfGl0W?usp=sharing', '_blank')
 }
 
 const fetchSubscriptionData = async (uid) => {
