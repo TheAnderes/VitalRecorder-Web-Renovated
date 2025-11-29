@@ -47,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
   }
   const { user, isLoading } = useAuth()
   const { getUserRole, checkAdminPermissions } = useAdmin()
-  
+
   // Esperar a que termine de cargar la autenticación
   if (isLoading.value) {
     // Esperar un poco más para que termine de cargar
@@ -72,10 +72,10 @@ router.beforeEach(async (to, from, next) => {
   // TEMPORAL: Deshabilitar verificación de admin para testing
   if (to.meta.requiredRole && user.value) {
     const userRole = await getUserRole(user.value.uid)
-    const requiredRoles = Array.isArray(to.meta.requiredRole) 
-      ? to.meta.requiredRole 
+    const requiredRoles = Array.isArray(to.meta.requiredRole)
+      ? to.meta.requiredRole
       : [to.meta.requiredRole]
-    
+
     // TEMPORAL: Permitir acceso directo a rutas de admin para testing
     if (to.path.startsWith('/admin')) {
       console.log('TEMPORAL: Permitiendo acceso directo a admin para testing')
@@ -86,7 +86,7 @@ router.beforeEach(async (to, from, next) => {
       //   return
       // }
     }
-    
+
     // TEMPORAL: Comentamos verificación de rol específico
     // if (!requiredRoles.includes(userRole)) {
     //   if (userRole === 'admin' || userRole === 'super_admin') {
@@ -103,6 +103,8 @@ router.beforeEach(async (to, from, next) => {
     const userRole = await getUserRole(user.value.uid)
     if (userRole === 'admin' || userRole === 'super_admin') {
       next({ name: 'admin-dashboard' })
+    } else if (userRole === 'cuidador') {
+      next({ name: 'caregiver-dashboard' })
     } else {
       next({ name: 'dashboard' })
     }
@@ -114,7 +116,7 @@ router.beforeEach(async (to, from, next) => {
 
 // Ocultar overlay en todos los casos (éxito o fallo)
 router.afterEach(() => {
-  try { const loading = useLoading(); loading.hide() } catch (e) {}
+  try { const loading = useLoading(); loading.hide() } catch (e) { }
 
   // Además de scrollear la ventana, también scrollear contenedores internos
   try {
@@ -140,7 +142,7 @@ router.afterEach(() => {
         if (scrollables.length) {
           // scrollear cada contenedor encontrado al inicio
           scrollables.forEach(el => {
-            try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) {}
+            try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) { }
           })
           return
         }
@@ -159,7 +161,7 @@ router.afterEach(() => {
 })
 
 router.onError(() => {
-  try { const loading = useLoading(); loading.hide() } catch (e) {}
+  try { const loading = useLoading(); loading.hide() } catch (e) { }
 
   try {
     const adminContent = document.querySelector('.admin-content')
@@ -179,16 +181,16 @@ router.onError(() => {
 
       if (scrollables.length) {
         scrollables.forEach(el => {
-          try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) {}
+          try { el.scrollTo({ top: 0, left: 0, behavior: 'smooth' }) } catch (e) { }
         })
         return
       }
-    } catch (e) {}
+    } catch (e) { }
 
     if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
-  } catch (e) {}
+  } catch (e) { }
 })
 
 export default router

@@ -241,7 +241,11 @@ const handleLogin = async () => {
         redirectPath = "/admin/dashboard";
         welcomeText = "Bienvenido al panel de administración.";
         console.log("Redirigiendo a admin dashboard");
-      } else if (userRole === "user" || userRole === "cuidador" || !userRole) {
+      } else if (userRole === "cuidador") {
+        redirectPath = "/caregiver-dashboard";
+        welcomeText = "Bienvenido a tu panel de cuidador.";
+        console.log("Redirigiendo a caregiver dashboard");
+      } else if (userRole === "user" || !userRole) {
         redirectPath = "/dashboard";
         welcomeText = "Bienvenido a tu dashboard de usuario.";
         console.log("Redirigiendo a user dashboard");

@@ -58,6 +58,36 @@
                 </span>
               </div>
             </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <i class="bi bi-credit-card-2-front" style="font-size: 1.5rem; color: #1f2b6c;"></i>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Suscripción Actual</span>
+                <span class="detail-value" :class="{ 'verified': isSubscriptionActive }">
+                  {{ subscriptionStatus }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </BaseCard>
+      </div>
+
+      <!-- Sección de Historial de Suscripciones -->
+      <div class="subscription-history-section" v-if="subscriptionHistory.length > 0">
+        <BaseCard class="history-card">
+          <h2 class="section-title">Historial de Suscripciones</h2>
+          <div class="history-list">
+            <div v-for="sub in subscriptionHistory" :key="sub.id" class="history-item">
+              <div class="history-info">
+                <span class="history-plan">{{ sub.plan_id === 'plan_1_person' ? 'Plan Individual' : sub.plan_id === 'plan_2_people' ? 'Plan Duo' : 'Plan Familiar' }}</span>
+                <span class="history-date">{{ formatDate(sub.start_date) }} - {{ formatDate(sub.end_date) }}</span>
+              </div>
+              <div class="history-status">
+                <span class="badge">Pagado</span>
+              </div>
+            </div>
           </div>
         </BaseCard>
       </div>
@@ -99,8 +129,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth } from '@/firebase.js'
+import { auth, db } from '@/firebase.js'
 import { onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc, collection, getDocs, orderBy, query } from 'firebase/firestore'
 import BaseCard from '@/components/shared/BaseCard.vue'
 import Swal from 'sweetalert2'
 
@@ -109,6 +140,8 @@ const router = useRouter()
 // Estado reactivo
 const user = ref(null)
 const loading = ref(true)
+const subscription = ref(null)
+const subscriptionHistory = ref([])
 
 // Computed properties
 const userName = computed(() => {
@@ -128,17 +161,65 @@ const getUserInitial = computed(() => {
   return 'U'
 })
 
+const subscriptionStatus = computed(() => {
+  if (!subscription.value) return 'Gratuito'
+  const now = new Date()
+  const endDate = subscription.value.end_date?.toDate()
+  if (endDate && endDate > now) {
+    return subscription.value.plan_id === 'plan_1_person' ? 'Plan Individual' :
+           subscription.value.plan_id === 'plan_2_people' ? 'Plan Duo' :
+           subscription.value.plan_id === 'plan_3_people' ? 'Plan Familiar' : 'Premium'
+  }
+  return 'Gratuito (Vencido)'
+})
+
+const isSubscriptionActive = computed(() => {
+  if (!subscription.value) return false
+  const now = new Date()
+  const endDate = subscription.value.end_date?.toDate()
+  return endDate && endDate > now
+})
+
 // Funciones
 const downloadApp = () => {
   // Redireccionar al archivo APK en Google Drive
   window.open('https://drive.google.com/file/d/1ejgnr03A9f1jFonTJ16_Y4AASaWVALPZ/view?usp=drivesdk', '_blank')
 }
 
+const fetchSubscriptionData = async (uid) => {
+  try {
+    // Fetch current subscription
+    const userDoc = await getDoc(doc(db, 'users', uid))
+    if (userDoc.exists()) {
+      subscription.value = userDoc.data().subscription || null
+    }
+
+    // Fetch history
+    const historyQuery = query(
+      collection(db, 'users', uid, 'subscription_history'),
+      orderBy('start_date', 'desc')
+    )
+    const historySnapshot = await getDocs(historyQuery)
+    subscriptionHistory.value = historySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  } catch (error) {
+    console.error("Error fetching subscription:", error)
+  }
+}
+
+const formatDate = (timestamp) => {
+  if (!timestamp) return '-'
+  return new Date(timestamp.seconds * 1000).toLocaleDateString()
+}
+
 // Lifecycle
 onMounted(() => {
-  onAuthStateChanged(auth, (currentUser) => {
+  onAuthStateChanged(auth, async (currentUser) => {
     if (currentUser) {
       user.value = currentUser
+      await fetchSubscriptionData(currentUser.uid)
       loading.value = false
     } else {
       // Si no hay usuario, redirigir al login
@@ -456,5 +537,58 @@ onMounted(() => {
   border-radius: 12px !important;
   padding: 0.875rem 2rem !important;
   font-family: 'Poppins', sans-serif !important;
+}
+
+.subscription-history-section {
+  width: 100%;
+}
+
+.history-card {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-plan {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.history-date {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.badge {
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 </style>
