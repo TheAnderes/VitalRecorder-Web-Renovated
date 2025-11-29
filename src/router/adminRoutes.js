@@ -3,7 +3,7 @@ export const adminRoutes = [
   {
     path: '/admin',
     redirect: '/admin/dashboard',
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     }
@@ -12,7 +12,7 @@ export const adminRoutes = [
     path: '/admin/login',
     name: 'admin-login',
     component: () => import('@/views/admin/AdminLogin.vue'),
-    meta: { 
+    meta: {
       requiresAuth: false,
       adminOnly: true
     }
@@ -21,7 +21,7 @@ export const adminRoutes = [
     path: '/admin/dashboard',
     name: 'admin-dashboard',
     component: () => import('@/views/admin/AdminDashboard.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     }
@@ -30,18 +30,18 @@ export const adminRoutes = [
     path: '/admin/users',
     name: 'admin-users',
     component: () => import('@/views/admin/UsersManagement.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     }
   },
   //--------------------------------------------------------------------------
   // Rutas para gestión de pacientes
-   {
+  {
     path: '/admin/patient',
     name: 'admin-patient',
     component: () => import('@/views/admin/AdminPatient/PatientManagement.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     },
@@ -80,12 +80,20 @@ export const adminRoutes = [
     path: '/admin/analytics',
     name: 'admin-analytics',
     component: () => import('@/views/admin/Analytics.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiredRole: ['admin', 'super_admin']
     }
-  }
-  ,
+  },
+  {
+    path: '/admin/revenue',
+    name: 'admin-revenue',
+    component: () => import('@/views/admin/Revenue.vue'),
+    meta: {
+      requiresAuth: true,
+      requiredRole: ['admin', 'super_admin']
+    }
+  },
   {
     path: '/admin/profile',
     name: 'admin-profile',
@@ -93,3 +101,4 @@ export const adminRoutes = [
     meta: { requiresAuth: true, requiredRole: ['admin', 'super_admin'] }
   }
 ]
+

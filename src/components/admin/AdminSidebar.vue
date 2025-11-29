@@ -91,15 +91,48 @@
           <router-link 
             to="/admin/analytics" 
             class="nav-link"
-            :class="{ active: $route.name === 'admin-analytics' }"
+            :class="{ active: $route.path.startsWith('/admin/analytics') || $route.path.startsWith('/admin/revenue') }"
           >
             <div class="nav-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
               </svg>
             </div>
-            <span class="nav-text" v-show="!isCollapsed">Reportes</span>
+            <span class="nav-text" v-show="!isCollapsed">Analíticas y Reportes</span>
+            <button
+              class="submenu-toggle"
+              v-show="!isCollapsed"
+              @click.stop.prevent="toggleReportsSubmenu"
+              :aria-expanded="reportsSubmenuOpen"
+              title="Mostrar submódulos"
+            >
+              <svg :class="{ open: reportsSubmenuOpen }" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
           </router-link>
+
+          <!-- Submenu: Reports submodules -->
+          <ul class="submenu" v-show="reportsSubmenuOpen && !isCollapsed">
+            <li class="submenu-item">
+              <router-link
+                to="/admin/analytics"
+                class="nav-link sub-link"
+                :class="{ active: $route.path === '/admin/analytics' }">
+                <span class="sub-dot" aria-hidden></span>
+                <span class="nav-text">Analíticas</span>
+              </router-link>
+            </li>
+            <li class="submenu-item">
+              <router-link
+                to="/admin/revenue"
+                class="nav-link sub-link"
+                :class="{ active: $route.path === '/admin/revenue' }">
+                <span class="sub-dot" aria-hidden></span>
+                <span class="nav-text">Ingresos</span>
+              </router-link>
+            </li>
+          </ul>
         </li>
 
       </ul>
@@ -144,6 +177,13 @@ const patientSubmenuOpen = ref(true)
 
 function togglePatientSubmenu() {
   patientSubmenuOpen.value = !patientSubmenuOpen.value
+}
+
+// submenu state for reports item
+const reportsSubmenuOpen = ref(true)
+
+function toggleReportsSubmenu() {
+  reportsSubmenuOpen.value = !reportsSubmenuOpen.value
 }
 
 // lista de submódulos para la sección de pacientes

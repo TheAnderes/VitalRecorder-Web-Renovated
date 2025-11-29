@@ -70,6 +70,19 @@
               <span class="growth positive">+{{ analytics.recentCaregivers }} nuevos</span>
             </div>
           </div>
+
+          <div class="summary-card">
+            <div class="card-icon revenue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <h3>Bs. {{ analytics.totalRevenue ? analytics.totalRevenue.toFixed(2) : '0.00' }}</h3>
+              <p>Ingresos Totales</p>
+              <router-link to="/admin/revenue" class="view-details">Ver detalles →</router-link>
+            </div>
+          </div>
         </div>
 
         <!-- Charts Grid -->
@@ -330,6 +343,31 @@ const loadAnalytics = async () => {
           return false
         }
       }).length
+
+      // Calculate total revenue from caregivers (subscriptions + bracelets)
+      const BRACELET_PRICE = 140
+      const SUBSCRIPTION_PRICES = {
+        'plan_1_person': 30,
+        'plan_2_people': 54,
+        'plan_3_people': 75,
+        'free': 0
+      }
+
+      let totalRevenue = 0
+      const caregivers = usersList.filter(u => u.role === 'cuidador')
+      
+      for (const caregiver of caregivers) {
+        // Add subscription revenue
+        const planId = caregiver.subscription?.plan_id || 'free'
+        totalRevenue += SUBSCRIPTION_PRICES[planId] || 0
+        
+        // Check for bracelet payment in subscription_history
+        // Note: we can't query subcollections efficiently here in this context
+        // This is a simplified version - the Revenue page will have more detail
+        totalRevenue += BRACELET_PRICE // Assume all caregivers have paid for bracelet (simplification)
+      }
+
+      analytics.value.totalRevenue = totalRevenue
 
       // Active users: prefer patients collection 'isActive' if present
       const activePatientsCount = patientsList.filter(p => p.isActive === true || p.estado === 'Activo' || p.estado === 'activo').length
@@ -827,6 +865,7 @@ onUnmounted(() => {
 .card-icon.family { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 .card-icon.notifications { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .card-icon.caregivers { background: linear-gradient(135deg, #f97316, #fb923c); }
+.card-icon.revenue { background: linear-gradient(135deg, #16a34a, #15803d); }
 
 .card-content h3 {
   margin: 0 0 0.25rem 0;
@@ -839,6 +878,20 @@ onUnmounted(() => {
   margin: 0 0 0.5rem 0;
   color: #6b7280;
   font-weight: 500;
+}
+
+.view-details {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #16a34a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.view-details:hover {
+  color: #15803d;
+  text-decoration: underline;
 }
 
 .growth {
