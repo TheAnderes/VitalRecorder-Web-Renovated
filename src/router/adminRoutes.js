@@ -36,7 +36,7 @@ export const adminRoutes = [
     }
   },
   //--------------------------------------------------------------------------
-  // Rutas para gestión de pacientes
+  // Rutas para gestión de cuidadores (ruta/estructura en código se mantiene)
   {
     path: '/admin/patient',
     name: 'admin-patient',

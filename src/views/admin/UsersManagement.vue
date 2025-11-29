@@ -223,6 +223,7 @@
             <select v-model="editForm.role">
               <option value="user">Usuario</option>
               <option value="admin">Administrador</option>
+              <option value="cuidador">Cuidador</option>
             </select>
           </div>
           <div class="form-row switch">
@@ -376,7 +377,7 @@ const editUser = (user) => {
     nombres: user.persona?.nombres || '',
     apellidos: user.persona?.apellidos || '',
     email: user.email || '',
-    role: user.role || 'user',
+    role: user.role || 'cuidador',
     // Treat undefined as active by default
     isActive: user.isActive === false ? false : true
   }

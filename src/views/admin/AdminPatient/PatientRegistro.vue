@@ -2,11 +2,11 @@
   <div class="admin-page patient-registro">
     <div class="page-header">
       <div class="header-content">
-        <h2>Registro de Pacientes</h2>
-        <p>Complete los datos para el alta inicial del paciente.</p>
+        <h2>Registro de Cuidadores</h2>
+        <p>Complete los datos para el alta inicial del cuidador.</p>
       </div>
       <div>
-        <button class="primary" @click="openPreview">Registrar Nuevo Paciente</button>
+        <button class="primary" @click="openPreview">Registrar Nuevo Cuidador</button>
       </div>
     </div>
 
@@ -58,7 +58,7 @@
 
             <!-- Lugar de nacimiento / estado civil / ocupación eliminados según esquema de la base de datos -->
 
-            <!-- Fotografía del paciente (removida) -->
+            <!-- Fotografía del cuidador (removida) -->
 
             <!-- Foto del CI (removida) -->
           </div>
@@ -82,7 +82,7 @@
             <div class="field">
               <label>Contraseña (opcional)</label>
               <input type="password" v-model="form.password" @input="validateField('password')" :class="{'invalid': errors.password}" placeholder="Min. 6 caracteres" />
-              <small class="hint">Proporcione contraseña sólo si desea crear una cuenta de Auth para el paciente.</small>
+              <small class="hint">Proporcione contraseña sólo si desea crear una cuenta de Auth para el cuidador.</small>
               <small v-if="errors.password" class="error-msg">{{ errors.password }}</small>
             </div>
           </div>
@@ -112,7 +112,7 @@
             </div>
 
             <div class="field">
-              <label>ID único del paciente</label>
+              <label>ID único del cuidador</label>
               <input :value="form.id" readonly />
             </div>
 
@@ -163,11 +163,11 @@
               <h4>Información Personal</h4>
             </div>
             <div class="preview-grid">
-              <div class="preview-item">
-                <div class="preview-photo" v-if="photoDataUrl">
-                  <img :src="photoDataUrl" alt="Foto paciente" />
+                <div class="preview-item">
+                  <div class="preview-photo" v-if="photoDataUrl">
+                    <img :src="photoDataUrl" alt="Foto cuidador" />
+                  </div>
                 </div>
-              </div>
               <div class="preview-details">
                 <div class="preview-field">
                   <label>Nombre completo</label>
@@ -271,7 +271,7 @@ const form = reactive({
   expediente: generateExpediente(),
   estado: 'Activo',
   usuarioRegistro: '',
-  role: 'user',
+  role: 'cuidador',
   settings: {
     familiar_email: null,
     intensidad_vibracion: 2,
@@ -537,7 +537,7 @@ const confirmSave = async (viewAfterSave = false) => {
     telefono: form.telefono || '',
     email: form.email ? form.email.trim().toLowerCase() : '',
     password: form.password || '',
-    role: form.role || 'user',
+    role: form.role || 'cuidador',
     settings: defaultsSettings,
     estado: 'Activo',
     isActive: true,
@@ -568,11 +568,11 @@ const confirmSave = async (viewAfterSave = false) => {
   
   console.log("📋 [PatientRegistro] Usuario registro:", payload.usuarioRegistro)
   console.log("👤 [PatientRegistro] Usuario autenticado:", user.value)
-  console.log("✅ [PatientRegistro] Estado del paciente:", payload.estado, "- isActive:", payload.isActive)
+  console.log("✅ [PatientRegistro] Estado del cuidador:", payload.estado, "- isActive:", payload.isActive)
 
   if (!user.value) {
     console.error("❌ [PatientRegistro] No hay usuario autenticado")
-    alert("Debe iniciar sesión para registrar pacientes")
+    alert("Debe iniciar sesión para registrar cuidadores")
     return
   }
 
@@ -605,7 +605,7 @@ const confirmSave = async (viewAfterSave = false) => {
             nombres: nombres,
             sexo: payload.persona?.sexo || null
           },
-          role: payload.role || 'user',
+          role: payload.role || 'cuidador',
           settings: payload.settings || {
             familiar_email: null,
             intensidad_vibracion: 2,
@@ -635,7 +635,7 @@ const confirmSave = async (viewAfterSave = false) => {
                 fecha_nac: payload.persona?.fecha_nac || '',
                 sexo: payload.persona?.sexo || null
               },
-              role: payload.role || 'user',
+              role: payload.role || 'cuidador',
               settings: payload.settings || {
                 familiar_email: null,
                 intensidad_vibracion: 2,
@@ -670,7 +670,7 @@ const confirmSave = async (viewAfterSave = false) => {
           fecha_nac: payload.persona?.fecha_nac || '',
           sexo: payload.persona?.sexo || null
         },
-        role: payload.role || 'user',
+        role: payload.role || 'cuidador',
         settings: payload.settings || {
           familiar_email: null,
           intensidad_vibracion: 2,
@@ -757,7 +757,7 @@ const printPreview = () => {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>Ficha de Paciente - ${form.persona.nombres} ${form.persona.apellidos}</title>
+      <title>Ficha de Cuidador - ${form.persona.nombres} ${form.persona.apellidos}</title>
       <style>
         * {
           margin: 0;
@@ -1032,13 +1032,13 @@ const printPreview = () => {
     <body>
       <!-- Header -->
       <div class="print-header">
-        <h1>🏥 Ficha de Registro de Paciente</h1>
+        <h1>🏥 Ficha de Registro de Cuidador</h1>
         <div class="subtitle">Sistema de Gestión Médica - VitalRecorder</div>
       </div>
       
-      <!-- Foto del paciente -->
+      <!-- Foto del cuidador -->
       ${photoDataUrl.value ? 
-        `<img src="${photoDataUrl.value}" class="patient-photo" alt="Foto paciente" />` : 
+        `<img src="${photoDataUrl.value}" class="patient-photo" alt="Foto cuidador" />` : 
         '<div class="no-photo">📷</div>'
       }
       
@@ -1149,15 +1149,15 @@ onMounted(async () => {
   // ensure usuario registro
   form.usuarioRegistro = currentUserName.value
   
-  // Cargar pacientes para validación de duplicados
+  // Cargar cuidadores para validación de duplicados
   try {
     loading.value = true
-    console.log("🔄 [PatientRegistro] Cargando pacientes para validación...")
+    console.log("🔄 [PatientRegistro] Cargando cuidadores para validación...")
     const list = await AdminPatientService.listPatients()
     patients.value = list || []
-    console.log("✅ [PatientRegistro] Pacientes cargados:", patients.value.length)
+    console.log("✅ [PatientRegistro] Cuidadores cargados:", patients.value.length)
   } catch (err) {
-    console.error("❌ [PatientRegistro] Error cargando pacientes:", err)
+    console.error("❌ [PatientRegistro] Error cargando cuidadores:", err)
   } finally {
     loading.value = false
   }

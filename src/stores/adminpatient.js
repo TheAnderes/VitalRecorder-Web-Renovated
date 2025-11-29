@@ -3,6 +3,8 @@ import { userService } from '@/services/userService'
 import { placeholderUsers } from '@/data/placeholderUsers'
 
 // Store dedicado a la administración de pacientes (composable)
+// Nota: esta store gestiona la entidad mostrada en el panel de 'Registro y Administración'
+// en la UI; las etiquetas visibles ahora se muestran como "Cuidadores".
 const state = ref({
   patients: [],
   stats: {
@@ -139,7 +141,7 @@ export function useAdminPatientStore() {
       return state.value.patients
     } catch (err) {
       console.error('fetchPatients error', err)
-      state.value.error = err?.message || 'Error cargando pacientes'
+      state.value.error = err?.message || 'Error cargando cuidadores'
       state.value.patients = [...placeholderUsers]
       return state.value.patients
     } finally {
@@ -226,7 +228,7 @@ export function useAdminPatientStore() {
       return state.value.selectedPatient
     } catch (err) {
       console.error('selectPatient error', err)
-      state.value.error = err?.message || 'Error cargando paciente'
+      state.value.error = err?.message || 'Error cargando cuidador'
     } finally {
       state.value.loading = false
     }

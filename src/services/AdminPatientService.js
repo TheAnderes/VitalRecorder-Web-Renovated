@@ -29,7 +29,7 @@ export async function getPatient(id) {
 
 export async function createPatient(data) {
   try {
-    console.log("🔥 [AdminPatientService] Creando paciente en Firestore...", data)
+    console.log("🔥 [AdminPatientService] Creando cuidador en Firestore...", data)
     // Clean data to remove undefined fields (Firestore rejects undefined)
     const clean = (obj) => {
       if (obj === null || obj === undefined) return obj
@@ -62,7 +62,7 @@ export async function createPatient(data) {
     console.log("✅ [AdminPatientService] Documento creado con ID:", ref.id)
     return ref.id
   } catch (error) {
-    console.error("❌ [AdminPatientService] Error creando paciente:", error)
+    console.error("❌ [AdminPatientService] Error creando cuidador:", error)
     console.error("Código de error:", error.code)
     console.error("Mensaje:", error.message)
     throw error
@@ -130,7 +130,7 @@ export async function setPatient(id, data) {
       updatedAt: serverTimestamp()
     })
   } catch (error) {
-    console.error('❌ [AdminPatientService] Error sobrescribiendo paciente:', error)
+    console.error('❌ [AdminPatientService] Error sobrescribiendo cuidador:', error)
     throw error
   }
 }

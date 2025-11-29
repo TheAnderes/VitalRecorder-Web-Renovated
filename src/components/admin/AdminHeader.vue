@@ -96,9 +96,9 @@ const pageTitle = computed(() => {
   const routeNames = {
     'admin-dashboard': 'Dashboard',
     'admin-users': 'Gestión de Usuarios',
-    'admin-patient-list': 'Registro y Administración de Pacientes',
-    'admin-patient-registro': 'Registro de Pacientes',
-    'admin-patient-perfil': 'Perfil de Paciente',
+    'admin-patient-list': 'Registro y Administración de Cuidadores',
+    'admin-patient-registro': 'Registro de Cuidadores',
+    'admin-patient-perfil': 'Perfil de Cuidador',
     'admin-analytics': 'Analíticas',
     'admin-user-roles': 'Gestión de Roles'
   }

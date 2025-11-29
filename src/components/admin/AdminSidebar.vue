@@ -59,7 +59,7 @@
                   <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z" fill="currentColor"/>
                 </svg>
               </div>
-              <span class="nav-text" v-show="!isCollapsed">Registro y Administración de Pacientes</span>
+              <span class="nav-text" v-show="!isCollapsed">Registro y Administración de Cuidadores</span>
                           <button
               class="submenu-toggle"
               v-show="!isCollapsed"
@@ -186,10 +186,10 @@ function toggleReportsSubmenu() {
   reportsSubmenuOpen.value = !reportsSubmenuOpen.value
 }
 
-// lista de submódulos para la sección de pacientes
+// lista de submódulos para la sección de pacientes (ahora cuidadores)
 const patientSubmodules = [
-  { id: 'registro', name: 'Registro de Pacientes' },
-  { id: 'perfil', name: 'Perfil del Paciente' },
+  { id: 'registro', name: 'Registro de Cuidadores' },
+  { id: 'perfil', name: 'Perfil del Cuidador' },
 
 ]
 

@@ -170,30 +170,30 @@
     <div class="stats-bar">
       <div class="stat-item">
         <span class="stat-number">{{ stats.total }}</span>
-        <span class="stat-label">📊 Total Pacientes</span>
+        <span class="stat-label">📊 Total Cuidadores</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ stats.activePatients }}</span>
-        <span class="stat-label">✅ Pacientes Activos</span>
+        <span class="stat-label">✅ Cuidadores Activos</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ stats.inactivePatients }}</span>
-        <span class="stat-label">❌ Pacientes Inactivos</span>
+        <span class="stat-label">❌ Cuidadores Inactivos</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ stats.masculinePatients }}</span>
-        <span class="stat-label">👨 Pacientes Masculinos</span>
+        <span class="stat-label">👨 Cuidadores Masculinos</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ stats.femininePatients }}</span>
-        <span class="stat-label">👩 Pacientes Femeninos</span>
+        <span class="stat-label">👩 Cuidadores Femeninos</span>
       </div>
     </div>
 
     <!-- Loading / Error / Table -->
     <div v-if="loading" class="loading-state">
       <div class="loading-spinner"></div>
-      <p>Cargando pacientes...</p>
+      <p>Cargando cuidadores...</p>
     </div>
 
     <div v-else-if="error" class="error-state">
@@ -202,25 +202,24 @@
         <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
         <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
       </svg>
-      <h3>Error al cargar pacientes</h3>
+      <h3>Error al cargar cuidadores</h3>
       <p>{{ error }}</p>
       <button @click="refreshData" class="retry-btn">Reintentar</button>
     </div>
 
     <div v-else class="users-table">
       <div v-if="filteredUsers.length === 0" class="empty-state">
-        <p>📭 No hay pacientes registrados en Firebase</p>
-        <p style="font-size: 0.9rem; color: #6b7280;">Total de pacientes cargados: {{ patients.length }}</p>
-        <button @click="openAddModal" class="primary-btn">Agregar primer paciente</button>
+        <p>📭 No hay cuidadores registrados en Firebase</p>
+        <p style="font-size: 0.9rem; color: #6b7280;">Total de cuidadores cargados: {{ patients.length }}</p>
+        <button @click="openAddModal" class="primary-btn">Agregar primer cuidador</button>
       </div>
       <div v-else class="table-container">
         <!-- table markup (copied) -->
         <div class="data-grid">
           <div class="grid-header">
-            <div class="cell user">Paciente</div>
+            <div class="cell user">Cuidador</div>
             <div class="cell contact">Información de Contacto</div>
             <div class="cell gender">Género</div>
-            <div class="cell department">Departamento</div>
             <div class="cell date center">Fecha de ingreso</div>
             <div class="cell status center">Estado</div>
             <div class="cell actions center">Acciones</div>
@@ -255,9 +254,6 @@
                 <div style="font-size:0.82rem; color:#6b7280;">{{ patient.persona?.sexo || patient.persona?.gender || patient.sexo || 'N/D' }}</div>
               </div>
 
-              <div class="cell department">
-                <div style="font-weight:600; color:#111827;">{{ patient.persona?.departamento || patient.departamento || patient.patientDoc?.persona?.departamento || 'N/D' }}</div>
-              </div>
 
                   <div class="cell date center">
                     <span>{{ formatDate(patient.patientCreatedAt || patient.createdAt || patient.patientDoc?.createdAt) }}</span>
@@ -277,14 +273,14 @@
                     </svg>
                   </button>
 
-                  <button @click="goToEdit(patient)" class="action-btn edit" title="Editar paciente">
+                  <button @click="goToEdit(patient)" class="action-btn edit" title="Editar cuidador">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
                     </svg>
                   </button>
 
-                  <button @click="deactivatePatient(patient)" :class="['action-btn', patient.isActive ? 'delete' : 'restore']" :title="patient.isActive ? 'Desactivar paciente' : 'Reactivar paciente'">
+                  <button @click="deactivatePatient(patient)" :class="['action-btn', patient.isActive ? 'delete' : 'restore']" :title="patient.isActive ? 'Desactivar cuidador' : 'Reactivar cuidador'">
                     <svg v-if="patient.isActive" width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2"/>
                       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2"/>
@@ -404,7 +400,7 @@ const filteredUsers = computed(() => {
   if (roleFilter.value && roleFilter.value !== 'all') {
     list = list.filter(p => {
       // users from user collection will have role; patients may have role mirrored
-      const role = p.role || p.userRole || 'user'
+      const role = p.role || p.userRole || 'cuidador'
       return role === roleFilter.value
     })
   }
@@ -497,11 +493,14 @@ const loadUsersAndMergePatients = async () => {
   try {
     loading.value = true
     error.value = null
-    console.log("🔄 Cargando usuarios (role:user) y pacientes desde Firebase...")
+    console.log("🔄 Cargando usuarios con rol 'cuidador' desde Firebase...")
 
-    // Load all users and then filter client-side for role 'user'
+    // Load all users and then filter client-side for role 'cuidador' (accept both 'cuidador' and 'caregiver')
     const allUsers = await userService.getAllUsers()
-    const users = (allUsers || []).filter(u => (u.role || 'user') === 'user')
+    const users = (allUsers || []).filter(u => {
+      const r = (u.role || '').toString().toLowerCase()
+      return r === 'cuidador' || r === 'caregiver'
+    })
 
     // No patients collection: use users only
     const merged = users.map(u => ({
@@ -509,7 +508,7 @@ const loadUsersAndMergePatients = async () => {
       userId: u.id,
       userUid: u.uid || u.userUid || null,
       userEmail: u.email,
-      role: u.role || 'user',
+      role: u.role || 'cuidador',
       persona: { ...(u.persona || {}) },
       email: u.email,
       telefono: u.persona?.telefono || u.telefono || '',
@@ -525,7 +524,7 @@ const loadUsersAndMergePatients = async () => {
     patients.value = merged
     console.log(`✅ Usuarios cargados: ${patients.value.length}`)
   } catch (err) {
-    console.error("❌ Error cargando usuarios/pacientes:", err)
+    console.error("❌ Error cargando usuarios/cuidadores:", err)
     error.value = err.message
   } finally {
     loading.value = false
@@ -585,7 +584,7 @@ const editPatient = (user) => {
     nombres: user.persona?.nombres || '',
     apellidos: user.persona?.apellidos || '',
     email: user.email || '',
-    role: user.role || 'user',
+    role: user.role || 'cuidador',
     // Forzar activo en edición
     isActive: true,
     dni: user.dni || '',
@@ -607,10 +606,10 @@ const savePatientEdits = async () => {
       medicalInfo: editForm.value.medicalInfo,
       medicalStatus: editForm.value.medicalStatus
     })
-  console.log("✅ Paciente actualizado en Firebase")
+  console.log("✅ Cuidador actualizado en Firebase")
   await loadUsersAndMergePatients() // Recargar lista desde users
   } catch (e) {
-    console.error('Error guardando paciente:', e)
+    console.error('Error guardando cuidador:', e)
   } finally {
     closeModals()
   }
@@ -627,13 +626,13 @@ const deactivatePatient = async (user) => {
   if (!user || !user.id) return
   const stored = patients.value.find(u => u.id === user.id)
   if (!stored) {
-    alert('No se encontró el paciente en la lista')
+    alert('No se encontró el cuidador en la lista')
     return
   }
   // Determine current state: prefer stored.isActive, fallback to stored.estado
   const isCurrentlyActive = typeof stored.isActive === 'boolean' ? stored.isActive : (String(stored.estado || 'Activo').toLowerCase() === 'activo')
   const willDeactivate = !!isCurrentlyActive
-  const confirmMsg = willDeactivate ? `Marcar al paciente ${getUserFullName(stored)} como Inactivo?` : `Reactivar al paciente ${getUserFullName(stored)}?`
+  const confirmMsg = willDeactivate ? `Marcar al cuidador ${getUserFullName(stored)} como Inactivo?` : `Reactivar al cuidador ${getUserFullName(stored)}?`
   const ok = confirm(confirmMsg)
   if (!ok) return
       try {
@@ -663,7 +662,7 @@ const deactivatePatient = async (user) => {
     await loadUsersAndMergePatients()
     alert(`Usuario ${getUserFullName(stored)} actualizado: ${newEstado}`)
   } catch (e) {
-    console.error('Error actualizando estado del paciente:', e)
+    console.error('Error actualizando estado del cuidador:', e)
     // Mostrar mensaje más informativo
     alert('Error actualizando estado. Revisa la consola o verifica que el documento exista en Firestore.')
   }
@@ -697,16 +696,16 @@ const addPatient = async () => {
       medicalStatus: addForm.value.medicalStatus,
       emergencyContacts: addForm.value.emergencyContacts,
       estado: 'Activo',  // Estado por defecto
-      role: 'user',
+      role: 'cuidador',
       isActive: true     // Activo por defecto
     }
-    console.log("💾 [PatientList] Creando paciente con estado:", payload.estado, "- isActive:", payload.isActive)
+    console.log("💾 [PatientList] Creando cuidador con estado:", payload.estado, "- isActive:", payload.isActive)
     // Create as a user in the `users` collection (keep centralized storage)
     await userService.createUser(payload)
-  console.log("✅ Paciente creado en Firebase")
+  console.log("✅ Cuidador creado en Firebase")
   await loadUsersAndMergePatients()
   } catch (e) {
-    console.error('Error agregando paciente:', e)
+    console.error('Error agregando cuidador:', e)
   } finally {
     showAddModal.value = false
   }

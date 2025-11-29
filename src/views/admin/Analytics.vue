@@ -305,7 +305,7 @@ const loadAnalytics = async () => {
       silentModeUsers: 0
     }
     
-      // Cargar usuarios y pacientes reales desde Firestore
+      // Cargar usuarios y cuidadores reales desde Firestore
       const [usersList, patientsList] = await Promise.all([
         userService.getAllUsers(),
         AdminPatientService.listPatients()
@@ -452,7 +452,7 @@ const loadAnalytics = async () => {
         return bt - at
       }).slice(0,8).forEach(p => {
         const ts = (p.updatedAt && p.updatedAt.toDate) ? p.updatedAt.toDate() : new Date(p.updatedAt || p.createdAt || Date.now())
-        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Paciente actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
+        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Cuidador actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
       })
 
       // sort activities by timestamp and keep top 5
@@ -598,7 +598,7 @@ const exportReport = async () => {
       patientRows += `<tr><td>${p.id || '—'}</td><td>${nombre}</td><td>${dni}</td><td>${estado}</td><td style="text-align:right">${created}</td></tr>`
     })
     patientsSection.innerHTML = `
-      <h3 style="margin:0 0 8px 0">Listado de Pacientes (${patientsList.length})</h3>
+      <h3 style="margin:0 0 8px 0">Listado de Cuidadores (${patientsList.length})</h3>
       <table class="pdf-table">
         <thead>
           <tr><th>ID</th><th>Nombre</th><th>DNI</th><th>Estado</th><th style="text-align:right">Creado</th></tr>

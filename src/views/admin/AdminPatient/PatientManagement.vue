@@ -10,8 +10,8 @@
           </svg>
         </div>
         <div class="header-text">
-          <h1>Registro y Administración de Pacientes</h1>
-          <p>Sistema completo de registro, administración y seguimiento de pacientes</p>
+          <h1>Registro y Administración de Cuidadores</h1>
+          <p>Sistema completo de registro, administración y seguimiento de cuidadores</p>
         </div>
       </div>
       
@@ -20,7 +20,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          Nuevo Paciente
+          Nuevo Cuidador
         </button>
             <button @click="exportPatientsPdf" class="btn-secondary" :disabled="loading">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -52,7 +52,7 @@
             <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
             <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
           </svg>
-          <span>Lista de Pacientes</span>
+          <span>Lista de Cuidadores</span>
         </router-link>
 
         <router-link 
@@ -66,7 +66,7 @@
             <line x1="20" y1="8" x2="20" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             <line x1="23" y1="11" x2="17" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <span>Registrar Paciente</span>
+          <span>Registrar Cuidador</span>
         </router-link>
 
         <router-link 
@@ -78,7 +78,7 @@
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
             <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
           </svg>
-          <span>Perfil de Paciente</span>
+          <span>Perfil de Cuidador</span>
         </router-link>
       </nav>
     </div>
@@ -119,9 +119,12 @@ const goToRegister = () => {
 const exportPatientsPdf = async () => {
   try {
   loading.value = true
-  // Fetch users and export only those with role === 'user'
+  // Fetch users and export only those with role === 'cuidador' (or 'caregiver')
   const allUsers = await userService.getAllUsers()
-  const list = (allUsers || []).filter(u => (u.role || 'user') === 'user')
+  const list = (allUsers || []).filter(u => {
+    const r = (u.role || '').toString().toLowerCase()
+    return r === 'cuidador' || r === 'caregiver'
+  })
 
     // Build rows using a layout similar to PatientList (avatar + meta, contact, gender, dept, date, estado)
     const rows = list.map(p => {
@@ -189,7 +192,7 @@ const exportPatientsPdf = async () => {
     <body>
       <header>
         <div>
-          <h1>Listado de Pacientes</h1>
+          <h1>Listado de Cuidadores</h1>
           <div style="color:#6b7280; margin-top:6px; font-size:12px">Generado: ${new Date().toLocaleString('es-ES')}</div>
         </div>
         <div style="text-align:right">
@@ -226,8 +229,8 @@ const exportPatientsPdf = async () => {
     // Wait for render then trigger print
     setTimeout(()=> { w.print() }, 300)
   } catch (err) {
-    console.error('Error exportando pacientes a PDF', err)
-    alert('Error exportando pacientes. Revisa la consola.')
+    console.error('Error exportando cuidadores a PDF', err)
+    alert('Error exportando cuidadores. Revisa la consola.')
   } finally {
     loading.value = false
   }

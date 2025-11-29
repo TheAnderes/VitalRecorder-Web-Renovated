@@ -2,8 +2,8 @@
   <div class="admin-page patient-edit">
     <div class="page-header">
       <div class="header-content">
-        <h2>Editar Paciente</h2>
-        <p>Modifique los datos del paciente y guarde los cambios.</p>
+        <h2>Editar Cuidador</h2>
+        <p>Modifique los datos del cuidador y guarde los cambios.</p>
       </div>
     </div>
 
@@ -39,7 +39,7 @@
     </div>
 
     <div v-else class="card">
-      <p>Paciente no encontrado.</p>
+      <p>Cuidador no encontrado.</p>
     </div>
   </div>
 </template>

@@ -2,11 +2,11 @@
   <div class="admin-page patient-perfil layout-two-col">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h3>📋 Pacientes</h3>
+        <h3>📋 Cuidadores</h3>
         <input 
           type="text" 
           class="search-patients" 
-          placeholder="Buscar paciente..." 
+          placeholder="Buscar cuidador..." 
           v-model="searchUsers"
         />
       </div>
@@ -34,7 +34,7 @@
             <div class="avatar-large" v-if="!selectedUserData.persona?.fotografia">
               {{ getInitial(selectedUserData) }}
             </div>
-            <img v-else :src="selectedUserData.persona.fotografia" class="avatar-large-img" alt="Foto del paciente" />
+            <img v-else :src="selectedUserData.persona.fotografia" class="avatar-large-img" alt="Foto del cuidador" />
             
             <div class="header-info">
               <div class="name-section">
@@ -91,8 +91,8 @@
               <h4>📸 Fotografías</h4>
               <div class="photos-grid">
                 <div class="photo-item" v-if="selectedUserData.persona?.fotografia">
-                  <div class="photo-label">Fotografía del Paciente</div>
-                  <img :src="selectedUserData.persona.fotografia" alt="Foto paciente" class="photo-display" />
+                  <div class="photo-label">Fotografía del Cuidador</div>
+                  <img :src="selectedUserData.persona.fotografia" alt="Foto cuidador" class="photo-display" />
                 </div>
                 <div class="photo-item" v-if="selectedUserData.persona?.foto_ci">
                   <div class="photo-label">Fotografía CI</div>
@@ -139,7 +139,7 @@
       </div>
 
       <div v-else class="card">
-        <p>No hay paciente seleccionado. Seleccione uno de la lista.</p>
+        <p>No hay cuidador seleccionado. Seleccione uno de la lista.</p>
       </div>
     </main>
   </div>
@@ -350,7 +350,7 @@ const printProfile = () => {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>Perfil de Paciente - ${getFullName(p)}</title>
+      <title>Perfil de Cuidador - ${getFullName(p)}</title>
       <style>
         * {
           margin: 0;
@@ -646,17 +646,17 @@ const printProfile = () => {
     <body>
       <!-- Header -->
       <div class="print-header">
-        <h1>🏥 Perfil Clínico de Paciente</h1>
+        <h1>🏥 Perfil Clínico de Cuidador</h1>
         <div class="subtitle">Sistema de Gestión Médica - VitalRecorder</div>
       </div>
       
-      <!-- Foto del paciente (omitida en impresión) -->
+      <!-- Foto del cuidador (omitida en impresión) -->
       ${''}
       
       <!-- Banner de Estado -->
       <div class="status-banner">
         <span style="font-size: 18pt;">${p.isActive ? '✅' : '❌'}</span>
-        <span>Estado del Paciente: <strong>${p.isActive ? 'ACTIVO' : 'INACTIVO'}</strong></span>
+        <span>Estado del Cuidador: <strong>${p.isActive ? 'ACTIVO' : 'INACTIVO'}</strong></span>
       </div>
       
       <!-- Información Personal -->
@@ -975,7 +975,7 @@ const printProfile = () => {
         </div>
         <div class="signature-box">
           <div class="signature-line"></div>
-          <div class="signature-label">Firma del Paciente / Responsable</div>
+          <div class="signature-label">Firma del Cuidador / Responsable</div>
         </div>
       </div>
       
@@ -1004,14 +1004,19 @@ const printProfile = () => {
   }, 250)
 }
 
-// Cargar pacientes desde Firebase
+// Cargar cuidadores desde Firebase
 const loadPatients = async () => {
   try {
     loading.value = true
-    console.log("🔄 [PatientPerfil] Cargando usuarios desde Firebase...")
-    const list = await userService.getAllUsers()
-    users.value = list || []
-    console.log("✅ [PatientPerfil] Usuarios cargados:", users.value.length)
+    console.log("🔄 [PatientPerfil] Cargando usuarios desde Firebase (filtrando por role 'cuidador')...")
+    const all = await userService.getAllUsers()
+    // keep only caregiver roles to show in this view
+    const caregivers = (all || []).filter(u => {
+      const r = (u.role || '').toString().toLowerCase()
+      return r === 'cuidador' || r === 'caregiver'
+    })
+    users.value = caregivers
+    console.log("✅ [PatientPerfil] Cuidadores cargados:", users.value.length)
 
     // Si hay un id en la URL, seleccionar ese usuario
     if (route.query.id) {

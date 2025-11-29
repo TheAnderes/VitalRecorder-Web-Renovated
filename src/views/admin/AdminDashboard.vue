@@ -118,7 +118,7 @@ const loadDashboardData = async () => {
     // Cargar estadísticas básicas
     await adminStore.fetchStats()
     
-    // Cargar actividad reciente usando los mismos orígenes que Analytics (usuarios + pacientes)
+    // Cargar actividad reciente usando los mismos orígenes que Analytics (usuarios + cuidadores)
     try {
       const [usersList, patientsList] = await Promise.all([
         userService.getAllUsers(),
@@ -137,14 +137,14 @@ const loadDashboardData = async () => {
         activities.push({ id: `u-${u.id}`, icon: 'user', message: `Registro: ${u.persona?.nombres || u.email || 'Usuario'}`, timestamp: ts })
       })
 
-      // Pacientes: cambios/actualizaciones recientes
+      // Cuidadores: cambios/actualizaciones recientes
       patientsList.slice().sort((a,b)=>{
         const at = (a.updatedAt && a.updatedAt.toDate) ? a.updatedAt.toDate() : new Date(a.updatedAt || a.createdAt || 0)
         const bt = (b.updatedAt && b.updatedAt.toDate) ? b.updatedAt.toDate() : new Date(b.updatedAt || b.createdAt || 0)
         return bt - at
-      }).slice(0,8).forEach(p => {
+        }).slice(0,8).forEach(p => {
         const ts = (p.updatedAt && p.updatedAt.toDate) ? p.updatedAt.toDate() : new Date(p.updatedAt || p.createdAt || Date.now())
-        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Paciente actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
+        activities.push({ id: `p-${p.id}`, icon: 'warning', message: `Cuidador actualizado: ${p.persona?.nombres || p.dni || p.id}`, timestamp: ts })
       })
 
       // Ordenar y limitar a 5
