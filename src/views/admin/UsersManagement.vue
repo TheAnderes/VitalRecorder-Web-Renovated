@@ -142,13 +142,13 @@
                         <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
                       </svg>
                     </button>
-                    <button @click="editUser(user)" class="action-btn edit" title="Editar usuario" v-if="canManageUsers">
+                    <button @click="editUser(user)" class="action-btn edit" title="Editar usuario">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
                       </svg>
                     </button>
-                    <button @click="deleteUser(user)" class="action-btn delete" title="Eliminar usuario" v-if="canDeleteUsers">
+                    <button @click="deleteUser(user)" class="action-btn delete" title="Eliminar usuario">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                         <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2"/>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2"/>
@@ -391,14 +391,32 @@ const isUserActive = (user) => {
 const saveUserEdits = async () => {
   if (!selectedUser.value || !editForm.value) return
   try {
-    console.log("💾 [UsersManagement] Actualizando usuario en Firebase:", selectedUser.value.id)
-    
-    await AdminUserService.updateUserRole(
-      selectedUser.value.id,
-      editForm.value.role,
-      'admin' // TODO: obtener ID del admin actual
-    )
-    
+    console.log("💾 [UsersManagement] Guardando cambios del usuario en Firebase:", selectedUser.value.id)
+
+    // Admin ID placeholder (reemplazar por id real del admin autenticado si está disponible)
+    const adminId = 'admin'
+
+    // Prepare payload for updateUserInfo (mergeable)
+    const userInfo = {
+      persona: {
+        ...(selectedUser.value.persona || {}),
+        nombres: editForm.value.nombres || '',
+        apellidos: editForm.value.apellidos || ''
+      },
+      email: editForm.value.email || selectedUser.value.email,
+      role: editForm.value.role || selectedUser.value.role
+    }
+
+    // Update basic info
+    await AdminUserService.updateUserInfo(selectedUser.value.id, userInfo, adminId)
+
+    // If isActive changed, toggle status (keeps audit fields consistent)
+    const oldIsActive = selectedUser.value.isActive === false ? false : true
+    const newIsActive = editForm.value.isActive === false ? false : true
+    if (oldIsActive !== newIsActive) {
+      await AdminUserService.toggleUserStatus(selectedUser.value.id, newIsActive, adminId)
+    }
+
     console.log("✅ [UsersManagement] Usuario actualizado")
     await loadUsers()
   } catch (e) {

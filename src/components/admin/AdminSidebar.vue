@@ -98,7 +98,7 @@
                 <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.25h-15A2.25 2.25 0 012 17V4.75A2.25 2.25 0 014.25 2.5h15A2.25 2.25 0 0121.5 4.75V17a2.25 2.25 0 01-2.25 2.25z" fill="currentColor"/>
               </svg>
             </div>
-            <span class="nav-text" v-show="!isCollapsed">Analíticas y Reportes</span>
+            <span class="nav-text" v-show="!isCollapsed">Reportes</span>
           </router-link>
         </li>
 

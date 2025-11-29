@@ -34,7 +34,7 @@
             </svg>
           </div>
           <div class="action-content">
-            <h4>Ver Analíticas</h4>
+            <h4>Reportes</h4>
             <p>Estadísticas y reportes detallados</p>
           </div>
         </router-link>

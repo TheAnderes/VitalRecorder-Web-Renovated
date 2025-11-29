@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 import { placeholderUsers } from '@/data/placeholderUsers'
 
 // Store dedicado a la administración de pacientes (composable)
@@ -112,13 +112,13 @@ export function useAdminPatientStore() {
 
       if (navigator.onLine && !import.meta.env.DEV) {
         try {
-          const list = await AdminPatientService.listPatients()
+          const list = await userService.getAllUsers()
           state.value.patients = (list || []).map(normalize)
           persistLocal()
           await computeStats()
           return state.value.patients
         } catch (err) {
-          console.warn('AdminPatientService.listPatients failed, falling back to local/placeholder', err)
+          console.warn('userService.getAllUsers failed, falling back to local/placeholder', err)
         }
       }
 
@@ -150,14 +150,14 @@ export function useAdminPatientStore() {
   const addPatient = async (data) => {
     try {
       if (navigator.onLine && !import.meta.env.DEV) {
-        const id = await AdminPatientService.createPatient(data)
-        const created = await AdminPatientService.getPatient(id)
-        const normalized = normalize(created ? created : { id, ...data })
-        state.value.patients = [normalized, ...state.value.patients]
-        persistLocal()
-        await computeStats()
-        return normalized
-      }
+          const created = await userService.createUser(data)
+          // userService.createUser returns object with id and fields
+          const normalized = normalize(created ? created : { id: created.id, ...data })
+          state.value.patients = [normalized, ...state.value.patients]
+          persistLocal()
+          await computeStats()
+          return normalized
+        }
 
       // fallback local
       const id = `p_${String(Math.floor(Math.random() * 100000)).padStart(3, '0')}`
@@ -176,12 +176,12 @@ export function useAdminPatientStore() {
   const updatePatient = async (id, updates) => {
     try {
       if (navigator.onLine && !import.meta.env.DEV) {
-        await AdminPatientService.updatePatient(id, updates)
-        state.value.patients = state.value.patients.map(p => p.id === id ? { ...p, ...updates } : p)
-        persistLocal()
-        await computeStats()
-        return
-      }
+          await userService.updateUser(id, updates)
+          state.value.patients = state.value.patients.map(p => p.id === id ? { ...p, ...updates } : p)
+          persistLocal()
+          await computeStats()
+          return
+        }
 
       // fallback
       state.value.patients = state.value.patients.map(p => p.id === id ? { ...p, ...updates } : p)
@@ -196,12 +196,12 @@ export function useAdminPatientStore() {
   const deletePatient = async (id) => {
     try {
       if (navigator.onLine && !import.meta.env.DEV) {
-        await AdminPatientService.deletePatient(id)
-        state.value.patients = state.value.patients.filter(p => p.id !== id)
-        persistLocal()
-        await computeStats()
-        return
-      }
+          await userService.deleteUser(id)
+          state.value.patients = state.value.patients.filter(p => p.id !== id)
+          persistLocal()
+          await computeStats()
+          return
+        }
 
       // fallback
       state.value.patients = state.value.patients.filter(p => p.id !== id)
@@ -218,7 +218,7 @@ export function useAdminPatientStore() {
       state.value.loading = true
       state.value.error = null
       if (navigator.onLine && !import.meta.env.DEV) {
-        const doc = await AdminPatientService.getPatient(id)
+        const doc = await userService.getUserById(id)
         state.value.selectedPatient = normalize(doc)
         return state.value.selectedPatient
       }

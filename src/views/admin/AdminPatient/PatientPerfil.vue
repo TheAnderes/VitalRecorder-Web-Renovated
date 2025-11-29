@@ -7,22 +7,22 @@
           type="text" 
           class="search-patients" 
           placeholder="Buscar paciente..." 
-          v-model="searchPatients"
+          v-model="searchUsers"
         />
       </div>
       <ul class="patient-list">
-        <li v-for="p in filteredPatients" :key="p.id" :class="{active: selectedId === p.id}" @click="goToPatient(p)">
+        <li v-for="p in filteredUsers" :key="p.id" :class="{active: selectedId === p.id}" @click="goToPatient(p)">
           <div class="mini-avatar" v-if="!p.persona?.fotografia">{{ getInitial(p) }}</div>
           <img v-else :src="p.persona.fotografia" class="mini-avatar-img" alt="Foto" />
           <div class="meta">
             <div class="name">{{ getFullName(p) }}</div>
-            <div class="sub">🆔 {{ p.dni || p.persona?.dni || 'N/A' }}</div>
+            
           </div>
           <div class="status-dot" :class="p.isActive ? 'active' : 'inactive'"></div>
         </li>
       </ul>
       <div class="sidebar-footer">
-        <small>📊 {{ filteredPatients.length }} de {{ recentPatients.length }} pacientes</small>
+        <small>📊 {{ filteredUsers.length }} de {{ recentUsers.length }} usuarios</small>
       </div>
     </aside>
 
@@ -48,22 +48,13 @@
                 </div>
               </div>
               <div class="header-meta">
-                <span>🆔 {{ selectedUserData.dni || selectedUserData.persona?.dni || 'N/A' }}</span>
-                <span>•</span>
-                <span>📅 {{ computeAge(selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span>
+                <span>📅 {{ computeAge(selectedUserData.persona?.fecha_nac || selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span>
                 <span>•</span>
                 <span>📋 Exp. #{{ selectedUserData.numeroExpediente || selectedUserData.id?.slice(0,8) }}</span>
               </div>
             </div>
           </div>
           <div class="header-actions">
-            <button class="btn-action btn-edit" @click="editCurrent">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              Editar
-            </button>
             <button class="btn-action btn-print" @click="printProfile">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="2"/>
@@ -80,13 +71,10 @@
             <section class="card-box">
               <h4>👤 Datos Personales</h4>
               <div class="row"><span class="label">Nombre completo</span><span>{{ getFullName(selectedUserData) }}</span></div>
-              <div class="row"><span class="label">CI</span><span>{{ selectedUserData.dni || selectedUserData.persona?.dni || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Fecha de nacimiento</span><span>{{ formatDate(selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span></div>
-              <div class="row"><span class="label">Edad</span><span>{{ computeAge(selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span></div>
-              <div class="row"><span class="label">Sexo</span><span>{{ selectedUserData.persona?.sexo || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Estado civil</span><span>{{ selectedUserData.persona?.estado_civil || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Ocupación</span><span>{{ selectedUserData.persona?.ocupacion || selectedUserData.ocupacion || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Domicilio</span><span>{{ selectedUserData.persona?.domicilio || formatAddress(selectedUserData.direccion) || 'N/D' }}</span></div>
+              <div class="row" v-if="selectedUserData.dni || selectedUserData.persona?.dni"><span class="label">CI</span><span>{{ selectedUserData.dni || selectedUserData.persona?.dni }}</span></div>
+              <div class="row" v-if="selectedUserData.persona?.fecha_nac || selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento"><span class="label">Fecha de nacimiento</span><span>{{ formatDate(selectedUserData.persona?.fecha_nac || selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span></div>
+              <div class="row" v-if="selectedUserData.persona?.fecha_nac || selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento"><span class="label">Edad</span><span>{{ computeAge(selectedUserData.persona?.fecha_nac || selectedUserData.persona?.fecha_nacimiento || selectedUserData.fechaNacimiento) }}</span></div>
+              <div class="row" v-if="selectedUserData.persona?.sexo"><span class="label">Sexo</span><span>{{ selectedUserData.persona?.sexo }}</span></div>
             </section>
 
             <!-- Contacto -->
@@ -94,8 +82,8 @@
               <h4>📱 Información de Contacto</h4>
               <div class="row"><span class="label">Teléfono</span><span>{{ selectedUserData.persona?.telefono || selectedUserData.telefono || 'N/D' }}</span></div>
               <div class="row"><span class="label">Correo electrónico</span><span>{{ selectedUserData.persona?.correo || selectedUserData.email || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Teléfono alternativo</span><span>{{ selectedUserData.telefono2 || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Preferencia</span><span>{{ selectedUserData.preferenciaContacto || 'N/D' }}</span></div>
+              <div class="row"><span class="label">Estado</span><span>{{ selectedUserData.estado || (selectedUserData.isActive ? 'Activo' : (selectedUserData.isActive === false ? 'Inactivo' : 'N/D')) }}</span></div>
+              <div class="row"><span class="label">Categoría de edad</span><span>{{ getAgeCategory(selectedUserData) }}</span></div>
             </section>
 
             <!-- Fotografías -->
@@ -113,90 +101,7 @@
               </div>
             </section>
 
-            <!-- Información Médica -->
-            <section class="card-box wide">
-              <h4>🏥 Información Médica</h4>
-              <div class="medical-grid">
-                <div class="medical-item">
-                  <div class="medical-label">Estado de Adherencia</div>
-                  <div class="medical-value">
-                    <span class="badge-medical" :class="getMedicalStatusClass(selectedUserData.medicalInfo?.estadoAdherencia)">
-                      {{ selectedUserData.medicalInfo?.estadoAdherencia || 'No especificado' }}
-                    </span>
-                  </div>
-                </div>
-                <div class="medical-item">
-                  <div class="medical-label">Estado Actual</div>
-                  <div class="medical-value">
-                    <span class="badge-medical" :class="getMedicalStatusClass(selectedUserData.medicalInfo?.estadoActual)">
-                      {{ selectedUserData.medicalInfo?.estadoActual || 'No especificado' }}
-                    </span>
-                  </div>
-                </div>
-                <div class="medical-item">
-                  <div class="medical-label">Peso</div>
-                  <div class="medical-value">{{ selectedUserData.medicalInfo?.peso ? selectedUserData.medicalInfo.peso + ' kg' : 'N/D' }}</div>
-                </div>
-                <div class="medical-item">
-                  <div class="medical-label">Altura</div>
-                  <div class="medical-value">{{ selectedUserData.medicalInfo?.altura ? selectedUserData.medicalInfo.altura + ' cm' : 'N/D' }}</div>
-                </div>
-                <div class="medical-item">
-                  <div class="medical-label">Estado Físico</div>
-                  <div class="medical-value">{{ selectedUserData.medicalInfo?.estadoFisico || 'N/D' }}</div>
-                </div>
-              </div>
-
-              <!-- Alergias -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.alergias?.length">
-                <div class="section-title">🩺 Alergias</div>
-                <div class="tags-container">
-                  <span v-for="(alergia, idx) in selectedUserData.medicalInfo.alergias" :key="idx" class="tag tag-allergy">
-                    {{ alergia }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Enfermedades -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.enfermedades?.length">
-                <div class="section-title">🦠 Enfermedades</div>
-                <div class="tags-container">
-                  <span v-for="(enfermedad, idx) in selectedUserData.medicalInfo.enfermedades" :key="idx" class="tag tag-disease">
-                    {{ enfermedad }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Medicamentos -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.medicamentos?.length">
-                <div class="section-title">💊 Medicamentos</div>
-                <div class="tags-container">
-                  <span v-for="(med, idx) in selectedUserData.medicalInfo.medicamentos" :key="idx" class="tag tag-medication">
-                    {{ med }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Tratamiento -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.recetadoPor || selectedUserData.medicalInfo?.frecuenciaTratamiento">
-                <div class="section-title">📋 Tratamiento</div>
-                <div class="row"><span class="label">Recetado por</span><span>{{ selectedUserData.medicalInfo?.recetadoPor || 'N/D' }}</span></div>
-                <div class="row"><span class="label">Frecuencia</span><span>{{ selectedUserData.medicalInfo?.frecuenciaTratamiento || 'N/D' }}</span></div>
-                <div class="row"><span class="label">Condición de toma</span><span>{{ selectedUserData.medicalInfo?.condicionToma || 'N/D' }}</span></div>
-              </div>
-
-              <!-- Receta Photo -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.foto_receta">
-                <div class="section-title">📄 Receta Médica</div>
-                <img :src="selectedUserData.medicalInfo.foto_receta" alt="Receta" class="photo-display" />
-              </div>
-
-              <!-- Observaciones -->
-              <div class="medical-section" v-if="selectedUserData.medicalInfo?.observaciones">
-                <div class="section-title">📝 Observaciones Médicas</div>
-                <p class="observations-text">{{ selectedUserData.medicalInfo.observaciones }}</p>
-              </div>
-            </section>
+            <!-- Información Médica eliminada: ahora se usa la colección `users` sin campos médicos -->
 
             <!-- Responsable -->
             <section class="card-box wide" v-if="selectedUserData.responsable">
@@ -222,12 +127,7 @@
               </div>
             </section>
 
-            <!-- Seguro -->
-            <section class="card-box" v-if="selectedUserData.seguro?.nombre">
-              <h4>🏥 Seguro Médico</h4>
-              <div class="row"><span class="label">Aseguradora</span><span>{{ selectedUserData.seguro?.nombre || 'N/D' }}</span></div>
-              <div class="row"><span class="label">Número de póliza</span><span>{{ selectedUserData.seguro?.polid || 'N/D' }}</span></div>
-            </section>
+            <!-- Seguro eliminado: ahora se muestra solo información disponible en `users` -->
 
             <!-- Observaciones generales -->
             <section class="card-box wide" v-if="selectedUserData.observaciones">
@@ -248,26 +148,26 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import * as AdminPatientService from '@/services/AdminPatientService'
+import { userService } from '@/services/userService'
 
 const route = useRoute()
 const router = useRouter()
 
 // State local
-const patients = ref([])
+const users = ref([])
 const loading = ref(false)
-const selectedPatient = ref(null)
-const searchPatients = ref('')
+const selectedUser = ref(null)
+const searchUsers = ref('')
 
 const selectedId = computed(() => route.query.id)
 
-const recentPatients = computed(() => patients.value.slice(0, 50))
+const recentUsers = computed(() => users.value.slice(0, 50))
 
-const filteredPatients = computed(() => {
-  if (!searchPatients.value) return recentPatients.value
+const filteredUsers = computed(() => {
+  if (!searchUsers.value) return recentUsers.value
   
-  const query = searchPatients.value.toLowerCase()
-  return recentPatients.value.filter(p => {
+  const query = searchUsers.value.toLowerCase()
+  return recentUsers.value.filter(p => {
     const nombres = (p.persona?.nombres || '').toLowerCase()
     const apellidos = (p.persona?.apellidos || '').toLowerCase()
     const dni = (p.dni || p.persona?.dni || '').toString()
@@ -281,9 +181,9 @@ const filteredPatients = computed(() => {
 })
 
 const selectedUserData = computed(() => {
-  if (selectedPatient.value) return selectedPatient.value
-  // fallback: try to find in patients list
-  return patients.value.find(u => u.id === route.query.id) || null
+  if (selectedUser.value) return selectedUser.value
+  // fallback: try to find in users list
+  return users.value.find(u => u.id === route.query.id) || null
 })
 
 const getInitial = (u) => {
@@ -307,7 +207,7 @@ const getResponsableFullName = (resp) => {
 }
 
 const getAgeCategory = (patient) => {
-  const age = computeAgeNumber(patient.persona?.fecha_nacimiento || patient.fechaNacimiento)
+  const age = computeAgeNumber(patient.persona?.fecha_nac || patient.persona?.fecha_nacimiento || patient.fechaNacimiento)
   if (age === null) return 'N/E'
   if (age < 12) return '👶 Niño'
   if (age < 18) return '🧒 Adolescente'
@@ -330,28 +230,68 @@ const getMedicalStatusClass = (status) => {
   return ''
 }
 
-const computeAgeNumber = (dob) => {
-  if (!dob) return null
-  try {
-    let birthDate
-    if (typeof dob === 'string') {
-      birthDate = new Date(dob)
-    } else if (dob.toDate) {
-      birthDate = dob.toDate()
-    } else if (dob instanceof Date) {
-      birthDate = dob
-    } else {
-      return null
+// Flexible date parser that accepts ISO, Firestore Timestamp, Date objects,
+// and localized Spanish strings like "26 de noviembre de 1944, 12:00:00 a.m. UTC-4".
+const parseFlexibleDate = (input) => {
+  if (!input) return null
+
+  // Firestore Timestamp
+  if (input && typeof input.toDate === 'function') return input.toDate()
+  if (input instanceof Date) return input
+
+  if (typeof input === 'string') {
+    // Try native parse first (ISO etc.)
+    const d = new Date(input)
+    if (!isNaN(d)) return d
+
+    // Try pattern: 26 de noviembre de 1944, 12:00:00 a.m. UTC-4
+    const months = {
+      enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5,
+      julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
     }
-    
-    const now = new Date()
-    let years = now.getFullYear() - birthDate.getFullYear()
-    const m = now.getMonth() - birthDate.getMonth()
-    if (m < 0 || (m === 0 && now.getDate() < birthDate.getDate())) years--
-    return years >= 0 ? years : null
-  } catch {
-    return null
+
+    const re = /([0-9]{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+([0-9]{4})(?:[,\s]+\s*([0-9]{1,2}):([0-9]{2})(?::([0-9]{2}))?\s*(a\.m\.|p\.m\.|am|pm)?)?(?:\s*UTC([+-]?\d+))?/i
+    const m = input.match(re)
+    if (m) {
+      try {
+        const day = parseInt(m[1], 10)
+        const monthName = m[2].toLowerCase()
+        const month = months[monthName] ?? 0
+        const year = parseInt(m[3], 10)
+        let hour = m[4] ? parseInt(m[4], 10) : 0
+        const minute = m[5] ? parseInt(m[5], 10) : 0
+        const second = m[6] ? parseInt(m[6], 10) : 0
+        const ampmRaw = m[7] ? m[7].toLowerCase() : null
+        if (ampmRaw) {
+          const ampm = ampmRaw.replace(/\./g, '')
+          if ((ampm === 'a m' || ampm === 'am' || ampm === 'a.m') && hour === 12) hour = 0
+          if ((ampm === 'p m' || ampm === 'pm' || ampm === 'p.m') && hour < 12) hour += 12
+        }
+        const tzStr = m[8]
+        if (tzStr !== undefined && tzStr !== null && tzStr !== '') {
+          const tz = parseInt(tzStr, 10)
+          // Build timestamp as if the provided parts are in that UTC offset, then normalize
+          const ts = Date.UTC(year, month, day, hour, minute, second) - (tz * 3600 * 1000)
+          return new Date(ts)
+        }
+        return new Date(year, month, day, hour, minute, second)
+      } catch (e) {
+        return null
+      }
+    }
   }
+
+  return null
+}
+
+const computeAgeNumber = (dob) => {
+  const birthDate = parseFlexibleDate(dob)
+  if (!birthDate) return null
+  const now = new Date()
+  let years = now.getFullYear() - birthDate.getFullYear()
+  const m = now.getMonth() - birthDate.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < birthDate.getDate())) years--
+  return years >= 0 ? years : null
 }
 
 const formatAddress = (d = {}) => {
@@ -361,12 +301,15 @@ const formatAddress = (d = {}) => {
 
 const computeAge = (dob) => {
   if (!dob) return 'N/D'
-  const b = new Date(dob)
+  // Use parseFlexibleDate which handles Firestore Timestamps, Date objects,
+  // ISO strings and Spanish textual dates like "26 de noviembre de 1983, 12:00:00 a.m. UTC-4".
+  const b = parseFlexibleDate(dob)
+  if (!b) return 'N/D'
   const now = new Date()
   let years = now.getFullYear() - b.getFullYear()
   const m = now.getMonth() - b.getMonth()
   if (m < 0 || (m === 0 && now.getDate() < b.getDate())) years--
-  return years + ' años'
+  return (years >= 0 ? years : 'N/D') + ' años'
 }
 
 const formatChronic = (c = {}) => {
@@ -382,12 +325,14 @@ const formatChronic = (c = {}) => {
 
 const formatDate = (iso) => {
   if (!iso) return 'N/D'
-  try { return new Date(iso).toLocaleDateString('es-ES') } catch { return iso }
+  const d = parseFlexibleDate(iso)
+  if (!d) return iso
+  return d.toLocaleDateString('es-ES')
 }
 
 const goToPatient = (p) => {
   router.replace({ path: route.path, query: { id: p.id } })
-  selectedPatient.value = p
+  selectedUser.value = p
 }
 
 const editCurrent = () => {
@@ -735,11 +680,11 @@ const printProfile = () => {
           </div>
           <div class="info-item">
             <div class="info-label">Fecha de Nacimiento</div>
-            <div class="info-value">${formatDate(p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/D'}</div>
+            <div class="info-value">${formatDate(p.persona?.fecha_nac || p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/D'}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Edad</div>
-            <div class="info-value">${computeAge(p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/A'} <span class="badge badge-primary">${getAgeCategory(p)}</span></div>
+            <div class="info-value">${computeAge(p.persona?.fecha_nac || p.persona?.fecha_nacimiento || p.fechaNacimiento) || 'N/A'} <span class="badge badge-primary">${getAgeCategory(p)}</span></div>
           </div>
           <div class="info-item">
             <div class="info-label">Sexo/Género</div>
@@ -775,22 +720,18 @@ const printProfile = () => {
             <div class="info-label">Teléfono Principal</div>
             <div class="info-value">📱 ${p.telefono || p.persona?.telefono || 'N/A'}</div>
           </div>
-          ${p.telefono2 ? `
-          <div class="info-item">
-            <div class="info-label">Teléfono Secundario</div>
-            <div class="info-value">📱 ${p.telefono2}</div>
-          </div>
-          ` : ''}
           <div class="info-item">
             <div class="info-label">Email</div>
             <div class="info-value">📧 ${p.email || p.persona?.correo || 'N/A'}</div>
           </div>
-          ${p.preferenciaContacto ? `
           <div class="info-item">
-            <div class="info-label">Preferencia de Contacto</div>
-            <div class="info-value">✨ ${p.preferenciaContacto}</div>
+            <div class="info-label">Estado</div>
+            <div class="info-value">${p.estado || (p.isActive ? 'Activo' : (p.isActive === false ? 'Inactivo' : 'N/D'))}</div>
           </div>
-          ` : ''}
+          <div class="info-item">
+            <div class="info-label">Categoría de edad</div>
+            <div class="info-value">${getAgeCategory(p)}</div>
+          </div>
           <div class="info-item full-width">
             <div class="info-label">Dirección / Domicilio</div>
             <div class="info-value">🏠 ${p.persona?.domicilio || formatAddress(p.direccion) || 'N/D'}</div>
@@ -1067,18 +1008,18 @@ const printProfile = () => {
 const loadPatients = async () => {
   try {
     loading.value = true
-    console.log("🔄 [PatientPerfil] Cargando pacientes desde Firebase...")
-    const list = await AdminPatientService.listPatients()
-    patients.value = list || []
-    console.log("✅ [PatientPerfil] Pacientes cargados:", patients.value.length)
-    
-    // Si hay un id en la URL, seleccionar ese paciente
+    console.log("🔄 [PatientPerfil] Cargando usuarios desde Firebase...")
+    const list = await userService.getAllUsers()
+    users.value = list || []
+    console.log("✅ [PatientPerfil] Usuarios cargados:", users.value.length)
+
+    // Si hay un id en la URL, seleccionar ese usuario
     if (route.query.id) {
-      selectedPatient.value = patients.value.find(p => p.id === route.query.id)
-      console.log("👤 [PatientPerfil] Paciente seleccionado:", selectedPatient.value)
+      selectedUser.value = users.value.find(p => p.id === route.query.id)
+      console.log("👤 [PatientPerfil] Usuario seleccionado:", selectedUser.value)
     }
   } catch (err) {
-    console.error("❌ [PatientPerfil] Error cargando pacientes:", err)
+    console.error("❌ [PatientPerfil] Error cargando usuarios:", err)
   } finally {
     loading.value = false
   }
@@ -1091,8 +1032,8 @@ onMounted(async () => {
 // react to query change
 watch(() => route.query.id, (id) => {
   if (id) {
-    selectedPatient.value = patients.value.find(p => p.id === id)
-    console.log("👤 [PatientPerfil] Cambio de paciente:", selectedPatient.value)
+    selectedUser.value = users.value.find(p => p.id === id)
+    console.log("👤 [PatientPerfil] Cambio de usuario:", selectedUser.value)
   }
 })
 </script>

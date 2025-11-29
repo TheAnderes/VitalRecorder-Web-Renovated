@@ -33,7 +33,7 @@
           <div class="input-wrapper">
             <input 
               type="text" 
-              placeholder="Nombre, CI, teléfono, correo..."
+              placeholder="Nombre, correo..."
               v-model="searchQuery"
               @input="updateSearch"
               class="filter-input"
@@ -51,35 +51,7 @@
           </div>
         </div>
 
-        <!-- CI Filter -->
-        <div class="filter-item">
-          <label class="filter-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
-              <path d="M7 8h10M7 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Carnet de Identidad
-          </label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              placeholder="Buscar por CI..." 
-              v-model="dniFilter" 
-              @input="updateDniFilter"
-              class="filter-input"
-            />
-            <button 
-              v-if="dniFilter" 
-              @click="dniFilter = ''" 
-              class="btn-clear-input"
-              title="Limpiar CI"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </button>
-          </div>
-        </div>
+        <!-- CI Filter removed as requested -->
 
         <!-- Medical Status Filter -->
         <div class="filter-item">
@@ -131,32 +103,7 @@
           </div>
         </div>
 
-        <!-- Age Range Filter -->
-        <div class="filter-item">
-          <label class="filter-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Rango de Edad
-          </label>
-          <div class="select-wrapper">
-            <select 
-              v-model="ageRangeFilter" 
-              @change="updateAgeRangeFilter" 
-              class="filter-select"
-            >
-              <option value="all">🎂 Todas las edades</option>
-              <option value="0-12">👶 Niños (0-12)</option>
-              <option value="13-17">🧒 Adolescentes (13-17)</option>
-              <option value="18-59">🧑 Adultos (18-59)</option>
-              <option value="60-120">👴 Adultos Mayores (60+)</option>
-            </select>
-            <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
-              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
+        <!-- Age Range Filter removed as requested -->
 
         <!-- Sort By -->
         <div class="filter-item">
@@ -207,10 +154,6 @@
             Búsqueda: "{{ searchQuery }}"
             <button @click="searchQuery = ''" class="remove-tag">×</button>
           </span>
-          <span v-if="dniFilter" class="filter-tag">
-            CI: "{{ dniFilter }}"
-            <button @click="dniFilter = ''" class="remove-tag">×</button>
-          </span>
           <span v-if="medicalStatusFilter !== 'all'" class="filter-tag">
             Estado: {{ medicalStatusFilter }}
             <button @click="medicalStatusFilter = 'all'" class="remove-tag">×</button>
@@ -218,10 +161,6 @@
           <span v-if="genderFilter !== 'all'" class="filter-tag">
             Sexo: {{ genderFilter }}
             <button @click="genderFilter = 'all'" class="remove-tag">×</button>
-          </span>
-          <span v-if="ageRangeFilter !== 'all'" class="filter-tag">
-            Edad: {{ getAgeRangeLabel(ageRangeFilter) }}
-            <button @click="ageRangeFilter = 'all'" class="remove-tag">×</button>
           </span>
         </div>
       </div>
@@ -281,6 +220,7 @@
             <div class="cell user">Paciente</div>
             <div class="cell contact">Información de Contacto</div>
             <div class="cell gender">Género</div>
+            <div class="cell department">Departamento</div>
             <div class="cell date center">Fecha de ingreso</div>
             <div class="cell status center">Estado</div>
             <div class="cell actions center">Acciones</div>
@@ -295,9 +235,9 @@
                   <div class="user-details">
                     <div class="user-name">{{ getUserFullName(patient) }}</div>
                     <div class="user-secondary">
-                      <span class="user-ci">🆔 {{ patient.dni || patient.persona?.dni || 'N/A' }}</span>
-                      <span class="separator">•</span>
-                      <span class="user-age">{{ calculateAge(patient) }} años</span>
+                      <template v-if="calculateAge(patient) !== 'N/A'">
+                        <span class="user-age">{{ calculateAge(patient) }} años</span>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -315,6 +255,9 @@
                 <div style="font-size:0.82rem; color:#6b7280;">{{ patient.persona?.sexo || patient.persona?.gender || patient.sexo || 'N/D' }}</div>
               </div>
 
+              <div class="cell department">
+                <div style="font-weight:600; color:#111827;">{{ patient.persona?.departamento || patient.departamento || patient.patientDoc?.persona?.departamento || 'N/D' }}</div>
+              </div>
 
                   <div class="cell date center">
                     <span>{{ formatDate(patient.patientCreatedAt || patient.createdAt || patient.patientDoc?.createdAt) }}</span>
@@ -333,12 +276,14 @@
                       <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
                     </svg>
                   </button>
+
                   <button @click="goToEdit(patient)" class="action-btn edit" title="Editar paciente">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
                     </svg>
                   </button>
+
                   <button @click="deactivatePatient(patient)" :class="['action-btn', patient.isActive ? 'delete' : 'restore']" :title="patient.isActive ? 'Desactivar paciente' : 'Reactivar paciente'">
                     <svg v-if="patient.isActive" width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2"/>
@@ -364,7 +309,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAdmin } from '@/composables/useAdmin'
-import * as AdminPatientService from '@/services/AdminPatientService'
 import { userService } from '@/services/userService'
 
 const { canManageUsers, canDeleteUsers } = useAdmin()
@@ -378,10 +322,8 @@ const searchQuery = ref('')
 const roleFilter = ref('all')
 const sortBy = ref('createdAt')
 const sortOrder = ref('desc')
-const dniFilter = ref('')
 const medicalStatusFilter = ref('all')
 const genderFilter = ref('all')
-const ageRangeFilter = ref('all')
 
 // Stats computadas
 const stats = computed(() => {
@@ -431,25 +373,12 @@ const filteredUsers = computed(() => {
       const nombres = (p.persona?.nombres || '').toLowerCase()
       const apellidos = (p.persona?.apellidos || '').toLowerCase()
       const email = (p.email || p.persona?.correo || '').toLowerCase()
-      const telefono = (p.telefono || p.persona?.telefono || '').toString()
-      const dni = (p.dni || p.persona?.dni || '').toString()
-      
-      return nombres.includes(q) || 
-             apellidos.includes(q) || 
-             email.includes(q) || 
-             telefono.includes(q) || 
-             dni.includes(q)
+      // Only search by name or email as requested
+      return nombres.includes(q) || apellidos.includes(q) || email.includes(q)
     })
   }
   
-  // Filtro por CI/DNI
-  if (dniFilter.value) {
-    const dniQuery = dniFilter.value.toString()
-    list = list.filter(p => {
-      const dni = (p.dni || p.persona?.dni || '').toString()
-      return dni.includes(dniQuery)
-    })
-  }
+  // CI filter removed
   
   // Filtro por estado médico
   if (medicalStatusFilter.value && medicalStatusFilter.value !== 'all') {
@@ -469,18 +398,7 @@ const filteredUsers = computed(() => {
     })
   }
   
-  // Filtro por rango de edad
-  if (ageRangeFilter.value && ageRangeFilter.value !== 'all') {
-    list = list.filter(p => {
-      const age = calculateAge(p)
-      if (age === 'N/A') return false
-      
-      const ageNum = parseInt(age)
-      const [min, max] = ageRangeFilter.value.split('-').map(Number)
-      
-      return ageNum >= min && ageNum <= max
-    })
-  }
+  // Age range filter removed
   
   // Filtro por rol
   if (roleFilter.value && roleFilter.value !== 'all') {
@@ -540,21 +458,18 @@ const criticalCount = computed(() => 0)
 
 // Computed para detectar filtros activos
 const hasActiveFilters = computed(() => {
-  return searchQuery.value !== '' ||
-         dniFilter.value !== '' ||
-         medicalStatusFilter.value !== 'all' ||
-         genderFilter.value !== 'all' ||
-         ageRangeFilter.value !== 'all' ||
-         roleFilter.value !== 'all'
+    return searchQuery.value !== '' ||
+      medicalStatusFilter.value !== 'all' ||
+      genderFilter.value !== 'all' ||
+      roleFilter.value !== 'all'
 })
 
 // Methods
 const clearAllFilters = () => {
   searchQuery.value = ''
-  dniFilter.value = ''
   medicalStatusFilter.value = 'all'
   genderFilter.value = 'all'
-  ageRangeFilter.value = 'all'
+  // ageRangeFilter removed
   roleFilter.value = 'all'
 }
 
@@ -588,64 +503,27 @@ const loadUsersAndMergePatients = async () => {
     const allUsers = await userService.getAllUsers()
     const users = (allUsers || []).filter(u => (u.role || 'user') === 'user')
 
-    // Load patients to merge contact info when linked
-    const patientDocs = await AdminPatientService.listPatients()
-
-    // Build quick lookups by possible link fields
-    const byEmail = {}
-    const byUid = {}
-    const byDocId = {}
-    ;(patientDocs || []).forEach(p => {
-      if (p.email) byEmail[(p.email || '').toLowerCase()] = p
-      if (p.userEmail) byEmail[(p.userEmail || '').toLowerCase()] = p
-      if (p.userUid) byUid[p.userUid] = p
-      if (p.userDocId) byDocId[p.userDocId] = p
-      if (p.id) byDocId[p.id] = p
-    })
-
-    // Merge patient contact details into user object where available
-    const merged = users.map(u => {
-      const emailKey = (u.email || '').toLowerCase()
-      const linked = byUid[u.uid] || byUid[u.userUid] || byDocId[u.id] || byDocId[u.userDocId] || byEmail[emailKey] || null
-
-      // create merged view: prefer user fields but copy contact & persona from patient link
-      const mergedItem = {
-        id: u.id,
-        userId: u.id,
-        userUid: u.uid || u.userUid || null,
-        userEmail: u.email,
-        role: u.role || 'user',
-        persona: { ...(u.persona || {}) },
-        email: u.email,
-        telefono: u.persona?.telefono || u.telefono || '',
-        dni: u.persona?.dni || u.dni || '' ,
-        // keep medical info from user or linked patient if exists
-        medicalInfo: u.medicalInfo || (linked ? linked.medicalInfo : undefined),
-        // attach link to patient doc id for navigation/editing
-        linkedPatientId: linked?.id || null,
-        // patient document creation timestamp (for 'fecha de ingreso')
-        patientCreatedAt: linked?.createdAt || linked?.created_at || null,
-        // attach full patient object as nested if needed
-        patientDoc: linked || null,
-        // Preserve active state and human-readable estado from linked patient when available,
-        // otherwise use values from the user object if present, otherwise default to true/'Activo'
-        isActive: (linked && typeof linked.isActive === 'boolean') ? linked.isActive : (typeof u.isActive === 'boolean' ? u.isActive : true),
-        estado: linked?.estado || u.estado || ((linked && typeof linked.isActive === 'boolean' ? (linked.isActive ? 'Activo' : 'Inactivo') : (typeof u.isActive === 'boolean' ? (u.isActive ? 'Activo' : 'Inactivo') : 'Activo')))
-      }
-
-      // copy more detailed contact if patient doc exists
-      if (linked) {
-        mergedItem.telefono = mergedItem.telefono || linked.telefono || linked.persona?.telefono || ''
-        mergedItem.email = mergedItem.email || linked.email || linked.persona?.correo || ''
-        mergedItem.persona = { ...mergedItem.persona, ...(linked.persona || {}) }
-        mergedItem.dni = mergedItem.dni || linked.dni || linked.persona?.dni || ''
-      }
-
-      return mergedItem
-    })
+    // No patients collection: use users only
+    const merged = users.map(u => ({
+      id: u.id,
+      userId: u.id,
+      userUid: u.uid || u.userUid || null,
+      userEmail: u.email,
+      role: u.role || 'user',
+      persona: { ...(u.persona || {}) },
+      email: u.email,
+      telefono: u.persona?.telefono || u.telefono || '',
+      dni: u.persona?.dni || u.dni || '' ,
+      medicalInfo: u.medicalInfo || {},
+      linkedPatientId: null,
+      patientCreatedAt: u.createdAt || null,
+      patientDoc: null,
+      isActive: typeof u.isActive === 'boolean' ? u.isActive : true,
+      estado: typeof u.isActive === 'boolean' ? (u.isActive ? 'Activo' : 'Inactivo') : 'Activo'
+    }))
 
     patients.value = merged
-    console.log(`✅ Usuarios cargados y mergeados: ${patients.value.length}`)
+    console.log(`✅ Usuarios cargados: ${patients.value.length}`)
   } catch (err) {
     console.error("❌ Error cargando usuarios/pacientes:", err)
     error.value = err.message
@@ -659,8 +537,8 @@ const loadPatients = async () => {
   try {
     loading.value = true
     error.value = null
-    const list = await AdminPatientService.listPatients()
-    patients.value = (list || []).map(p => ({ ...p, isActive: true }))
+    const list = await userService.getAllUsers()
+    patients.value = (list || []).map(p => ({ ...p, isActive: typeof p.isActive === 'boolean' ? p.isActive : true }))
   } catch (err) {
     error.value = err.message
   } finally {
@@ -720,7 +598,7 @@ const editPatient = (user) => {
 const savePatientEdits = async () => {
   if (!selectedUser.value || !editForm.value) return
   try {
-    await AdminPatientService.updatePatient(selectedUser.value.id, {
+    await userService.updateUser(selectedUser.value.id, {
       persona: { nombres: editForm.value.nombres, apellidos: editForm.value.apellidos },
       email: editForm.value.email,
       role: editForm.value.role,
@@ -758,7 +636,7 @@ const deactivatePatient = async (user) => {
   const confirmMsg = willDeactivate ? `Marcar al paciente ${getUserFullName(stored)} como Inactivo?` : `Reactivar al paciente ${getUserFullName(stored)}?`
   const ok = confirm(confirmMsg)
   if (!ok) return
-  try {
+      try {
     const newIsActive = !willDeactivate
     const newEstado = newIsActive ? 'Activo' : 'Inactivo'
 
@@ -774,93 +652,16 @@ const deactivatePatient = async (user) => {
     // 2) patientDoc.id
     if (!targetPatientId && stored.patientDoc?.id) targetPatientId = stored.patientDoc.id
 
-    // 3) intentar buscar coincidencias consultando la colección 'patients' si no tenemos id directo
-    if (!targetPatientId) {
-      try {
-        const allPatientDocs = await AdminPatientService.listPatients()
-        const maybe = allPatientDocs.find(p => {
-          try {
-            const emails = [(p.email||'').toLowerCase(), (p.userEmail||'').toLowerCase()]
-            const dnis = [(p.dni||''), (p.persona?.dni||'')]
-            const uids = [(p.userUid||''), (p.userDocId||''), (p.userUid||'')]
-            const storedEmail = (stored.email||'').toLowerCase()
-            const storedDni = stored.dni || stored.persona?.dni || ''
-            const storedUid = stored.userUid || stored.userUid || ''
-
-            const matchesEmail = storedEmail && emails.includes(storedEmail)
-            const matchesDni = storedDni && dnis.includes(storedDni)
-            const matchesUid = storedUid && uids.includes(storedUid)
-
-            return matchesEmail || matchesDni || matchesUid
-          } catch (e) {
-            return false
-          }
-        })
-        if (maybe) targetPatientId = maybe.id
-      } catch (e) {
-        console.warn('No se pudo listar patients para búsqueda:', e)
-      }
+    // Directly update the user document: no patients collection anymore
+    if (!stored.id) {
+      alert('No se encontró el usuario objetivo para actualizar el estado.')
+      return
     }
 
-    if (!targetPatientId) {
-      const createOk = confirm('No existe un documento en la colección patients para este usuario. ¿Deseas crear uno y aplicar el cambio de estado allí?')
-      if (!createOk) {
-        alert('Operación cancelada: no se modificó ningún documento en patients.')
-        return
-      }
-
-      // Crear documento patients mínimo a partir del usuario 'stored'
-      const payload = {
-        persona: stored.persona || { nombres: stored.persona?.nombres || '', apellidos: stored.persona?.apellidos || '' },
-        email: stored.email || '',
-        telefono: stored.telefono || '',
-        dni: stored.dni || stored.persona?.dni || '',
-        userUid: stored.userUid || stored.userUid || null,
-        userDocId: stored.userId || stored.id || null,
-        estado: newEstado,
-        isActive: newIsActive,
-        role: stored.role || 'user'
-      }
-
-      const newId = await AdminPatientService.createPatient(payload)
-      targetPatientId = newId
-      console.log(`🆕 Documento patients/${newId} creado a partir del usuario; aplicando estado.`)
-    }
-
-    // Verificar existencia real antes de actualizar
-    let patientDoc = await AdminPatientService.getPatient(targetPatientId).catch(() => null)
-    if (!patientDoc) {
-      const createMissingOk = confirm(`El documento patients/${targetPatientId} no existe. ¿Deseas crear un nuevo paciente a partir del usuario y aplicar el cambio?`)
-      if (!createMissingOk) {
-        alert('Operación cancelada: no se modificó ningún documento en patients.')
-        return
-      }
-
-      // Crear documento patients mínimo a partir del usuario 'stored'
-      const payloadMissing = {
-        persona: stored.persona || { nombres: stored.persona?.nombres || '', apellidos: stored.persona?.apellidos || '' },
-        email: stored.email || '',
-        telefono: stored.telefono || '',
-        dni: stored.dni || stored.persona?.dni || '',
-        userUid: stored.userUid || stored.userUid || null,
-        userDocId: stored.userId || stored.id || null,
-        estado: newEstado,
-        isActive: newIsActive,
-        role: stored.role || 'user'
-      }
-
-      const newId = await AdminPatientService.createPatient(payloadMissing)
-      targetPatientId = newId
-      console.log(`🆕 Documento patients/${newId} creado (fallback)`) 
-      patientDoc = await AdminPatientService.getPatient(targetPatientId).catch(() => null)
-      if (!patientDoc) throw new Error(`No se pudo crear o recuperar el documento patients/${targetPatientId}`)
-    }
-
-    await AdminPatientService.updatePatient(targetPatientId, { isActive: newIsActive, estado: newEstado, updatedAt: new Date().toISOString() })
-    console.log(`✅ Estado del paciente (patients/${targetPatientId}) actualizado en Firebase`)
-
+    await userService.updateUser(stored.id, { isActive: newIsActive, estado: newEstado })
+    console.log(`✅ Estado del usuario (${stored.id}) actualizado en collection users`)
     await loadUsersAndMergePatients()
-    alert(`Paciente ${getUserFullName(stored)} actualizado: ${newEstado}`)
+    alert(`Usuario ${getUserFullName(stored)} actualizado: ${newEstado}`)
   } catch (e) {
     console.error('Error actualizando estado del paciente:', e)
     // Mostrar mensaje más informativo
@@ -900,7 +701,8 @@ const addPatient = async () => {
       isActive: true     // Activo por defecto
     }
     console.log("💾 [PatientList] Creando paciente con estado:", payload.estado, "- isActive:", payload.isActive)
-    await AdminPatientService.createPatient(payload)
+    // Create as a user in the `users` collection (keep centralized storage)
+    await userService.createUser(payload)
   console.log("✅ Paciente creado en Firebase")
   await loadUsersAndMergePatients()
   } catch (e) {
@@ -960,21 +762,50 @@ const statusClass = (status) => 'active'
 
 const calculateAge = (patient) => {
   try {
-    // Prefer fecha_nacimiento from linked patient doc if available
-    const fechaNac = patient.patientDoc?.persona?.fecha_nacimiento || patient.patientDoc?.fechaNacimiento || patient.persona?.fecha_nacimiento || patient.fecha_nacimiento
+    // Prefer fecha_nac/fecha_nacimiento from linked patient doc if available
+    const fechaNac = patient.patientDoc?.persona?.fecha_nac || patient.patientDoc?.persona?.fecha_nacimiento || patient.patientDoc?.fechaNacimiento || patient.persona?.fecha_nac || patient.persona?.fecha_nacimiento || patient.fecha_nac || patient.fecha_nacimiento
     if (!fechaNac) return 'N/A'
-    
-    let birthDate
-    if (typeof fechaNac === 'string') {
-      birthDate = new Date(fechaNac)
-    } else if (fechaNac.toDate) {
-      // Firestore Timestamp
-      birthDate = fechaNac.toDate()
-    } else if (fechaNac instanceof Date) {
-      birthDate = fechaNac
-    } else {
-      return 'N/A'
+
+    // parse with flexible parser (support Spanish textual dates with UTC offset)
+    const parseFlexibleDate = (input) => {
+      if (!input) return null
+      if (input && typeof input.toDate === 'function') return input.toDate()
+      if (input instanceof Date) return input
+      if (typeof input === 'string') {
+        const d = new Date(input)
+        if (!isNaN(d)) return d
+        const months = { enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5, julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11 }
+        const re = /([0-9]{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+([0-9]{4})(?:[,\s]+\s*([0-9]{1,2}):([0-9]{2})(?::([0-9]{2}))?\s*(a\.m\.|p\.m\.|am|pm)?)?(?:\s*UTC([+-]?\d+))?/i
+        const m = input.match(re)
+        if (m) {
+          try {
+            const day = parseInt(m[1],10)
+            const month = months[(m[2]||'').toLowerCase()] ?? 0
+            const year = parseInt(m[3],10)
+            let hour = m[4] ? parseInt(m[4],10) : 0
+            const minute = m[5] ? parseInt(m[5],10) : 0
+            const second = m[6] ? parseInt(m[6],10) : 0
+            const ampmRaw = m[7] ? m[7].toLowerCase() : null
+            if (ampmRaw) {
+              const ampm = ampmRaw.replace(/\./g,'')
+              if ((ampm === 'am' || ampm === 'a m') && hour === 12) hour = 0
+              if ((ampm === 'pm' || ampm === 'p m') && hour < 12) hour += 12
+            }
+            const tzStr = m[8]
+            if (tzStr !== undefined && tzStr !== null && tzStr !== '') {
+              const tz = parseInt(tzStr,10)
+              const ts = Date.UTC(year, month, day, hour, minute, second) - (tz * 3600 * 1000)
+              return new Date(ts)
+            }
+            return new Date(year, month, day, hour, minute, second)
+          } catch (e) { return null }
+        }
+      }
+      return null
     }
+
+    const birthDate = parseFlexibleDate(fechaNac)
+    if (!birthDate) return 'N/A'
     
     const today = new Date()
     let age = today.getFullYear() - birthDate.getFullYear()
@@ -1100,8 +931,8 @@ onMounted(async () => {
   color: #6b7280;
 }
 
-.grid-header .cell.contact { max-width: 220px }
-.grid-row .cell.contact { max-width: 220px; overflow: hidden; text-overflow: ellipsis }
+.grid-header .cell.contact { max-width: 260px }
+.grid-row .cell.contact { max-width: 260px; overflow: hidden; text-overflow: ellipsis; padding-left: 0.5rem }
 .grid-header .cell.medical { max-width: 240px }
 .grid-row .cell.medical { max-width: 240px }
 .status-badge.inactive { background:#fee2e2; color:#991b1b }
@@ -1528,8 +1359,8 @@ onMounted(async () => {
   box-shadow: 0 6px 18px rgba(17,24,39,0.04);
   width: 100%;
   min-width: 1000px;
-  /* More balanced columns: user (wide), contact (narrow), gender, department, date, status, actions */
-  --grid-cols: minmax(320px, 1.6fr) minmax(160px, 0.8fr) minmax(120px, 0.7fr) minmax(160px, 0.9fr) 140px 120px 120px;
+  /* Adjusted columns: make contact column wider so it sits closer to the user column */
+  --grid-cols: minmax(280px, 1.4fr) minmax(240px, 1fr) minmax(110px, 0.6fr) 140px 120px 120px;
 }
 
 .grid-header,
@@ -2025,7 +1856,6 @@ onMounted(async () => {
   .cell.user::before { content: none; }
   .cell.contact::before { content: "Información de Contacto"; }
   .cell.gender::before { content: "Género"; }
-  .cell.department::before { content: "Departamento"; }
   .cell.date::before { content: "Fecha de Registro"; }
   .cell.status::before { content: "Estado"; }
   .cell.actions::before { content: "Acciones"; }
